@@ -1,0 +1,52 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "^6.1.11",
+    "@fullcalendar/daygrid": "^6.1.11",
+    "@fullcalendar/interaction": "^6.1.11",
+    "@fullcalendar/react": "^6.1.11",
+    "@fullcalendar/timegrid": "^6.1.11",
+    "@heroicons/react": "^2.1.4",
+    "@material-tailwind/react": "^2.1.9",
+    "axios": "^1.7.2",
+    "chart.js": "^4.3.0",
+    "datatables.net": "^1.13.10",
+    "datatables.net-dt": "^1.13.10",
+    "jquery": "^3.7.1",
+    "leaflet": "^1.9.4",
+    "leaflet-compass": "^1.5.6",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "react-quill": "^2.0.0",
+    "react-router-dom": "^6.22.0",
+    "sweetalert2": "^11.10.5",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.29",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  }
+}

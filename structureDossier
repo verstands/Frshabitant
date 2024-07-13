@@ -1,0 +1,48 @@
+my-react-ts-app/
+├── public/
+│   ├── index.html
+│   ├── favicon.ico
+│   └── manifest.json
+├── src/
+│   ├── assets/
+│   │   ├── images/
+│   │   ├── styles/
+│   │   └── fonts/
+│   ├── components/
+│   │   ├── Common/
+│   │   │   ├── Button.tsx
+│   │   │   ├── Header.tsx
+│   │   │   └── Footer.tsx
+│   │   ├── Layout/
+│   │   │   ├── MainLayout.tsx
+│   │   │   └── Sidebar.tsx
+│   │   ├── App.tsx
+│   │   └── index.tsx
+│   ├── hooks/
+│   │   └── useAuth.ts
+│   ├── pages/
+│   │   ├── Home.tsx
+│   │   ├── About.tsx
+│   │   └── Contact.tsx
+│   ├── services/
+│   │   ├── api.ts
+│   │   └── auth.ts
+│   ├── store/
+│   │   ├── index.ts
+│   │   ├── rootReducer.ts
+│   │   └── actions.ts
+│   ├── types/
+│   │   ├── index.ts
+│   │   └── auth.ts
+│   ├── utils/
+│   │   ├── constants.ts
+│   │   └── helpers.ts
+│   ├── index.tsx
+│   ├── react-app-env.d.ts
+│   └── setupTests.ts
+├── .gitignore
+├── package.json
+├── README.md
+├── tsconfig.json
+├── tsconfig.paths.json
+└── webpack.config.js (or similar config for your bundler)
