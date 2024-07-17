@@ -3,13 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import LoginService from "../../Services/Login.service";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import Spinner from "../../components/Spinner";
+import { toast } from "react-toastify";
+
 
 const LoginAgnt = () => {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  let nevigate = useNavigate();
+  const navigate = useNavigate();
 
   const config: RepositoryConfigInterface = {
     appConfig: {},
@@ -21,6 +23,7 @@ const LoginAgnt = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    console.log('Form submitted');
     try {
       const response = await loginServiceInstance.login(email, password);
       sessionStorage.setItem('token', response.access_token);
@@ -28,7 +31,7 @@ const LoginAgnt = () => {
       sessionStorage.setItem('user', JSON.stringify(response.agent));
       sessionStorage.setItem('role', JSON.stringify(response.role));
       setLoading(false);
-      nevigate('/dashboard')
+      navigate('/dashboard')
     } catch (error: unknown) {
       if (isError(error)) {
         setError(error.message);
@@ -51,7 +54,7 @@ const LoginAgnt = () => {
             href="#"
             className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
           >
-            <p className="text-dark-purple">Mon reseau Habitant</p>
+            <p className="text-dark-purple">Mon réseau Habitat</p>
           </a>
 
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-white  dark:border-white">
@@ -61,7 +64,7 @@ const LoginAgnt = () => {
                   Content de vous revoir !
                 </h2>
                 <p className="text-[15px]">
-                  Connectez-vous pour continuer avec mon reseau habitant
+                  Connectez-vous pour continuer avec mon réseau habitat
                 </p>
               </center>
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>

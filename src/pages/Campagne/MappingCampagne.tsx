@@ -1,40 +1,21 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom';
+import Otbar from "../../components/Agents/Otbar";
+import MappingTable from "./MappingTable";
 
 const MappingCampagne = () => {
-    const location = useLocation();
-  const excelData = location.state?.excelData || [];
-  console.log("sssssss", excelData);
-    return (
-        <table>
-          <thead>
-            <tr>
-              <th>Maison</th>
-              <th>Entre 100e et 150e Propriétaire</th>
-              <th>Fioul</th>
-              <th>Planning RDV</th>
-              <th>Dossiers</th>
-              <th>Prospects</th>
-              <th>CDR</th>
-              <th>Appel</th>
-            </tr>
-          </thead>
-          <tbody>
-            {excelData.map((row, index) => (
-              <tr key={index}>
-                <td>{row[0]}</td>
-                <td>{row[1]}</td>
-                <td>{row[2]}</td>
-                <td>{row[3]}</td>
-                <td>{row[4]}</td>
-                <td>{row[5]}</td>
-                <td>{row[6]}</td>
-                <td>{row[7]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      );
-}
+  return (
+    <>
+      <Otbar title="Espace Campagne" />
+      <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
+        <h2 className="font-bold text-[20px]">
+          Mapping des champs de votre fichier
+        </h2>
+        <br />
+        <hr/>
+        <br />
+        <MappingTable />
+      </div>
+    </>
+  );
+};
 
-export default MappingCampagne
+export default MappingCampagne;

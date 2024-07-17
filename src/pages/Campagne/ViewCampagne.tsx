@@ -53,7 +53,7 @@ const ViewCampagne = () => {
         <Link to="">
           <div className="border-[#1e58c1] flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px]">
             <FaPlus className="bg-white  p-1 rounded-[50%] text-[#1e58c1]" />
-            <Link to="/createCapagne" className=" text-white">
+            <Link to="/typeproduit" className=" text-white">
               Nouveau Campagne
             </Link>
           </div>

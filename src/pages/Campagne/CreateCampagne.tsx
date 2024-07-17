@@ -1,16 +1,26 @@
 import  { useEffect, useState } from "react";
 import Otbar from "../../components/Agents/Otbar";
 import * as XLSX from "xlsx"
+import { useNavigate } from "react-router-dom";
 
 const CreateCampagne = () => {
   const [selectedFile, setSelectedFile] = useState<null | File>(null);
-  const [excelData, setExcelData] = useState([]);
+  const [titre, setTitre] = useState<string>("");
+  const [excelData, setExcelData] = useState<any[][]>([]);
+  const navigate = useNavigate();
+
 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    // do something with the files
     setSelectedFile(files && files[0]);
+    if (files && files.length > 0) {
+      setSelectedFile(files[0]);
+    }
+  };
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitre(event.target.value);
   };
 
   const handleCreateClick = () => {
@@ -21,8 +31,12 @@ const CreateCampagne = () => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const data: never[]  = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        setExcelData(data);
-        console.log('excelData:', excelData);
+
+        const filteredData = data.filter((row: any[]) => row.length > 0);
+        setExcelData(filteredData);
+        sessionStorage.setItem('titre', titre);
+        sessionStorage.setItem('dataexcel', JSON.stringify(filteredData));
+        navigate('/mapping-campagne')
       };
       reader.readAsBinaryString(selectedFile);
     } else {
@@ -37,12 +51,7 @@ const CreateCampagne = () => {
   return (
     <>
       <Otbar title="Espace Campagne" />
-      {
-
-      }
       <div className="px-20">
-        <h1>Hello</h1>
-        <p>Rabby</p>
         <div className="flex items-center p-2 justify-between">
           <div className="flex p-4">
             <h1 className="text-[#b3b4b6]">Campagnes / </h1>
@@ -71,12 +80,13 @@ const CreateCampagne = () => {
                 type="text"
                 name="email"
                 id="email"
+                onChange={handleTitleChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
             <div>
               <label
-                htmlFor="email"
+                htmlFor="file"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
               >
                 File

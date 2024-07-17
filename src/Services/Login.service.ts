@@ -1,5 +1,7 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
+import { toast } from "react-toastify";
+
 
 class LoginService<T> extends Repository<T> {
   constructor(config: RepositoryConfigInterface) {
@@ -12,7 +14,7 @@ class LoginService<T> extends Repository<T> {
       const response = await this.postFind$('auth/login', requestBody);
       return response.data;
     } catch (error: any) {
-      console.error('Error during login request:', error.message);
+      console.error('Error during login request:', error.message)
       throw error;
     }
   }

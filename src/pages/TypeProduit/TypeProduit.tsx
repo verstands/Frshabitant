@@ -1,8 +1,37 @@
 import { FaUser } from "react-icons/fa";
 import Otbar from "../../components/Agents/Otbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { TypeProduitInterface } from "../../Interfaces/TypeProduitInterface";
+import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
+import TypeProduitService from "../../Services/TypeProduit.service";
 
-const TypeProduit = () => {
+const TypeProduit = ({ produits }: { produits: TypeProduitInterface[] }) => {
+  const [produitData, setproduit] = useState<TypeProduitInterface[] | null>(null);
+  const navigate = useNavigate();
+  const config: RepositoryConfigInterface = {
+    appConfig: {},
+    dialog: {},
+  };
+
+  const getTypeproduit = async () => {
+    try {
+      const response = await TypeproduitService.getTypeProduit();
+      setproduit(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+  const TypeproduitService = new TypeProduitService(config);
+
+  useEffect(() => {
+    getTypeproduit();
+  }, [produits]);
+
+  const BtnOnclick = (id: string) =>{
+    sessionStorage.setItem('produit', id);
+    navigate('/createCapagne')
+  }
   return (
     <div>
       <Otbar title="Espace Produit" />
@@ -11,79 +40,24 @@ const TypeProduit = () => {
           <h2 className="font-bold text-[20px] pb-4">Type de produit</h2>
           <hr className="pb-3" />
           <div className="grid gap-3 grid-cols-3 grid-template-rows: 1fr">
-            <Link to="" className="hover:shadow-sm">
-              <div className="border-2 border-blue-600 p-2 rounded-[10px]">
-                <center>
-                  <FaUser size={30} color="#55565a" />
-                  <h1 className="text-blue-600 text-[20px] w-full font-bold">
-                    Rénovation Globale
-                  </h1>
-                </center>
-                <br />
-                <hr className="border-1 border-blue-600" />
-
-                <p className="p-6 font-mono">
-                  Poursuivez votre parcours avec une interface personnalisée
-                  pour la rénovation global.
-                  <br />.
-                </p>
-              </div>
-            </Link>
-            <Link to="" className="hover:shadow-sm">
-              <div className="border-2 border-blue-600 p-2 rounded-[10px]">
-                <center>
-                  <FaUser size={30} color="#55565a" />
-                  <h1 className="text-blue-600 text-[20px] w-full font-bold">
-                    Panneaux photovoltaique
-                  </h1>
-                </center>
-                <br />
-                <hr className="border-1 border-blue-600" />
-
-                <p className="p-6 font-mono">
-                  Poursuivez votre parcours avec une interface personnalisée
-                  pour les panneaux pour les photovoltaique..
-                </p>
-              </div>
-            </Link>
-            <Link to="" className="hover:shadow-sm">
-              <div className="border-2 border-blue-600 p-2 rounded-[10px]">
-                <center>
-                  <FaUser size={30} color="#55565a" />
-                  <h1 className="text-blue-600 text-[20px] w-full font-bold">
-                    PAC
-                  </h1>
-                </center>
-                <br />
-                <hr className="border-1 border-blue-600" />
-
-                <p className="p-6 font-mono">
-                  Poursuivez votre parcours avec une interface personnalisée
-                  pour les pompes à chaleur
+            {produitData?.map((produitItem: TypeProduitInterface) => (
+              <button  onClick={() => BtnOnclick(produitItem.id)} className="hover:shadow-sm w-full" style={{ maxWidth: "300px" }}>
+                <div className="border-2 border-blue-600 p-2 rounded-[10px]">
+                  <center>
+                    <FaUser size={30} color="#55565a" />
+                    <h1 className="text-blue-600 text-[20px] w-full font-bold">
+                      {produitItem.titre}
+                    </h1>
+                  </center>
                   <br />
-                  .
-                </p>
-              </div>
-            </Link>
-            <Link to="" className="hover:shadow-sm">
-              <div className="border-2 border-blue-600 p-2 rounded-[10px]">
-                <center>
-                  <FaUser size={30} color="#55565a" />
-                  <h1 className="text-blue-600 text-[20px] w-full font-bold">
-                    Thermostat
-                  </h1>
-                </center>
-                <br />
-                <hr className="border-1 border-blue-600" />
+                  <hr className="border-1 border-blue-600" />
 
-                <p className="p-6 font-mono">
-                  Poursuivez votre parcours avec une interface personnalisée
-                  pour les thermostat
-                  <br />
-                  .
-                </p>
-              </div>
-            </Link>
+                  <p className="p-6 font-mono">
+                    {produitItem.description}
+                  </p>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
       </div>
