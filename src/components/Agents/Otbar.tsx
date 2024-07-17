@@ -1,6 +1,6 @@
 import React from "react";
 import { BiBell } from "react-icons/bi";
-import { FaPhone, FaSearch } from "react-icons/fa";
+import { FaPhone, FaSearch, FaSignInAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { UserInterface } from "../../Interfaces/UserInterface";
 
@@ -43,6 +43,7 @@ const Otbar: React.FC<OtbarProps> = ({ title }) => {
             <div>
               {user.prenom} {user.nom}
             </div>
+            <FaSignInAlt />
           </div>
         </div>
       </div>
