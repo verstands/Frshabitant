@@ -20,7 +20,7 @@ instance.interceptors.response.use(
     return response;
   },
   error => {
-    if (error.response.status === 403 || error.response.status === 400) {
+    if (error.response.status === 401 || error.response.status === 500) {
       window.location.href = '/';
     }
     return Promise.reject(error);

@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { TypeProduitInterface } from "../../Interfaces/TypeProduitInterface";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import TypeProduitService from "../../Services/TypeProduit.service";
+import Spinner from "../../components/Spinner";
 
 const TypeProduit = ({ produits }: { produits: TypeProduitInterface[] }) => {
   const [produitData, setproduit] = useState<TypeProduitInterface[] | null>(null);
+  const [loading, setloading] = useState(true);
   const navigate = useNavigate();
   const config: RepositoryConfigInterface = {
     appConfig: {},
@@ -18,6 +20,7 @@ const TypeProduit = ({ produits }: { produits: TypeProduitInterface[] }) => {
     try {
       const response = await TypeproduitService.getTypeProduit();
       setproduit(response.data);
+      setloading(false)
     } catch (error: unknown) {
       console.log(error);
     }
@@ -35,6 +38,9 @@ const TypeProduit = ({ produits }: { produits: TypeProduitInterface[] }) => {
   return (
     <div>
       <Otbar title="Espace Produit" />
+      {
+        loading && <center><Spinner /></center>
+      }
       <div className="px-20">
         <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
           <h2 className="font-bold text-[20px] pb-4">Type de produit</h2>

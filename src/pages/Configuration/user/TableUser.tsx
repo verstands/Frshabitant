@@ -60,7 +60,7 @@ const TableUser = () => {
     <>
       <div className="">
         <center>{loading && <Spinner />}</center>
-        <Card className="h-full w-full">
+        <Card className="h-full w-full overflow-scroll">
           <CardHeader className="rounded-none p-4">
             <div className="flex items-center md:w-80 px-4">
               <input
@@ -117,7 +117,7 @@ const TableUser = () => {
                       );
                     })
                     .map((data, index) => (
-                      <tr key={index}>
+                      <tr key={index} className="even:bg-blue-gray-50/50">
                         <td className="p-4">
                           <Typography
                             variant="small"

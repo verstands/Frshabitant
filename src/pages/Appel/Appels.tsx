@@ -3,9 +3,44 @@ import { FaClock, FaPencilAlt, FaPhoneAlt } from 'react-icons/fa'
 import Discours from '../../components/Agents/Discours'
 import DetailProspect from '../../components/Agents/DetailProspect'
 import Swal from "sweetalert2";
+import { useEffect, useState } from 'react';
+import ProspectService from '../../Services/Prospect.service';
+import { useParams } from 'react-router-dom';
+import { ProspectInterface } from '../../Interfaces/ProspectInterface';
+import { RepositoryConfigInterface } from '../../Interfaces/RepositoryConfig.interface';
+import { UserInterface } from '../../Interfaces/UserInterface';
+import Commentaire from '../../components/Agents/Commentaire';
 
 const Appels: React.FC = () => {
-    
+    const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
+    const [loading, setLoading] = useState(true);
+    const {id} = useParams<{ id: string }>();
+    const user: UserInterface = JSON.parse(
+        sessionStorage.getItem("user") || "[]"
+      );
+
+    const config: RepositoryConfigInterface = {
+        appConfig: {},
+        dialog: {},
+    };
+
+  const serviceProspect = new ProspectService(config);
+
+  const getProspectId = async () => {
+    try {
+      const response = await serviceProspect.getProspectId(id!);
+      setProspect(response.data);
+      setLoading(false);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProspectId();
+    console.log(prospect)
+  }, []);
+
     const appel = () =>{
         Swal.fire({
             icon: 'question',
@@ -18,7 +53,7 @@ const Appels: React.FC = () => {
         <>
             <Otbar title="Robot d'appel automatique " />
             <div className='border-white bg-white p-4 m-3 rounded-[10px] shadow flex items-center justify-between'>
-                <div onClick={() => appel()} className=' cursor-pointer text-[#6c7ec2] border-[#e7edfe] flex items-center gap-2 p-2 rounded-[10px] bg-[#e7edfe]'>
+                <div onClick={() => appel()} className=' cursor-pointer text-[#6c7ec2] border-[#e7edfe] flex items-center gap-2 p-4 rounded-[10px] bg-[#e7edfe]'>
                     <p>Démarrer un appel avec ce prospect</p>
                     <FaPhoneAlt />
                 </div>
@@ -26,8 +61,8 @@ const Appels: React.FC = () => {
                     <p><strong>Date de création : </strong> 11/12/2023 12:22:45</p>
                     <p className='flex gap-2'><strong>A rappeler : </strong> 11/12/2023 12:22:45 <FaPencilAlt className=' text-[#6c7ec2] cursor-pointer ' /></p>
                     <p><strong>Status : </strong> A rappeler</p>
-                    <p><strong>Commercial : </strong> YOEL AIEM</p>
-                    <p><strong>Campagne : </strong> DATA B 0.35.2</p>
+                    <p><strong>Agent : </strong>{user.prenom} {user.nom}</p>
+                    <p><strong>Campagne : </strong> {prospect?.capagnepospect && prospect?.capagnepospect.titre}</p>
                 </div>
             </div>
             <div className=' p-4'>
@@ -63,8 +98,12 @@ const Appels: React.FC = () => {
                 </div>
                 <br />
                 <div className='grid grid-cols-2 gap-2'>
-                    <Discours />
-                    <DetailProspect />
+                    {prospect && <Discours datadata={prospect}/>}
+                    {prospect && <DetailProspect data={prospect} />}
+                </div>
+                <div className=''>
+      <Commentaire />
+
                 </div>
             </div>
 

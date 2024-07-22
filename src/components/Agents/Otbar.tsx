@@ -1,6 +1,6 @@
 import React from "react";
 import { BiBell } from "react-icons/bi";
-import { FaPhone, FaSearch, FaSignInAlt } from "react-icons/fa";
+import { FaBars, FaPhone, FaSearch, FaSignInAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { UserInterface } from "../../Interfaces/UserInterface";
 
@@ -15,7 +15,12 @@ const Otbar: React.FC<OtbarProps> = ({ title }) => {
   return (
     <>
       <div className="flex items-center justify-between p-5">
-        <h2 className="text-[18px] font-bold">{title}</h2>
+        <div className="flex items-center gap-3">
+          <div>
+            <FaBars />
+          </div>
+          <h2 className="text-[18px] font-bold">{title}</h2>
+        </div>
         <div className="flex items-center gap-2">
           <div className="text-[12px] mr-1 font-bold flex  items-center gap-2 ">
             <FaPhone className="text-green-500" />
@@ -47,6 +52,7 @@ const Otbar: React.FC<OtbarProps> = ({ title }) => {
           </div>
         </div>
       </div>
+      <hr className="py-2"/>
     </>
   );
 };

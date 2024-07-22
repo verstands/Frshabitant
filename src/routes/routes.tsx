@@ -29,6 +29,7 @@ import ViewRoleUser from '../pages/Configuration/RoleUser/ViewRoleUser'
 import ViewScript from '../pages/Script/ViewScript'
 import Script from '../pages/Script/Script'
 import RepartiLead from '../pages/Campagne/RepartiLead'
+import ScriptUpdate from '../pages/Script/ScriptUpdate'
 
 const Routers = () => {
   return (
@@ -46,7 +47,7 @@ const Routers = () => {
             <Route path='/viewCapagne' element={< ViewCampagne />}></Route>
             <Route path='/createCapagne' element={< CreateCampagne />}></Route>
             <Route path='/mapping-campagne' element={< MappingCampagne />}></Route>
-            <Route path='/appels' element={< Appels />}></Route>
+            <Route path='/appels/:id' element={< Appels />}></Route>
             <Route path='/typeproduit' element={< TypeProduit/>}></Route>
             <Route path='/user' element={<Utilisateur />}></Route>
             <Route path='/viewUser' element={<ViewUser />}></Route>
@@ -55,6 +56,7 @@ const Routers = () => {
             <Route path='/script' element={<ViewScript />}></Route>
             <Route path='/resultatcampagne' element={<ResulatCampagne />}></Route>
             <Route path='/scripts' element={<Script />}></Route>
+            <Route path='/scriptupdate/:id' element={<ScriptUpdate />}></Route>
             <Route path='/reaprtilead' element={<RepartiLead />}></Route>
         </Route>
         <Route path='/' element={< LoginAgnt />}></Route>

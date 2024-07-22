@@ -1,7 +1,6 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
   FaUsers,
-  FaBars,
   FaTachometerAlt,
   FaFileAlt,
   FaHeadphones,
@@ -23,7 +22,6 @@ const SidebarAgent = () => {
     sessionStorage.getItem("user") || "[]"
   );
 
-
   return (
     <>
       {hasAccess("read") && (
@@ -33,9 +31,7 @@ const SidebarAgent = () => {
           <Link to="/dashboard">
             <div className="font-bold">Mon Reseau Habitat</div>
           </Link>
-          <div>
-            <FaBars />
-          </div>
+          
         </div>
         <p
           className="p-4 text-[#cccbd0]  font-bold"

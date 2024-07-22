@@ -5,6 +5,7 @@ import ProspectTable from "./ProspectTable";
 import hasAccess from "../../components/hasAcess";
 
 const ViewProspect = () => {
+  
   return (
     <>
       <Otbar title="Espace prospect" />

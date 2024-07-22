@@ -1,15 +1,15 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
-import { UserInterface } from '../Interfaces/UserInterface';
+import { FonctionInterface } from '../Interfaces/FonctionInterface';
 
-class AgentService<T> extends Repository<T> {
+class FonctionService<T> extends Repository<T> {
   constructor(config: RepositoryConfigInterface) {
     super(config);
   }
 
-  async postAgent(agent: UserInterface): Promise<T> {
+  async postFonction(foncton: FonctionInterface): Promise<T> {
     try {
-      const response = await this.postFind$('auth', agent);
+      const response = await this.postFind$('fonction', foncton);
       return response.data;
     } catch (error: any) {
       console.error('Error during login request:', error.message);
@@ -17,9 +17,9 @@ class AgentService<T> extends Repository<T> {
     }
   }
 
-  async getAgent(): Promise<T> {
+  async getFonction(): Promise<T> {
     try {
-      const response = await this.find$('agent');
+      const response = await this.find$('fonction');
       return response;
     } catch (error: any) {
       console.error('Error during login request:', error.message);
@@ -28,4 +28,5 @@ class AgentService<T> extends Repository<T> {
   }
   
 }
-export default AgentService;
+
+export default FonctionService;

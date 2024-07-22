@@ -1,22 +1,46 @@
 import Otbar from "../../components/Agents/Otbar";
-import { FaPlus } from "react-icons/fa";
+import { FaHeadphones, FaPlay, FaPlus, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { PencilIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
   Typography,
   Button,
   CardBody,
-  Chip,
   CardFooter,
-  IconButton,
-  Tooltip,
 } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
+import CampagneService from "../../Services/Campagne.service";
+import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
+import { CampagneInterfce } from "../../Interfaces/CampagneInterface";
+import Spinner from "../../components/Spinner";
 
 const ViewCampagne = () => {
+  const [prospect, setProspect] = useState<CampagneInterfce[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const config: RepositoryConfigInterface = {
+    appConfig: {},
+    dialog: {},
+  };
+
+  const serviceCampgne = new CampagneService(config);
+
+  const getProspect = async () => {
+    try {
+      const response = await serviceCampgne.getCampagne();
+      setProspect(response.data);
+      setLoading(false)
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+   getProspect();
+  }, []);
   const TABLE_HEAD = [
-    "#",
     "Produit",
     "Titre",
     "Status",
@@ -28,23 +52,13 @@ const ViewCampagne = () => {
     "",
   ];
 
-  const TABLE_ROWS = [
-    {
-      img: "https://docs.material-tailwind.com/img/logos/logo-spotify.svg",
-      name: "Spotify",
-      amount: "$2,500",
-      date: "Wed 3:00pm",
-      status: "paid",
-      account: "visa",
-      accountNumber: "1234",
-      expiry: "06/2026",
-      expirys: "06/2026",
-      expiryss: "06/2026",
-    },
-  ];
+  const handleSearchDette = (event) => {
+    setSearchTerm(event.target.value);
+  };
   return (
     <>
       <Otbar title="Espace Campagne" />
+      <center>{ loading && <Spinner />}</center>
       <div className="flex items-center p-2 justify-between">
         <div className="flex p-4">
           <h1 className="text-[#b3b4b6]">Campagne / </h1>
@@ -67,6 +81,8 @@ const ViewCampagne = () => {
                 type="text"
                 name="email"
                 id="email"
+                value={searchTerm}
+                onChange={handleSearchDette}
                 placeholder="Recherche"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -93,163 +109,118 @@ const ViewCampagne = () => {
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS.map(
-                  (
-                    {
-                      img,
-                      name,
-                      amount,
-                      date,
-                      status,
-                      account,
-                      accountNumber,
-                      expiry,
-                    },
-                    index
-                  ) => {
-                    const isLast = index === TABLE_ROWS.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
-
-                    return (
-                      <tr key={name}>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-bold"
-                            >
-                              {name}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
+              {Array.isArray(prospect) &&
+                  prospect
+                    .filter((data) => {
+                      if (
+                        typeof data.titre !== "string" ||
+                        typeof data.statut !== "string" ||
+                        typeof data.distribue !== "string"
+                      ) {
+                        return false;
+                      }
+                      return (
+                        data.titre
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase()) ||
+                        data.statut
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase()) ||
+                        data.distribue
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase())
+                      );
+                    })
+                    .map((data, index) => (
+                      <tr key={index}>
+                        <td className="p-4">
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {amount}
+                            <center >
+                            <FaUser color="blue" />
+                            <div className="text-blue-500">
+                            {data.produit && data.produit.titre}
+                            </div>
+                            </center>
+                           
                           </Typography>
                         </td>
-                        <td className={classes}>
+                        <td className="p-4">
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {date}
+                            {data.titre}
                           </Typography>
                         </td>
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Chip
-                              size="sm"
-                              variant="ghost"
-                              value={status}
-                              color={
-                                status === "paid"
-                                  ? "green"
-                                  : status === "pending"
-                                  ? "amber"
-                                  : "red"
-                              }
-                            />
-                          </div>
+                        <td className="p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {data.statut === "1" && <p className="border rounded-[10px] p-1 bg-gray-500 text-white inline-block border-gray-600">Nouvelle</p>}
+                            {data.statut === "0" && <p className="border rounded-[10px] p-1 bg-green-600 text-white inline-block border-green-600">Terminé</p>}
+                            {data.statut === "2" && <p className="border rounded-[10px] p-1 bg-orange-600 text-white inline-block border-orange-600">Distribution</p>}
+                          </Typography>
                         </td>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal capitalize"
-                              >
-                                {account.split("-").join(" ")} {accountNumber}
-                              </Typography>
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal opacity-70"
-                              >
-                                {expiry}
-                              </Typography>
-                            </div>
-                          </div>
+                        <td className="font-normal  p-4">
+                        <p className="border text-[10px] rounded-[10px] p-1 bg-gray-500 text-white inline-block border-gray-600">Nouvelle : {data.nouveau}</p><br />
+                        <p className="border text-[10px] rounded-[10px] p-1 bg-yellow-500 text-white inline-block border-yellow-600">NRP : {data.nrp}</p><br />
+                        <p className="border text-[10px] rounded-[10px] p-1 bg-green-500 text-white inline-block border-green-600">RDV : {data.rdv}</p><br />
+                        <p className="border text-[10px] rounded-[10px] p-1 bg-red-500 text-white inline-block border-red-600">Non valide : {data.nonvalide}</p><br />
+                        <p className="border text-[10px] rounded-[10px] p-1 bg-orange-500 text-white inline-block border-orange-600">Non valide : {data.nonvalide}</p>
                         </td>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal capitalize"
-                              >
-                                {account.split("-").join(" ")} {accountNumber}
-                              </Typography>
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal opacity-70"
-                              >
-                                {expiry}
-                              </Typography>
-                            </div>
-                          </div>
+                        <td className="p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                           {data.total}
+                          </Typography>
                         </td>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal capitalize"
-                              >
-                                {account.split("-").join(" ")} {accountNumber}
-                              </Typography>
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal opacity-70"
-                              >
-                                {expiry}
-                              </Typography>
-                            </div>
-                          </div>
+                        <td className="p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                           {data.distribue}
+                          </Typography>
                         </td>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal capitalize"
-                              >
-                                {account.split("-").join(" ")} {accountNumber}
-                              </Typography>
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal opacity-70"
-                              >
-                                {expiry}
-                              </Typography>
-                            </div>
-                          </div>
+                        <td className="p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                           {data.restant}
+                          </Typography>
                         </td>
-                        <td className={classes}>
-                          <Tooltip content="Edit User">
-                            <IconButton variant="text">
-                              <PencilIcon className="h-4 w-4" />
-                            </IconButton>
-                          </Tooltip>
+                        <td className="p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                           <div className="flex items-center">
+                             <div className="border border-green-500 bg-green-500 p-3 rounded-l-xl">
+                             <FaPlay color="white" />
+                             </div>
+                             <div className="border border-orange-100 bg-orange-200 p-3 rounded-r-xl">
+                             <FaHeadphones color="orange" />
+                             </div>
+                           </div>
+                          </Typography>
                         </td>
+                        
                       </tr>
-                    );
-                  }
-                )}
+                    ))}
               </tbody>
             </table>
           </CardBody>

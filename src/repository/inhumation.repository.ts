@@ -20,7 +20,7 @@ abstract class Repository<T> {
   putFind$(uri: string | undefined, data?: object): Promise<T[] | T | object> {
     return axiosClient.put(`${uri}`, data)
     .catch(error => {
-      if (error.response.status != 403 || error.response.status != 500) {
+      if (error.response.status != 401 || error.response.status != 500) {
          alert(error.response.data.message)
       }
       throw error;
@@ -30,7 +30,7 @@ abstract class Repository<T> {
   postFind$(uri: string, data?: object): Promise<AxiosResponse<T>> {
     return axiosClient.post<T>(`${uri}`, data)
     .catch(error => {
-      if (error.response.status !== 403 || error.response.status !== 500) {
+      if (error.response.status !== 401 || error.response.status !== 500) {
           toast.error(`${error.response.data.message}`)
       }
       throw error;
@@ -41,7 +41,7 @@ abstract class Repository<T> {
     return axiosClient.get(`${uri}`)
     .then(response => response.data)
     .catch(error => {
-       if (error.response.status!= 403 || error.response.status!= 500) {
+       if (error.response.status!= 401 || error.response.status!= 500) {
          alert(error.response.data.message)
        }
        throw error;
@@ -52,7 +52,7 @@ abstract class Repository<T> {
     return axiosClient.post(`${uri}`, data)
     .then(response => response.data)
     .catch(error => {
-       if (error.response.status!= 403 || error.response.status!= 500) {
+       if (error.response.status!= 401 || error.response.status!= 500) {
          alert(error.response.data.message)
        }
        throw error;
@@ -63,7 +63,7 @@ abstract class Repository<T> {
     return axiosClient.put(`${uri}`, data)
     .then(response => response.data)
     .catch(error => {
-       if (error.response.status!= 403 || error.response.status!= 500) {
+       if (error.response.status!= 401 || error.response.status!= 500) {
          alert(error.response.data.message)
        }
        throw error;
@@ -74,7 +74,7 @@ abstract class Repository<T> {
     return axiosClient.delete(`${uri}`)
     .then(response => response.data)
     .catch(error => {
-       if (error.response.status!= 403 || error.response.status!= 500) {
+       if (error.response.status!= 401 || error.response.status!= 500) {
          alert(error.response.data.message)
        }
        throw error;
@@ -85,7 +85,7 @@ abstract class Repository<T> {
     return axiosClient.patch(`${uri}`, data)
     .then(response => response.data)
     .catch(error => {
-       if (error.response.status!= 403 || error.response.status!= 500) {
+       if (error.response.status!= 401 || error.response.status!= 500) {
          alert(error.response.data.message)
        }
        throw error;

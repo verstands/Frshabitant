@@ -5,17 +5,18 @@ import {
   Typography,
   CardBody,
 } from "@material-tailwind/react";
-import { RoleInterface } from "../../Interfaces/RoleInterface";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
-import RoleService from "../../Services/Role.service";
-import Spinner from "../../components/Spinner";
 import hasAccess from "../../components/hasAcess";
+import { ScriptInterface } from "../../Interfaces/ScriptInterface";
+import ScriptService from "../../Services/Script.service";
+import { Link } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
+import Spinner from "../../components/Spinner";
 
 const ScriptTable = () => {
     const [searchTerm, setSearchTerm] = useState("");
-    const [role, setRole] = useState<RoleInterface[] | null>(null);
+    const [role, setRole] = useState<ScriptInterface[] | null>(null);
     const [loading, setLoading] = useState(true);
-    let numero = 1;
 
     const config: RepositoryConfigInterface = {
         appConfig: {},
@@ -28,21 +29,27 @@ const ScriptTable = () => {
 
     const getRoles = async () => {
         try {
-          const response = await RoleServices.getRole();
+          const response = await RoleServices.getScript();
           setRole(response.data);
         } catch (error: unknown) {
           console.log(error);
         }
       };
 
-  const RoleServices = new RoleService(config);
+  const RoleServices = new ScriptService(config);
 
   useEffect(() => {
     getRoles();
     setLoading(false);
   }, []);
 
-  const TABLE_HEAD = ["N°","Titre","Contenu", "Position", "Action"];
+  const TABLE_HEAD = ["Titre","Contenu", "Produit", "Action"];
+
+  const removeHtmlTags = (text: string) => {
+    const tempElement = document.createElement("div");
+    tempElement.innerHTML = text;
+    return tempElement.textContent || tempElement.innerText || "";
+  };
 
   return (
     <>
@@ -83,8 +90,71 @@ const ScriptTable = () => {
                 </tr>
               </thead>
               <tbody>
-              
-              </tbody>
+              {Array.isArray(role) &&
+                role
+                  .filter((data) => {
+                    if (
+                      typeof data.contenue !== "string" ||
+                      typeof data.position !== "string" ||
+                      typeof data.titre !== "string"
+                    ) {
+                      return false;
+                    }
+                    return (
+                      data.contenue
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      data.position
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      data.titre
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    );
+                  })
+                  .map((data, index) => (
+                    <tr key={index}>
+                      <td className="p-4 font-bold">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-bold"
+                        >
+                          {data.titre}
+                        </Typography>
+                      </td>
+                      <td className="p-4 ">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-bold"
+                        >
+                          {removeHtmlTags(data.contenue).slice(0, 50)}...
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-bold"
+                        >
+                          {data.position}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          <Link to={`/scriptupdate/${data.id}`} className=" inline-block p-2 border border-blue-500 bg-blue-500 rounded-[10px]">
+                          <FaEdit color="white" />
+                          </Link>
+                        </Typography>
+                      </td>
+                    </tr>
+                  ))}
+            </tbody>
             </table>
           </CardBody>
         </Card>
