@@ -140,7 +140,7 @@ const SidebarAgent = () => {
               </Link>
             </div>
             <div className="border-[#4aa873]  bg-[#4aa873] p-2 rounded-[50%]">
-              <p className="text-white">+99</p>
+              <p className="text-white text-[10px] font-bold">+99</p>
             </div>
           </div>
           <div className="flex items-center p-2 gap-[15px] py-[15px]">
@@ -159,16 +159,16 @@ const SidebarAgent = () => {
             CONFIGURATION
           </p>
           <div
-            className="flex items-center  p-2 rounded-[10px] border-[#f4f5f9] bg-[#f4f5f9] gap-[15px] py-[5px]"
+            className="flex items-center  p-2 rounded-[10px] border-[#f4f5f9] bg-[#f4f5f9] gap-[12px] py-[5px]"
             onClick={() =>
               setShowDashboardSubMenuConfig(!showDashboardSubMenuConfig)
             }
           >
-            {" "}
+            
             <FaTachometerAlt color="#55565a" />
             <NavLink
               to="#"
-              className="font-bold text-[12px] leading-[20px] text-[#55565a]"
+              className="font-bold text-[12px] leading-[10px] text-[#55565a]"
             >
               Parametre
             </NavLink>

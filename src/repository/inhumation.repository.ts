@@ -81,8 +81,8 @@ abstract class Repository<T> {
      });
   }
 
-  patch$(data: T, uri: string | undefined): Promise<T> {
-    return axiosClient.patch(`${uri}`, data)
+  patch$(uri: string): Promise<T> {
+    return axiosClient.put(uri)
     .then(response => response.data)
     .catch(error => {
        if (error.response.status!= 401 || error.response.status!= 500) {
@@ -91,6 +91,7 @@ abstract class Repository<T> {
        throw error;
      });
   }
+
 }
 
 export default Repository;

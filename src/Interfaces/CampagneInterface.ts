@@ -11,4 +11,5 @@ export interface CampagneInterfce {
     distribue: string;
     restant: string;
     produit? : object;
+    statusCounts? : object;
 }

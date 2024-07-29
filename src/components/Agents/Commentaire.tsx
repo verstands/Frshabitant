@@ -1,14 +1,86 @@
-import React, { useState } from "react";
-import { FaClock } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaUserCircle } from "react-icons/fa";
+import { UserInterface } from "../../Interfaces/UserInterface";
+import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
+import CommentaireService from "../../Services/Commentaire.service";
+import { CommenatareInterface } from "../../Interfaces/CommentaireInterface";
+import prospect from "../../pages/Prospect/prospect";
+import { toast } from "react-toastify";
+import Spinner from "../Spinner";
 
 type Tab = "tab1" | "tab2" | "tab3" | "tab4" | "tab5" | "tab6";
 
-const Commentaire: React.FC = () => {
+interface DetailProspectProps {
+  datadata: CommenatareInterface;
+}
+const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
   const [activeTab, setActiveTab] = useState<Tab>("tab1");
+  const [comment, setComment] = useState<string>("");
+  const [comments, setComments] = useState<string[]>([]);
+  const [commentaire, setcommentaire] = useState<CommenatareInterface[] | null>(
+    null
+  );
+
+  const user: UserInterface = JSON.parse(
+    sessionStorage.getItem("user") || "[]"
+  );
+
+  const [loading, setLoading] = useState(true);
+  const [loadingBtn, setLoadingBtn] = useState(false);
+
+  const config: RepositoryConfigInterface = {
+    appConfig: {},
+    dialog: {},
+  };
 
   const handleTabClick = (tab: Tab) => {
     setActiveTab(tab);
   };
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value);
+  };
+
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoadingBtn(true);
+    if (comment.trim()) {
+      const newComment: CommenatareInterface = {
+        id_prospect: `${datadata.id}`,
+        id_user: `${user.id}`,
+        message: comment,
+      };
+      setComments([...comments, comment]);
+      try {
+        await serviceCommentaire.postCommentaire(newComment);
+        setLoadingBtn(false);
+        getCommentaire();
+      } catch (error: unknown) {
+        console.log("Error creating prospect:", error);
+        setLoadingBtn(false);
+      }
+      setComment("");
+    }
+  };
+
+  const getCommentaire = async () => {
+    try {
+      const response = await serviceCommentaire.getCommentaire(
+        user.id,
+        datadata.id
+      );
+      setcommentaire(response.data);
+      setLoading(false);
+    } catch (error: unknown) {
+      console.error("Error fetching comments:", error);
+    }
+  };
+
+  const serviceCommentaire = new CommentaireService(config);
+
+  useEffect(() => {
+    getCommentaire();
+  }, []);
 
   return (
     <div className="border-white  bg-white p-4 rounded-[10px] shadow">
@@ -80,28 +152,97 @@ const Commentaire: React.FC = () => {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
-          {activeTab === "tab1" && <div>
-            <div className='flex items-center'>
-                        <div className='bg-[#56c3ee] rounded-l-[10px] p-7 flex items-center flex-grow-0'>
-                            <FaClock className='text-white' />
-                        </div>
-                        <div className='bg-[#d1e6dd] rounded-r-[10px] p-3 flex-grow'>
-                            <p className='text-[#1d59cc]'><strong>Help #1 </strong>Ces boutons permettent de changer le statut du prospect en 1 clic</p>
-                            <p className='text-[#1d59cc]'><strong>Help #2 </strong>Ex : "RDV" : Change le statut en "RDV", crée un lead, puis passe au prospect suivant </p>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className='mt-6 flex gap-1 items-center'>
-                        <button className='bg-[#f2c231] rounded-[10px] p-2 '>NRP</button>
-                        <button className='bg-[#20b669] rounded-[10px] p-2 text-white'>RDV</button>
-                        <button className='bg-orange-300 rounded-[10px] p-2 text-white'>A rappeler</button>
-                        <button className='bg-[#eb5c56] rounded-[10px] p-2 text-white'>Non valide</button>
-                    </div>
-          </div>}
-          {activeTab === "tab2" && <div>Contenu du Tab 2</div>}
+          {activeTab === "tab1" && (
+            <div className="mt-6 flex gap-1 items-center">
+            <button
+              className="bg-[#f2c231] rounded-[7px] p-2"
+              title="Non repondu"
+            >
+              NRP
+            </button>
+            <button
+              className="bg-[#20b669] rounded-[7px] p-2 text-white"
+              title="Rendez-vous"
+            >
+              RDV
+            </button>
+            <button
+              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+              title="Non valide"
+            >
+              Non valide
+            </button>
+            <button
+              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+              title="Non valide"
+            >
+              Pas interéssé
+            </button>
+            <button
+              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+              title="Non valide"
+            >
+              Ne pas appeller
+            </button>
+            <button
+              className="bg-gray-500 rounded-[7px] p-2 text-white"
+              title="Non valide"
+            >
+              Mauvais numéro
+            </button>
+            <button
+              className="bg-blue-500 rounded-[7px] p-2 text-white"
+              title="Non valide"
+            >
+              Faux lead
+            </button>
+          </div>
+          )}
+          {activeTab === "tab2" && (
+            <div>
+              <h2 className="font-bold">{datadata.nom}</h2>
+              <p>Statut: Nouveau = NRP</p>
+              <p>Compteur NRP: 0 = 1</p>
+              <p>CountNrpTotal : 0 = 1</p>
+            </div>
+          )}
           {activeTab === "tab3" && <div>Contenu du Tab 3</div>}
           {activeTab === "tab4" && <div>Contenu du Tab 4</div>}
-          {activeTab === "tab5" && <div>Contenu du Tab 5</div>}
+          {activeTab === "tab5" && (
+            <div>
+              <div className="mb-4 h-96 overflow-y-scroll ">
+                {commentaire?.map((ab) => (
+                  <div className="flex items-start mb-4">
+                    <div className="bg-indigo-100 p-3 rounded-lg shadow-sm w-full">
+                      <p className="text-gray-700">{ab.message}</p>
+                    </div>
+                    <div className="flex-shrink-0 mr-4">
+                      <FaUserCircle size={30} />
+                    </div>
+                    <br />
+                  </div>
+                ))}
+              </div>
+              <form onSubmit={handleCommentSubmit} className="mb-4">
+                <textarea
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  value={comment}
+                  onChange={handleCommentChange}
+                  placeholder="Écrire un commentaire..."
+                />
+                {loadingBtn ? (
+                  <Spinner />
+                ) : (
+                  <button
+                    type="submit"
+                    className="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+                  >
+                    Soumettre
+                  </button>
+                )}
+              </form>
+            </div>
+          )}
           {activeTab === "tab6" && <div>Contenu du Tab 6</div>}
         </div>
       </div>

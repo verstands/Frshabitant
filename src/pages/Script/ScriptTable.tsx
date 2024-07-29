@@ -138,7 +138,7 @@ const ScriptTable = () => {
                           color="blue-gray"
                           className="font-bold"
                         >
-                          {data.position}
+                          {data.id_produit?.titre}
                         </Typography>
                       </td>
                       <td className="p-4">

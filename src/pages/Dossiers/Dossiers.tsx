@@ -305,9 +305,6 @@ const Dossiers = () => {
         <div className="p-1">
           <DossierTable />
         </div>
-        <center>
-          <Spinner />
-        </center>
       </div>
         )
       }

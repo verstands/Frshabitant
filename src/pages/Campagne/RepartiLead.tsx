@@ -17,9 +17,11 @@ const RepartiLead = () => {
   const [prospectDistribution, setProspectDistribution] = useState<{ [key: number]: any[] }>({});
   const [remainingProspects, setRemainingProspects] = useState<any[]>([]);
   const [distributedProspects, setDistributedProspects] = useState<{ [key: string]: any[] }>({});
+  const [isDisabled, setIsDisabled] = useState(false);
 
   //partie campgne
   const titreCampagne = sessionStorage.getItem("titre") || "";
+  const typelead = sessionStorage.getItem("lead") || "";
 const produitCampagne = sessionStorage.getItem("produit") || "";
 const totalCampagne = sessionStorage.getItem("selectedProspects");
 
@@ -111,6 +113,7 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
       setProspectDistribution(distribution);
       sessionStorage.setItem("prospectDistribution", JSON.stringify(distribution));
       setDataMapping([]);
+      setIsDisabled(true);
     }
   };
 
@@ -132,6 +135,7 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
                 adresse: '0', 
                 ville: '0', 
                 codepostal: '0',
+                status: '0',
                 surface: "0",
                 id_typechauffage:  String(prospect[5] || ''),
                 id_typerevenu:  String(prospect[2] || ''),
@@ -139,6 +143,7 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
                 code:  String(prospect[0] || ''),
                 id_campagne:  String(idCampagne),
                 id_produit:  String(produitCampagne),
+                typelead:  String(typelead),
               };
             console.log(prospectToSave)
           try {
@@ -190,6 +195,7 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
                 </h6>
                 <button className="border p-3 rounded-[12px] border-blue-600 bg-blue-600 text-center text-white"
                  onClick={handleRepartitionTotale}
+                 disabled={isDisabled}
                 >
                   Répartition Totale
                 </button>

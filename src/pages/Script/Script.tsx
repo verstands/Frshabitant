@@ -41,7 +41,7 @@ const Script = () => {
 
   const getTypeProduit = async () => {
     try {
-      const response = await serviceTypeProduitt.getTypeProduit;
+      const response = await serviceTypeProduitt.getTypeProduit();
       settyproduit(response.data);
     } catch (error: unknown) {
       console.log(error);

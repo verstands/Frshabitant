@@ -17,7 +17,7 @@ const Dashboad = () => {
   return (
     <>
       <div className="flex items-center justify-between p-5">
-        <h2 className="text-[25px] font-bold">Mon reseaut habitant</h2>
+        <h2 className="text-[25px] font-bold">Mon reseau habitat</h2>
         <div className="flex items-center">
           <div className="flex mr-1 items-center  text-[12px] font-bold px-4 py-2 rounded shadow">
             <FaKey />

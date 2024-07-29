@@ -13,6 +13,8 @@ export interface ProspectInterface {
     id_typerevenu: string;
     id_campagne: string;
     id_produit: string;
+    status: string;
+    typelead: string;
     id?: string
     agentpospect? : object
     produitpospect?: object 
