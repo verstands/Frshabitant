@@ -3,12 +3,16 @@ import Otbar from "../../components/Agents/Otbar";
 import {
   FaClock,
   FaMicrophone,
+  FaMicrophoneSlash,
+  FaPause,
   FaPencilAlt,
+  FaPhone,
   FaPhoneAlt,
   FaPhoneSlash,
   FaTimes,
   FaUser,
   FaUserPlus,
+  FaUsers,
   FaVideo,
 } from "react-icons/fa";
 import Discours from "../../components/Agents/Discours";
@@ -30,9 +34,11 @@ const Appels: React.FC = () => {
   const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
+  const { idcampagne } = useParams<{ id: string }>();
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isOpenPhone, setIsOpenPhone] = useState(false);
+  const [isOpenPhoneRdv, setIsOpenPhoneRdv] = useState(false);
 
   const idprospect = prospect?.id;
 
@@ -47,6 +53,21 @@ const Appels: React.FC = () => {
     id_postect: idprospect,
     id_user: `${user.id}`,
   });
+
+  //pour les appels
+  const [isMuted, setIsMuted] = useState(false);
+  const [started, setStarted] = useState(0);
+  const [callStartTime, setCallStartTime] = useState<Date | null>(null);
+  const [callTimer, setCallTimer] = useState<number | null>(null);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [callDuration, setCallDuration] = useState("");
+
+  const callButtonText = "Call";
+  const hangupButtonText = "Hangup";
+  const callButtonColor = "#43b61b";
+  const hangupButtonColor = "#e83232";
+  const muteButtonText = "Mute";
+  const muteButtonColor = "#ffa500";
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -78,6 +99,20 @@ const Appels: React.FC = () => {
     }
   };
 
+  const getProspectIdCampagne = async () => {
+    try {
+      const response = await serviceProspect.getOneCampagne(idcampagne!);
+      setProspect(response.data);
+      setLoading(false);
+      setAgenda({
+        ...agenda,
+        id_postect: response.data.id,
+      });
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
   const getProspectNonId = async () => {
     try {
       const response = await serviceProspect.getOne();
@@ -87,6 +122,7 @@ const Appels: React.FC = () => {
         ...agenda,
         id_postect: response.data.id,
       });
+      setIsOpenPhone(true);
     } catch (error: unknown) {
       console.log(error);
     }
@@ -117,12 +153,7 @@ const Appels: React.FC = () => {
   const BtnNRP = async (ids: string) => {
     try {
       const response = await serviceProspect.updataNRP(ids);
-      if (id) {
-        getProspectId();
-      } else {
-        getProspectNonId();
-      }
-      toast.success(response.message);
+      window.location.reload();
       handleToggleModal();
     } catch (error: unknown) {
       console.log(error);
@@ -132,12 +163,7 @@ const Appels: React.FC = () => {
   const BtnNOnValide = async (ids: string) => {
     try {
       const response = await serviceProspect.updataNonValide(ids);
-      if (id) {
-        getProspectId();
-      } else {
-        getProspectNonId();
-      }
-      toast.success(response.message);
+      window.location.reload();
       handleToggleModal();
     } catch (error: unknown) {
       console.log(error);
@@ -147,12 +173,7 @@ const Appels: React.FC = () => {
   const BtnRDV = async (ids: string) => {
     try {
       const response = await serviceProspect.updataRDV(ids);
-      if (id) {
-        getProspectId();
-      } else {
-        getProspectNonId();
-      }
-      toast.success(response.message);
+      window.location.reload();
       handleToggleModal();
     } catch (error: unknown) {
       console.log(error);
@@ -161,12 +182,7 @@ const Appels: React.FC = () => {
   const BtnPasInteresse = async (ids: string) => {
     try {
       const response = await serviceProspect.updataPasInteresse(ids);
-      if (id) {
-        getProspectId();
-      } else {
-        getProspectNonId();
-      }
-      toast.success(response.message);
+      window.location.reload();
       handleToggleModal();
     } catch (error: unknown) {
       console.log(error);
@@ -176,12 +192,7 @@ const Appels: React.FC = () => {
   const BtnNPP = async (ids: string) => {
     try {
       const response = await serviceProspect.updataNPP(ids);
-      if (id) {
-        getProspectId();
-      } else {
-        getProspectNonId();
-      }
-      toast.success(response.message);
+      window.location.reload();
       handleToggleModal();
     } catch (error: unknown) {
       console.log(error);
@@ -191,12 +202,7 @@ const Appels: React.FC = () => {
   const BtnMN = async (ids: string) => {
     try {
       const response = await serviceProspect.updataMN(ids);
-      if (id) {
-        getProspectId();
-      } else {
-        getProspectNonId();
-      }
-      toast.success(response.message);
+      window.location.reload();
       handleToggleModal();
     } catch (error: unknown) {
       console.log(error);
@@ -206,12 +212,7 @@ const Appels: React.FC = () => {
   const BtnFL = async (ids: string) => {
     try {
       const response = await serviceProspect.updataFL(ids);
-      if (id) {
-        getProspectId();
-      } else {
-        getProspectNonId();
-      }
-      toast.success(response.message);
+      window.location.reload();
       handleToggleModal();
     } catch (error: unknown) {
       console.log(error);
@@ -222,11 +223,157 @@ const Appels: React.FC = () => {
   useEffect(() => {
     if (id) {
       getProspectId();
-    } else {
+    }else if(idcampagne){
+      getProspectIdCampagne();
+    }
+     else {
       getProspectNonId();
     }
+  
+    const script = document.createElement("script");
+    script.src = "/webphone/webphone_api.js";
+    script.async = true;
+  
+    script.onload = () => {
+      (window as any).webphone_api.parameters = {
+        serveraddress: "188.165.55.170",
+        username: "8019",
+        password: "goautodial",
+      };
+  
+      /*(window as any).webphone_api.onRegistered = () => {
+        console.log("Webphone registered successfully");
+        setStarted(2);
+      };
+  
+      (window as any).webphone_api.onError = (error: any) => {
+        console.error("Webphone error: ", error);
+        displayStatus("ERROR: " + error);
+      };
+  
+      (window as any).webphone_api.onCallStateChange((status: string) => {
+        if (status === "setup") {
+          setButtonState(true);
+        } else if (status === "connected") {
+          setCallStartTime(new Date());
+          startCallTimer();
+          displayStatus("Call connected");
+        } else if (status === "disconnected") {
+          stopCallTimer();
+          displayFinalCallDuration();
+          setButtonState(false);
+          resetMuteButton();
+        }
+      });*/
+  
+      if (prospect?.telephone) {
+        makeCall(); 
+      }
+  
+      (window as any).webphone_api.start();
+    };
+  
+    document.body.appendChild(script);
+  
+    return () => {
+      document.body.removeChild(script);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, prospect?.telephone]);
+  
+
+  const makeCall = () => {
+    const number = prospect?.telephone
+    if (number) {
+      if (webphone_api.isincall()) {
+        webphone_api.hangup();
+        alert(number)
+      } else {
+        webphone_api.call(number);
+      }
+    } else {
+      alert("Please enter a phone number.");
+    }
+  };
+
+  const toggleMute = () => {
+    if (isMuted) {
+      webphone_api.setparameter("enablemicrophone", true);
+      setIsMuted(false);
+    } else {
+      webphone_api.setparameter("enablemicrophone", false);
+      setIsMuted(true);
+    }
+  };
+
+  const setButtonState = (isInCall: boolean) => {
+    const callButton = document.getElementById(
+      "callButton"
+    ) as HTMLButtonElement;
+    const muteButton = document.getElementById(
+      "muteButton"
+    ) as HTMLButtonElement;
+
+    if (isInCall) {
+      callButton.innerHTML = hangupButtonText;
+      callButton.style.backgroundColor = hangupButtonColor;
+      muteButton.style.display = "inline-block";
+    } else {
+      callButton.innerHTML = callButtonText;
+      callButton.style.backgroundColor = callButtonColor;
+      muteButton.style.display = "none";
+    }
+  };
+
+  const resetMuteButton = () => {
+    const muteButton = document.getElementById(
+      "muteButton"
+    ) as HTMLButtonElement;
+    setIsMuted(false);
+    muteButton.innerHTML = muteButtonText;
+    muteButton.style.backgroundColor = muteButtonColor;
+  };
+
+  const displayStatus = (message: string) => {
+    setStatusMessage(message);
+  };
+
+  const startCallTimer = () => {
+    setCallTimer(
+      window.setInterval(() => {
+        if (callStartTime) {
+          const now = new Date();
+          const duration = Math.floor(
+            (now.getTime() - callStartTime.getTime()) / 1000
+          );
+          setCallDuration(formatDuration(duration));
+        }
+      }, 1000)
+    );
+  };
+
+  const stopCallTimer = () => {
+    if (callTimer) {
+      clearInterval(callTimer);
+      setCallTimer(null);
+    }
+  };
+
+  const displayFinalCallDuration = () => {
+    if (callStartTime) {
+      const now = new Date();
+      const duration = Math.floor(
+        (now.getTime() - callStartTime.getTime()) / 1000
+      );
+      setCallDuration("Final call duration: " + formatDuration(duration));
+    }
+  };
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return mins + "m " + secs + "s";
+  };
 
   const appel = () => {
     Swal.fire({
@@ -237,6 +384,12 @@ const Appels: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         handleToggleModal();
+        if(!isOpenPhone){
+          if (prospect?.telephone) {
+            makeCall(); 
+            startCallTimer();
+          }
+        }
       }
     });
   };
@@ -244,38 +397,59 @@ const Appels: React.FC = () => {
   const handleToggleModal = () => {
     setIsOpenPhone(!isOpenPhone);
   };
+
+  const handleToggleModalRdv = () => {
+    setIsOpenPhoneRdv(!isOpenPhoneRdv);
+  };
   return (
     <>
       <Otbar title="Robot d'appel automatique " />
       {isOpenPhone && (
-      <div className="p-4">
-        <div className="bg-red-200 rounded-[10px] p-4 flex-grow shadow-xl">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-3">
-                <p className="font-bold">APPEL EN COURS</p>
-                <span className=" inline-block bg-slate-400 rounded-[50px] p-3 font-bold text-white">
-                  01:10
-                </span>
+        <div className="p-4">
+          <div className="flex flex-col items-center p-5 rounded-xl shadow-lg  relative overflow-hidden bg-gradient-to-r from-blue-500 to-pink-500 bg-[length:200%_200%] animate-[gradientAnimation_10s_ease_infinite]">
+            <div className="text-center mb-4 text-white">
+              <div className="text-xl font-bold mb-1">{prospect.nom}</div>
+              <div className="text-lg font-normal text-blue-100">
+                +{prospect.telephone}
               </div>
             </div>
-            <div className="flex items-center gap-3 ">
-              <button className="bg-gray-700 p-3 rounded-full">
-                <FaMicrophone className="text-white" />
+            <div className="flex items-center mb-4">
+              <div className="text-xl mr-5 font-bold text-white">{callDuration}</div>
+              <div className="px-4 py-2 bg-black bg-opacity-30 rounded-xl text-lg font-semibold animate-[pulsate_1.5s_infinite]">
+                Appel en cours
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 w-full max-w-2xl">
+              <button
+                className="flex items-center justify-center hover:bg-red-500 hover:text-white bg-white w-16 h-16 rounded-full text-2xl transition duration-300 transform hover:scale-110 hover:shadow-lg"
+                aria-label="Raccrocher l'appel"
+                onClick={handleToggleModal}
+              >
+                <FaPhoneSlash />
               </button>
-              <button className="bg-red-600 p-3 rounded-full"  onClick={handleToggleModal}>
-                <FaPhoneSlash className="text-white" />
+              <button
+                className="flex items-center justify-center hover:bg-red-500 hover:text-white bg-white w-16 h-16 rounded-full text-2xl transition duration-300 transform hover:scale-110 hover:shadow-lg"
+                aria-label="Raccrocher l'appel"
+              >
+                <FaMicrophoneSlash />
               </button>
-              <button className="font-bold bg-white p-2 rounded-[8px] flex items-center gap-1 shadow-md">
-                <FaUser /> Transfert
+              <button
+                className="flex items-center justify-center hover:bg-red-500 hover:text-white bg-white w-16 h-16 rounded-full text-2xl transition duration-300 transform hover:scale-110 hover:shadow-lg"
+                aria-label="Transférer l'appel"
+              >
+                <FaUser />
+                <span className="ml-2 hidden">Transfert</span>
               </button>
-              <button className="font-bold bg-white p-2 rounded-[8px] flex items-center gap-1  shadow-md">
-                <FaClock /> Attente
+              <button
+                className="flex items-center justify-center hover:bg-yellow-500 hover:text-white bg-white w-16 h-16 rounded-full text-2xl transition duration-300 transform hover:scale-110 hover:shadow-lg"
+                aria-label="Mettre en attente"
+              >
+                <FaPause />
+                <span className="ml-2 hidden">Attente</span>
               </button>
             </div>
           </div>
         </div>
-      </div>
       )}
       <div className="border-white bg-white p-4 m-3 rounded-[10px] shadow flex items-center justify-between">
         <div
@@ -316,9 +490,7 @@ const Appels: React.FC = () => {
               <strong>Rendez-vous </strong>- cet appel est un appel programmé
               dans votre agenda
             </p>
-            <p>
-             .
-            </p>
+            <br />
             <button
               className="text-white bg-[#f85153] p-2 rounded-[8px]"
               onClick={toggleModal}
@@ -357,7 +529,7 @@ const Appels: React.FC = () => {
             <button
               className="bg-[#20b669] rounded-[7px] p-2 text-white"
               title="Rendez-vous"
-              onClick={() => BtnRDV(prospect?.id)}
+              onClick={() => handleToggleModalRdv()}
             >
               RDV
             </button>
@@ -453,6 +625,42 @@ const Appels: React.FC = () => {
               </div>
             </div>
           </form>
+        </div>
+      )}
+
+      {isOpenPhoneRdv && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 max-w-lg">
+            <br />
+            <div>
+              <label
+                htmlFor="email"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+              >
+                Commentaire
+              </label>
+              <textarea
+                name=""
+                id=""
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              ></textarea>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+                onClick={handleToggleModalRdv}
+              >
+                Annuler
+              </button>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded"
+                type="submit"
+                onClick={() => BtnRDV(prospect?.id)}
+              >
+                Valider
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

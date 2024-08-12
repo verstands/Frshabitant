@@ -1,5 +1,5 @@
 export interface TypeChauffageInterface {
-    id: number;
+    id?: number;
     intitule: string;
 }
   

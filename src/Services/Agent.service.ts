@@ -1,6 +1,7 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
 import { UserInterface } from '../Interfaces/UserInterface';
+import { toast } from 'react-toastify';
 
 class AgentService<T> extends Repository<T> {
   constructor(config: RepositoryConfigInterface) {
@@ -22,7 +23,17 @@ class AgentService<T> extends Repository<T> {
       const response = await this.find$('agent');
       return response;
     } catch (error: any) {
-      console.error('Error during login request:', error.message);
+      toast.error(error.response.message);
+      throw error;
+    }
+  }
+
+  async resetPassword(email: string, newPassword: string): Promise<any> {
+    try {
+      const response = await this.updates$({ newPassword }, `auth/reset-password/${email}`);
+      return response;
+    } catch (error: any) {
+      console.error('Error during password reset request:', error.message);
       throw error;
     }
   }

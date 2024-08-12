@@ -43,6 +43,7 @@ const Prospect = () => {
     id_user: `${user.id}`,
     code: "0",
     id_campagne: "",
+    typelead: "",
     id_produit: "",
   });
 

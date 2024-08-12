@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const instance = axios.create({
   baseURL: 'http://localhost:4000/api/', 
@@ -21,6 +22,7 @@ instance.interceptors.response.use(
   },
   error => {
     if (error.response.status === 401 || error.response.status === 500) {
+      toast.error(error.response.message)
       window.location.href = '/';
     }
     return Promise.reject(error);

@@ -1,25 +1,59 @@
 import { FaEdit, FaEnvelope, FaSms, FaVoicemail } from "react-icons/fa";
 import { ProspectInterface } from "../../Interfaces/ProspectInterface";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import { toast } from "react-toastify";
 import ProspectService from "../../Services/Prospect.service";
 import ReactQuill from "react-quill";
-import { ScriptInterface } from "../../Interfaces/ScriptInterface";
+import TypechauffageService from "../../Services/TypeChauffage.service";
+import { TypeChauffageInterface } from "../../Interfaces/TypeChauffageInterface";
+import { MailInterface } from "../../Interfaces/MailInterface";
+import MailService from "../../Services/Mail.service";
+import Spinner from "../Spinner";
+import ModelMailService from "../../Services/ModelMail.service";
+import { UserInterface } from "../../Interfaces/UserInterface";
+import { ModelMailInterface } from "../../Interfaces/ModelMailInterface";
+import Select, { SingleValue } from "react-select";
 
 interface DetailProspectProps {
   data: ProspectInterface;
 }
 
+interface SelectOption {
+  value: string;
+  label: string;
+  id: string;
+}
+
 const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
   const [prospect, setProspect] = useState<ProspectInterface>(data);
+  const [modelMailData, setmodelMailData] = useState<ModelMailInterface>(data);
   const [loadingBtn, setLoadingBtn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState<ScriptInterface>({
-    titre: "",
-    contenue: "",
-    position: "",
+  const [typechauffage, settypechauffage] = useState<
+    TypeChauffageInterface[] | null
+  >(null);
+  const [modelmail, setmodelmail] = useState<ModelMailInterface[] | null>(null);
+  const [datamail, setdatamail] = useState<MailInterface>({
+    cc: "vide",
+    objet: "",
+    exp: prospect.email,
+    message: "",
+    from: "",
   });
+  const [loading, setLoading] = useState(false);
+
+  const user: UserInterface = JSON.parse(
+    sessionStorage.getItem("user") || "[]"
+  );
+
+  const handleChangeMail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setdatamail((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const config: RepositoryConfigInterface = {
     appConfig: {},
@@ -38,6 +72,7 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
   };
 
   const serviceCommentaire = new ProspectService(config);
+  const serviceModelMail = new ModelMailService(config);
 
   const handleCommentSubmitUpdata = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +97,7 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
     try {
       await serviceCommentaire.updateProspect(String(data.id), newComment);
       setLoadingBtn(false);
+      window.location.reload();
       toast.success("modification a été fait avec success !!!");
     } catch (error: unknown) {
       console.log("Error creating prospect:", error);
@@ -103,11 +139,86 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
   ];
 
   const handleDescriptionChange = (value: string) => {
-    setUserInfo((prevState) => ({
+    setdatamail((prevState) => ({
       ...prevState,
-      contenue: value,
+      message: value,
     }));
   };
+  const serviceTypeChauffage = new TypechauffageService(config);
+  const serviceMail = new MailService(config);
+
+  const getTypeChauffage = async () => {
+    try {
+      const response = await serviceTypeChauffage.getTypeChauffages();
+      settypechauffage(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    console.log(datamail);
+    const response = await serviceMail.postMail(datamail);
+    setLoading(false);
+    setIsOpen(false);
+    toast.success(response.data.message);
+    try {
+      setLoading(false);
+      setIsOpen(false);
+    } catch (error: unknown) {
+      console.error("Unexpected error:", error);
+      setLoading(false);
+    }
+  };
+
+  serviceModelMail;
+  const getModelMailMail = async () => {
+    try {
+      const response = await serviceModelMail.getModelmailMail(
+        String(prospect.id_campagne),
+        String(user.id_fonction)
+      );
+      setmodelmail(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  const handleModelChange = async (
+    selectedOption: SingleValue<SelectOption>
+  ) => {
+    if (selectedOption) {
+      try {
+        const response = await serviceModelMail.getModelmailId(
+          selectedOption.id
+        );
+        setmodelMailData(response.data);
+        setdatamail((prevState) => ({
+          ...prevState,
+          objet: response.data.sujet,
+          message: response.data.contenue,
+          from: response.data.emailexp,
+        }));
+      } catch (error: unknown) {
+        console.log(error);
+      }
+    }
+  };
+
+  const modelOptions = modelmail?.map((model) => ({
+    value: model.id,
+    label: model.nom,
+    id: model.id,
+  }));
+
+  useEffect(() => {
+    if (modelMailData) {
+      console.log(modelMailData); // Affiche les données mises à jour dans la console
+    }
+    getTypeChauffage();
+    getModelMailMail();
+  }, [modelMailData]);
   return (
     <>
       <div className="border-white  bg-white p-4 rounded-[10px] shadow">
@@ -274,16 +385,19 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
             >
-              Type de chauffage
+              typechauffage
             </label>
-            <input
-              type="text"
+            <select
               name="id_typechauffage"
               id="id_typechauffage"
-              value={prospect.id_typechauffage}
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
+            >
+              <option value="">{prospect.id_typechauffage}</option>
+              {typechauffage?.map((e) => (
+                <option value={e.intitule}>{e.intitule}</option>
+              ))}
+            </select>
           </div>
           <div>
             <label
@@ -306,109 +420,124 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
       <br />
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
-            <h3 className="text-2xl font-bold">Mail</h3>
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="bg-white p-8 rounded-lg shadow-lg z-10 max-w-xl w-full">
+            <h3 className="text-2xl font-bold b-2">Mail</h3>
             <hr />
-            <br />
+            <div className="grid grid-cols-1 gap-2">
+              <div>
+                <label
+                  htmlFor="modelSelect"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                >
+                  Modele: <span className="text-red-500">*</span>
+                </label>
+                <Select
+                  id="modelSelect"
+                  options={modelOptions}
+                  onChange={handleModelChange}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+            </div>
+            <hr />
+
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="id_typerevenu_from"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                 >
                   De: <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  name="id_typerevenu"
-                  id="id_typerevenu"
+                  name="from"
+                  id="id_typerevenu_from"
+                  value={datamail.from}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="id_typerevenu_objet"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                >
+                  Objet: <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="objet"
+                  id="id_typerevenu_objet"
+                  value={datamail.objet}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="id_typerevenu_to"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                >
+                  A: <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="to"
+                  id="id_typerevenu_to"
                   value={prospect.email}
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="id_typerevenu_cc"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                 >
-                  <span className="text-red-500">.</span>
+                  Cc: <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  name="id_typerevenu"
-                  id="id_typerevenu"
-                  value={prospect.email}
+                  name="cc"
+                  id="id_typerevenu_cc"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
             </div>
-            <div>
+            <div className="form-group col-md-12 h-96 overflow-y-scroll">
               <label
-                htmlFor="email"
+                htmlFor="description"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
               >
-                Objet: <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="id_typerevenu"
-                id="id_typerevenu"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="email"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-              >
-                A: <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="id_typerevenu"
-                id="id_typerevenu"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="email"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-              >
-                Cc: <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="id_typerevenu"
-                id="id_typerevenu"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-            </div>
-            <div className="form-group col-md-12 editor">
-              <label className="font-weight-bold">
-                Description <span className="required"> * </span>
+                Description: <span className="text-red-500">*</span>
               </label>
               <ReactQuill
                 theme="snow"
-                value={userInfo.contenue}
-                onChange={handleDescriptionChange}
+                value={datamail.message}
+                // onChange={handleDescriptionChange}
                 placeholder={"Ecrire un message..."}
                 modules={modules}
                 formats={formats}
               />
             </div>
-            <div className="pt-3 flex items-center gap-2 float-end">
-            <button
+            <div className="flex items-center py-4 gap-2 float-end">
+              <button
                 className="bg-red-500 p-2 pt-1 rounded-[5px] text-white flex items-center gap-1"
                 onClick={toggleModal}
               >
                 Fermer
               </button>
-              <button className="bg-[#1d59cc] p-2 pt-1 rounded-[5px] text-white flex items-center gap-1">
-                <FaEnvelope />
-                Envoyer
-              </button>
+              {loading ? (
+                <Spinner />
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  className="bg-[#1d59cc] p-2 pt-1 rounded-[5px] text-white flex items-center gap-1"
+                >
+                  <FaEnvelope />
+                  Envoyer
+                </button>
+              )}
             </div>
           </div>
         </div>

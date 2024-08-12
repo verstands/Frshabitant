@@ -1,15 +1,15 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
+import { RoleInterface } from '../Interfaces/RoleInterface';
 
 class RoleUserService<T> extends Repository<T> {
   constructor(config: RepositoryConfigInterface) {
     super(config);
   }
 
-  async postRoleUser(id_user: string, id_role: string): Promise<T> {
-    const requestBody = { id_user, id_role };
+  async postRoleUser(data : RoleInterface): Promise<T> {
     try {
-      const response = await this.postFind$('accerole', requestBody);
+      const response = await this.postFind$('accerole', data);
       return response.data;
     } catch (error: any) {
       console.error('Error during login request:', error.message);

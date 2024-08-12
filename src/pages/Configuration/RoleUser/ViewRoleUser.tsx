@@ -16,7 +16,7 @@ const ViewRoleUser = () => {
         <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
           {hasAccess("create") && (
             <Link
-              to=""
+              to="/createRoleUser"
               className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#4aa873] p-3 rounded-[15px] float-right"
             >
               Affecter un utilisateur par un role

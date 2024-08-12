@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import {
@@ -18,6 +18,7 @@ import {
   IconButton,
   Tooltip,
   Input,
+  button,
 } from "@material-tailwind/react";
 import AgentService from "../../../Services/Agent.service";
 import { RepositoryConfigInterface } from "../../../Interfaces/RepositoryConfig.interface";
@@ -29,6 +30,7 @@ const TableUser = () => {
   const [agent, setAgent] = useState<UserInterface[] | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  let number = 1;
 
   const config: RepositoryConfigInterface = {
     appConfig: {},
@@ -55,7 +57,15 @@ const TableUser = () => {
     setSearchTerm(event.target.value);
   };
 
-  const TABLE_HEAD = ["Nom", "Prenom", "Email", "Type", "Active", "Action"];
+  const TABLE_HEAD = [
+    "N°",
+    "Nom",
+    "Prenom",
+    "Email",
+    "Fonction",
+    "Active",
+    "Action",
+  ];
   return (
     <>
       <div className="">
@@ -124,6 +134,15 @@ const TableUser = () => {
                             color="blue-gray"
                             className="font-normal font-bold"
                           >
+                            {number++}
+                          </Typography>
+                        </td>
+                        <td className="p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal font-bold"
+                          >
                             {data.nom}
                           </Typography>
                         </td>
@@ -151,22 +170,47 @@ const TableUser = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {data.statut}
+                            {data.fonction?.initule}
                           </Typography>
                         </td>
+                      
                         <td className="font-normal  p-4">
-                          <div className="border rounded-[10px] p-1 bg-green-600 text-white inline-block border-green-600">
-                            Oui
-                          </div>
+                          {data.statut === "1" ? (
+                            <div>
+                              <label className="inline-flex items-center me-5 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  value=""
+                                  className="sr-only peer"
+                                  checked
+                                />
+                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                              </label>
+                            </div>
+                          ) : (
+                            <div>
+                              <label className="inline-flex items-center me-5 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  value=""
+                                  className="sr-only peer"
+                                />
+                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                              </label>
+                            </div>
+                          )}
                         </td>
-                        <td className="p-4">
-                          {
-                             hasAccess("update") && (
-                              <IconButton className="font flex items-center justify-center bg-blue-600 ">
+                        <td className="p-4 flex gap-2">
+                          {hasAccess("update") && (
+                            <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-blue-500 p-3 rounded-[15px] float-right">
                               <PencilIcon className="w-5 h-5 text-white" />
-                            </IconButton>
-                             )
-                          }
+                            </button>
+                          )}
+                          {hasAccess("delete") && (
+                            <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-red-500 p-3 rounded-[15px] float-right">
+                              <FaTrash className="w-5 h-5 text-white" />
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}

@@ -45,7 +45,6 @@ const ProspectTable = () => {
     "Produit",
     "Nom",
     "Email",
-    "Telephone",
     "Status",
     "Utilisateur",
     "Campagne",
@@ -172,15 +171,7 @@ const ProspectTable = () => {
                           {data.email}
                         </Typography>
                       </td>
-                      <td className="p-4">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {data.telephone}
-                        </Typography>
-                      </td>
+                  
                       <td className="p-4">
                         <Typography
                           variant="small"

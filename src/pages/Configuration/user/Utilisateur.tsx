@@ -10,11 +10,20 @@ import { FonctionInterface } from "../../../Interfaces/FonctionInterface";
 import Spinner from "../../../components/Spinner";
 
 const Utilisateur = () => {
+  const generatePassword = (length: number): string => {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      password += charset[randomIndex];
+    }
+    return password;
+  };
   const [agent, setAgent] = useState<UserInterface>({
     nom: "",
     prenom: "",
     email: "",
-    statut: "0",
+    statut: "1",
     mdp: "",
     id_fonction: "",
   });
@@ -29,36 +38,29 @@ const Utilisateur = () => {
   };
 
   const agntService = new AgentService(config);
-  const serviceFonction = new FonctionService(config);
+  const serviceFonction = new FonctionService(config); 
 
-  const handleAddRow = () => {
-    setRows([...rows, { jour: "", debut: "", fin: "" }]);
-  };
 
-  const handleInputChange = (index: number, field: string, value: string) => {
-    const newRows = rows.map((row, i) =>
-      i === index ? { ...row, [field]: value } : row
-    );
-    setRows(newRows);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setAgent({ ...agent, [name]: value });
+    setAgent((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
-    const response = await agntService.postAgent(agent);
-    setLoading(false);
-    navigate("/viewUser");
+  
     try {
-      setLoading(false);
-    } catch (error: unknown) {
-      console.error("Unexpected error:", error);
-      setLoading(false);
+      const response = await agntService.postAgent(agent);
+      navigate("/viewUser");
+    } catch (error: any) {
+      
+        console.error('Une erreur inconnue est survenue');
+    } finally {
+      setLoading(false); // Assurez-vous que le chargement est arrêté
     }
   };
 
@@ -72,6 +74,12 @@ const Utilisateur = () => {
   };
 
   useEffect(() => {
+    getFonction();
+    const defaultPassword = generatePassword(8);
+    setAgent((prevState) => ({
+      ...prevState,
+      mdp: defaultPassword,
+    }));
     getFonction();
   }, []);
 
@@ -154,7 +162,7 @@ const Utilisateur = () => {
                 </label>
                 <input
                   type="text"
-                  name="mdp"
+                  name="mdps"
                   value={agent.mdp}
                   onChange={handleChange}
                   id="email"
@@ -195,7 +203,7 @@ const Utilisateur = () => {
                 </label>
               </div>
               <hr />
-              <h5 className="font-bold"> Horaires de travail</h5>
+              {/** <h5 className="font-bold"> Horaires de travail</h5>
               <table className="border border-gray-300 bg-gray-300 p-2 rounded-xl">
                 <thead>
                   <th>Jour</th>
@@ -257,6 +265,8 @@ const Utilisateur = () => {
                 </tbody>
               </table>
               <hr />
+              */}
+
             </div>
             <button
               type="reset"

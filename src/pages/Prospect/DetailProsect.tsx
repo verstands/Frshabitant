@@ -5,10 +5,13 @@ import { useParams } from 'react-router-dom';
 import ProspectService from '../../Services/Prospect.service';
 import { RepositoryConfigInterface } from '../../Interfaces/RepositoryConfig.interface';
 import { ProspectInterface } from '../../Interfaces/ProspectInterface';
+import TypechauffageService from '../../Services/TypeChauffage.service';
+import { TypeChauffageInterface } from '../../Interfaces/TypeChauffageInterface';
 
 
 const DetailProsect = () => {
     const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
+    const [typechauffage, settypechauffage] = useState<TypeChauffageInterface[] | null>(null);
     const [loading, setLoading] = useState(true);
     const { id } = useParams<{ id: string }>();
 
@@ -19,11 +22,22 @@ const DetailProsect = () => {
   };
 
   const serviceProspect = new ProspectService(config);
+  const serviceTypeChauffage = new TypechauffageService(config);
 
   const getProspectId = async () => {
     try {
       const response = await serviceProspect.getProspectId(id!);
       setProspect(response.data);
+      setLoading(false);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  const getTypeChauffage = async () => {
+    try {
+      const response = await serviceTypeChauffage.getTypeChauffages(id!);
+      settypechauffage(response.data);
       setLoading(false);
     } catch (error: unknown) {
       console.log(error);
@@ -39,7 +53,7 @@ const DetailProsect = () => {
       <div className="flex items-center p-2 justify-between">
         <div className="flex p-4">
           <h1 className="text-[#b3b4b6]">Prospect / </h1>
-          <h1 className="font-bold"> Detail de prospect : {prospect?.code}</h1>
+          <h1 className="font-bold"> Details de prospect : {prospect?.code}</h1>
         </div>
       </div>
       <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
@@ -169,7 +183,7 @@ const DetailProsect = () => {
                 htmlFor="email"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
               >
-                Type de chauffage
+                Type de chauffagesss
               </label>
               <input
                   type="text"
@@ -210,12 +224,6 @@ const DetailProsect = () => {
                 />
             </div>
           </div>
-          <br />
-          <div>
-              <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-[green] p-3 rounded-[15px]">
-               Modifier <FaEdit />
-              </button>
-            </div>
           <br />
           <hr />
           

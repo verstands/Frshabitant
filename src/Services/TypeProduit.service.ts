@@ -1,15 +1,15 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
+import { TypeProduitInterface } from '../Interfaces/TypeProduitInterface';
 
 class TypeProduitService<T> extends Repository<T> {
   constructor(config: RepositoryConfigInterface) {
     super(config);
   }
 
-  async postTypeProduit(nom: string): Promise<T> {
-    const requestBody = { nom };
+  async postTypeProduit(data: TypeProduitInterface): Promise<T> {
     try {
-      const response = await this.postFind$('typeproduit', requestBody);
+      const response = await this.postFind$('typeproduit', data);
       return response.data;
     } catch (error: any) {
       console.error('Error during login request:', error.message);

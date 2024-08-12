@@ -1,3 +1,4 @@
+import { FaPlus } from "react-icons/fa";
 import Otbar from "../../../components/Agents/Otbar";
 import hasAccess from "../../../components/hasAcess";
 import TableUser from "./TableUser";
@@ -19,7 +20,7 @@ const ViewUser = () => {
             to="/user"
             className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#4aa873] p-3 rounded-[15px] float-right"
           >
-            Creer
+            <FaPlus /> Nouveau utilisateur
           </Link>
         )}
         <div className="py-4"></div>

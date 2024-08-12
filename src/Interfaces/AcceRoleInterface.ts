@@ -1,5 +1,5 @@
 export interface AcceRoleInterface{
-    id: string;
+    id?: string;
     id_user: string
-    id_role: string
+    id_role: string | undefined
 }

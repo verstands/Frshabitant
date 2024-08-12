@@ -9,7 +9,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const MappingTable = () => {
-    const [dataMapping, setDataMapping] = useState([]);
+  const [dataMapping, setDataMapping] = useState([]);
+  const [selectedColumns, setSelectedColumns] = useState({});
   const NomChamps = [
     "Prénom",
     "Nom",
@@ -25,6 +26,14 @@ const MappingTable = () => {
     const dataFromSessionStorage = JSON.parse(sessionStorage.getItem('dataexcel')) || [];
     setDataMapping(dataFromSessionStorage);
   }, []);
+
+  const handleSelectChange = (e, index) => {
+    const { value } = e.target;
+    setSelectedColumns((prevState) => ({
+      ...prevState,
+      [index]: value,
+    }));
+  };
 
   const renderTableHeaders = () => {
     const headers = [];
@@ -43,6 +52,8 @@ const MappingTable = () => {
               name={`select-${i}`}
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500 w-full"
               id={`select-${i}`}
+              value={selectedColumns[i] || ""}
+              onChange={(e) => handleSelectChange(e, i)}
             >
               <option value="">---</option>
               {NomChamps.map((option, index) => (
@@ -162,11 +173,10 @@ const MappingTable = () => {
           </table>
         </CardBody>
         <CardFooter>
-            <center>
-                <Link to="/resultatcampagne" className="border border-blue-600 bg-blue-600 p-2 text-white rounded-xl">Lancer le scan</Link>
-            </center>
+          <center>
+            <Link to="/resultatcampagne" className="border border-blue-600 bg-blue-600 p-2 text-white rounded-xl">Lancer le scan</Link>
+          </center>
         </CardFooter>
-       
       </Card>
     </>
   );

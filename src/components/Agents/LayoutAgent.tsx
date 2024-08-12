@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import SidebarAgent from './SidebarAgent'
 import { useEffect, useState } from 'react';
-
 const LayoutAgent = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -19,7 +18,7 @@ const LayoutAgent = () => {
     return (
     <>
 
-        {windowWidth > 700 ? (
+        {windowWidth > 750 ? (
         <div className="flex">
             <div className="md:basis-[17%] md:h-[100vh] sticky top-0">
                 <SidebarAgent />

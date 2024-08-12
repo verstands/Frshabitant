@@ -31,14 +31,14 @@ const ViewCampagne = () => {
     try {
       const response = await serviceCampgne.getCampagne();
       setProspect(response.data);
-      setLoading(false)
+      setLoading(false);
     } catch (error: unknown) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-   getProspect();
+    getProspect();
   }, []);
   const TABLE_HEAD = [
     "Produit",
@@ -58,7 +58,7 @@ const ViewCampagne = () => {
   return (
     <>
       <Otbar title="Espace Campagne" />
-      <center>{ loading && <Spinner />}</center>
+      <center>{loading && <Spinner />}</center>
       <div className="flex items-center p-2 justify-between">
         <div className="flex p-4">
           <h1 className="text-[#b3b4b6]">Campagne / </h1>
@@ -109,7 +109,7 @@ const ViewCampagne = () => {
                 </tr>
               </thead>
               <tbody>
-              {Array.isArray(prospect) &&
+                {Array.isArray(prospect) &&
                   prospect
                     .filter((data) => {
                       if (
@@ -139,13 +139,12 @@ const ViewCampagne = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            <center >
-                            <FaUser color="blue" />
-                            <div className="text-blue-500">
-                            {data.produit && data.produit.titre}
-                            </div>
+                            <center>
+                              <FaUser color="blue" />
+                              <div className="text-blue-500">
+                                {data.produit && data.produit.titre}
+                              </div>
                             </center>
-                           
                           </Typography>
                         </td>
                         <td className="p-4">
@@ -163,36 +162,51 @@ const ViewCampagne = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {(data.statusCounts?.status1 === "0" &&
-                              data.statusCounts?.status2 === "0" &&
-                              data.statusCounts?.status3 === "0" &&
-                              data.statusCounts?.status4 === "0" &&
-                              data.statusCounts?.status6 === "0" &&
-                              data.statusCounts?.status7 === "0") && (
+                            {data.statusCounts?.status1 === 0 &&
+                            data.statusCounts?.status2 === 0 &&
+                            data.statusCounts?.status3 === 0 &&
+                            data.statusCounts?.status4 === 0 &&
+                            data.statusCounts?.status6 === 0 &&
+                            data.statusCounts?.status5 === 0 &&
+                            data.statusCounts?.status7 === 0 ? (
                               <p className="border rounded-[10px] p-1 bg-gray-500 text-white inline-block border-gray-600">
                                 Nouvelle
                               </p>
-                            )}
-                             {(data.statusCounts?.status1 !== "0" &&
-                              data.statusCounts?.status2 !== "0" &&
-                              data.statusCounts?.status3 !== "0" &&
-                              data.statusCounts?.status4 !== "0" &&
-                              data.statusCounts?.status6 !== "0" &&
-                              data.statusCounts?.status7 !== "0") && (
+                            ) : (
                               <p className="border rounded-[10px] p-1 bg-orange-600 text-white inline-block border-orange-600">
                                 Distribution
                               </p>
                             )}
-                            {data.statut === "2" && <p className="border rounded-[10px] p-1 bg-orange-600 text-white inline-block border-orange-600">Distribution</p>}
                           </Typography>
                         </td>
+
                         <td className="font-normal  p-4">
-                        <p className="border text-[10px] rounded-[10px] p-1 bg-green-500 text-white inline-block border-green-600">RDV : {data.statusCounts?.status1}</p><br />
-                        <p className="border text-[10px] rounded-[10px] p-1 bg-yellow-500 text-white inline-block border-yellow-600">NRP : {data.statusCounts?.status2}</p><br />
-                        <p className="border text-[10px] rounded-[10px] p-1 bg-red-500 text-white inline-block border-red-600">Non valide : {data.statusCounts?.status3}</p><br />
-                        <p className="border text-[10px] rounded-[10px] p-1 bg-red-500 text-white inline-block border-red-600">Pas interessé : {data.statusCounts?.status4}</p><br />
-                        <p className="border text-[10px] rounded-[10px] p-1 bg-orange-500 text-white inline-block border-orange-600">Mauvais numéro : {data.statusCounts?.status6}</p><br />
-                        <p className="border text-[10px] rounded-[10px] p-1 bg-blue-500 text-white inline-block border-blue-600">Faux lead : {data.statusCounts?.status7}</p>
+                          <p className="border text-[10px] rounded-[10px] p-1 bg-green-500 text-white inline-block border-green-600">
+                            RDV : {data.statusCounts?.status1}
+                          </p>
+                          <br />
+                          <p className="border text-[10px] rounded-[10px] p-1 bg-yellow-500 text-white inline-block border-yellow-600">
+                            NRP : {data.statusCounts?.status2}
+                          </p>
+                          <br />
+                          <p className="border text-[10px] rounded-[10px] p-1 bg-red-500 text-white inline-block border-red-600">
+                            Non valide : {data.statusCounts?.status3}
+                          </p>
+                          <br />
+                          <p className="border text-[10px] rounded-[10px] p-1 bg-red-500 text-white inline-block border-red-600">
+                            Pas interessé : {data.statusCounts?.status4}
+                          </p>
+                          <br />
+                          <p className="border text-[10px] rounded-[10px] p-1 bg-orange-500 text-white inline-block border-orange-600">
+                            Mauvais numéro : {data.statusCounts?.status6}
+                          </p>
+                          <br />
+                          <p className="border text-[10px] rounded-[10px] p-1 bg-blue-500 text-white inline-block border-blue-600">
+                            Faux lead : {data.statusCounts?.status7}
+                          </p><br />
+                          <p className="border text-[10px] rounded-[10px] p-1 bg-gray-500 text-white inline-block border-blue-600">
+                            Ne pas appeler : {data.statusCounts?.status5}
+                          </p>
                         </td>
                         <td className="p-4">
                           <Typography
@@ -200,7 +214,7 @@ const ViewCampagne = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                           {data.total}
+                            {data.total}
                           </Typography>
                         </td>
                         <td className="p-4">
@@ -209,7 +223,7 @@ const ViewCampagne = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                           {data.distribue}
+                            {data.distribue}
                           </Typography>
                         </td>
                         <td className="p-4">
@@ -218,15 +232,13 @@ const ViewCampagne = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {
-                              (data.total) -
+                            {data.total -
                               (data.statusCounts?.status1 +
                                 data.statusCounts?.status2 +
                                 data.statusCounts?.status3 +
                                 data.statusCounts?.status4 +
                                 data.statusCounts?.status6 +
-                                data.statusCounts?.status7 )
-                            }
+                                data.statusCounts?.status7)}
                           </Typography>
                         </td>
                         <td className="p-4">
@@ -235,14 +247,17 @@ const ViewCampagne = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                           <div className="flex items-center">
-                             <div className="border border-green-500 bg-green-500 p-3 rounded-l-xl">
-                              <Link to="/appels"> <FaPlay color="white" /></Link>
-                             </div>
-                             <div className="border border-orange-100 bg-orange-200 p-3 rounded-r-xl">
-                             <FaHeadphones color="orange" />
-                             </div>
-                           </div>
+                            <div className="flex items-center">
+                              <div className="border border-green-500 bg-green-500 p-3 rounded-l-xl">
+                                <Link to={`/appels/campagne/${data.id}`}>
+                                  {" "}
+                                  <FaPlay color="white" />
+                                </Link>
+                              </div>
+                              <div className="border border-orange-100 bg-orange-200 p-3 rounded-r-xl">
+                                <FaHeadphones color="orange" />
+                              </div>
+                            </div>
                           </Typography>
                         </td>
                       </tr>

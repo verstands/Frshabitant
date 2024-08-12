@@ -29,6 +29,7 @@ const TypeProduit = ({ produits }: { produits: TypeProduitInterface[] }) => {
 
   useEffect(() => {
     getTypeproduit();
+    
   }, [produits]);
 
   const BtnOnclick = (id: string) =>{

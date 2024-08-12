@@ -1,15 +1,15 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
+import { TypeChauffageInterface } from '../Interfaces/TypeChauffageInterface';
 
 class TypechauffageService<T> extends Repository<T> {
   constructor(config: RepositoryConfigInterface) {
     super(config);
   }
 
-  async postTypeChauffage(nom: string): Promise<T> {
-    const requestBody = { nom };
+  async postTypeChauffage(data: TypeChauffageInterface): Promise<T> {
     try {
-      const response = await this.postFind$('typechauffage', requestBody);
+      const response = await this.postFind$('typechauffage', data);
       return response.data;
     } catch (error: any) {
       console.error('Error during login request:', error.message);

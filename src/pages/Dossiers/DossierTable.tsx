@@ -124,26 +124,16 @@ const DossierTable = () => {
                             className="font-normal"
                           >
                             <div className="flex items-center gap-2">
-                              <input type="checkbox" />
                               <div className="flex items-center">
-                                <div className="border border-green-100 bg-green-100 p-3 rounded-l-xl">
-                                  <Link to={`/appels/${data.id}`}>
-                                    <FaPhone color="green" />
-                                  </Link>
-                                </div>
-                                <div className="border border-green-100 bg-green-100 p-3">
-                                  <Link to="">
-                                    <FaEye color="green" />
-                                  </Link>
-                                </div>
-                                <div className="border border-green-100 bg-green-100  p-3 rounded-r-xl">
-                                  <FaEdit color="green" />
-                                </div>
+                                <Link to={`/detailDossier/${data.id}`}>
+                                  <div className="border border-green-100 bg-green-100  p-3 rounded-xl">
+                                    <FaEdit color="green" />
+                                  </div>
+                                </Link>
                               </div>
                             </div>
                           </Typography>
                         </td>
-
                         <td className="p-4">
                           <Typography
                             variant="small"

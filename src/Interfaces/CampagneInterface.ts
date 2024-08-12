@@ -1,5 +1,6 @@
 export interface CampagneInterfce {  
     titre: string;
+    id? : string;
     id_produit: string;
     statut: string;
     nouveau: string;

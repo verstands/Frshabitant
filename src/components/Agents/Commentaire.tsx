@@ -8,7 +8,7 @@ import prospect from "../../pages/Prospect/prospect";
 import { toast } from "react-toastify";
 import Spinner from "../Spinner";
 
-type Tab = "tab1" | "tab2" | "tab3" | "tab4" | "tab5" | "tab6";
+type Tab = "tab1" | "tab2" | "tab3" | "tab4" | "tab5" | "tab6" | "tab7";
 
 interface DetailProspectProps {
   datadata: CommenatareInterface;
@@ -148,6 +148,16 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
               >
                 Calendrier
               </button>
+              <button
+                onClick={() => handleTabClick("tab7")}
+                className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium ${
+                  activeTab === "tab7"
+                    ? "border-indigo-500 text-indigo-600 bg-indigo-300 rounded-t-[15px]"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                }`}
+              >
+                Pieces Joint
+              </button>
             </nav>
           </div>
         </div>
@@ -244,6 +254,7 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
             </div>
           )}
           {activeTab === "tab6" && <div>Contenu du Tab 6</div>}
+          {activeTab === "tab7" && <div>Contenu du Tab 7</div>}
         </div>
       </div>
     </div>

@@ -136,6 +136,7 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
                 ville: '0', 
                 codepostal: '0',
                 status: '0',
+                statusdossier: '0',
                 surface: "0",
                 id_typechauffage:  String(prospect[5] || ''),
                 id_typerevenu:  String(prospect[2] || ''),

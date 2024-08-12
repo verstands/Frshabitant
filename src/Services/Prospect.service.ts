@@ -37,6 +37,27 @@ class ProspectService<T> extends Repository<T> {
     }
   }
 
+  
+  async getOneCampagne(id:string): Promise<T> {
+    try {
+      const response = await this.find$(`pospect/oneCampagne/oneCampagne/${id}`);
+      return response;
+    } catch (error: any) {
+      console.error('Error during login request:', error.message);
+      throw error;
+    }
+  }
+
+  async getcountNouveau(): Promise<T> {
+    try {
+      const response = await this.find$('pospect/countNouveau/countNouveau');
+      return response;
+    } catch (error: any) {
+      console.error('Error during login request:', error.message);
+      throw error;
+    }
+  }
+
   async getProspectId(id:string): Promise<T> {
     try {
       const response = await this.find$(`pospect/${id}`);

@@ -3,9 +3,92 @@ import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import ProspectTable from "./ProspectTable";
 import hasAccess from "../../components/hasAcess";
+import Select from "react-select";
+import { CampagneInterfce } from "../../Interfaces/CampagneInterface";
+import { useEffect, useState } from "react";
+import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
+import CampagneService from "../../Services/Campagne.service";
+import AgentService from "../../Services/Agent.service";
+import { UserInterface } from "../../Interfaces/UserInterface";
+import { TypeProduitInterface } from "../../Interfaces/TypeProduitInterface";
+import TypeProduitService from "../../Services/TypeProduit.service";
+
 
 const ViewProspect = () => {
+  const [campagne, setCampagne] = useState<CampagneInterfce[] | null>(null);
+  const [user, setUser] = useState<UserInterface[] | null>(null);
+  const [typeproduit, settypeproduit] = useState<TypeProduitInterface[] | null>(null);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+
   
+  const config: RepositoryConfigInterface = {
+    appConfig: {},
+    dialog: {},
+  };
+
+  const serviceCampgane = new CampagneService(config);
+  const serviceUser = new AgentService(config);
+  const serviceTypeProduit = new TypeProduitService(config);
+
+
+  const getCampgane = async () => {
+    try {
+      const response = await serviceCampgane.getCampagne();
+      setCampagne(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const response = await serviceUser.getAgent();
+      setUser(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  const getTypeProduit = async () => {
+    try {
+      const response = await serviceTypeProduit.getTypeProduit();
+      settypeproduit(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getCampgane();
+    getUser();
+    getTypeProduit();
+  }, []);
+
+
+  const handleChangeCampgne = (selectedOption: any) => {
+    setSelectedUser(selectedOption);
+    console.log("Campagne sélectionné:", selectedOption);
+  };
+
+
+  const campagneOptions =
+    campagne?.map((vh) => ({
+      label: vh.titre,
+      value: vh.id,
+    })) || [];
+
+    const userOptions =
+    user?.map((vh) => ({
+      label: vh.prenom + " " + vh.nom,
+      value: vh.id,
+    })) || [];
+
+    const typeProduitOptions =
+    typeproduit?.map((vh) => ({
+      label: vh.titre,
+      value: vh.id,
+    })) || [];
+
   return (
     <>
       <Otbar title="Espace prospect" />
@@ -40,13 +123,11 @@ const ViewProspect = () => {
               >
                 Capamgne
               </label>
-              <select
-                name=""
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id=""
-              >
-                <option value="">Toutes les camapgnes</option>
-              </select>
+              <Select
+                id="user-select"
+                options={campagneOptions}
+                onChange={handleChangeCampgne}
+              />
             </div>
             <div>
               <label
@@ -55,13 +136,11 @@ const ViewProspect = () => {
               >
                 Utilisateur
               </label>
-              <select
-                name=""
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id=""
-              >
-                <option value="">Tous les utilisateurs</option>
-              </select>
+              <Select
+                id="user-select"
+                options={userOptions}
+                onChange={handleChangeCampgne}
+              />
             </div>
             <div>
               <label
@@ -85,13 +164,11 @@ const ViewProspect = () => {
               >
                 Produit
               </label>
-              <select
-                name=""
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id=""
-              >
-                <option value="">Tous les produits</option>
-              </select>
+              <Select
+                id="user-select"
+                options={typeProduitOptions}
+                onChange={handleChangeCampgne}
+              />
             </div>
             <div>
               <label

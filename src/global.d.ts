@@ -1,0 +1,1 @@
+declare var webphone_api: any;
