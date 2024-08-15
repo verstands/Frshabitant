@@ -7,6 +7,7 @@ import { CommenatareInterface } from "../../Interfaces/CommentaireInterface";
 import prospect from "../../pages/Prospect/prospect";
 import { toast } from "react-toastify";
 import Spinner from "../Spinner";
+import PieceJointUser from "./PieceJointUser";
 
 type Tab = "tab1" | "tab2" | "tab3" | "tab4" | "tab5" | "tab6" | "tab7";
 
@@ -254,7 +255,7 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
             </div>
           )}
           {activeTab === "tab6" && <div>Contenu du Tab 6</div>}
-          {activeTab === "tab7" && <div>Contenu du Tab 7</div>}
+          {activeTab === "tab7" && <div> <PieceJointUser data={datadata} /></div>}
         </div>
       </div>
     </div>

@@ -1,7 +1,12 @@
 import React from "react";
 import { FaClock } from "react-icons/fa";
+import { ProspectInterface } from "../../Interfaces/ProspectInterface";
 
-const DossierUserActionRapide = () => {
+interface DetailProspectProps {
+  datadata: ProspectInterface;
+}
+
+const DossierUserActionRapide: React.FC<DetailProspectProps> = ({ datadata }) => {
   return (
     <div className="border-white  bg-white p-4 rounded-[10px] shadow">
       <h2 className="font-bold">Actions rapides</h2>

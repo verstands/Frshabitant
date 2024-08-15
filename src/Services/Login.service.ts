@@ -1,6 +1,5 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
-import { toast } from "react-toastify";
 
 
 class LoginService<T> extends Repository<T> {

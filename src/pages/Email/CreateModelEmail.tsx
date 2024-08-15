@@ -30,7 +30,7 @@ const CreateModelEmail = () => {
   });
 
   const [form3Data, setForm3Data] = useState<{ fichier: File | null }>({
-    fichier: null as File | null,
+    fichier: null,
   });
 
   const [form4Data, setForm4Data] = useState({
@@ -65,17 +65,9 @@ const CreateModelEmail = () => {
   };
 
   const handleForm3Change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
-    if (name === "fichier" && files) {
-      setForm3Data((prev) => ({
-        ...prev,
-        [name]: files[0] 
-      }));
-    } else {
-      setForm3Data((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+    const { name, files } = e.target;
+    if (files && files.length > 0) {
+      setForm3Data({ ...form3Data, [name]: files[0] });
     }
   };
 
@@ -107,53 +99,28 @@ const CreateModelEmail = () => {
   const serviceModelMail = new ModelMailService(config);
 
   const handleSave = async () => {
-    if (!form1Data.nom || !form1Data.description || !formData2.nomexp || !formData2.emailexp) {
-      alert("Veuillez remplir tous les champs obligatoires.");
-      return;
-    }
-  
-    const formData = new FormData();
-    
-    formData.append('nom', form1Data.nom);
-    formData.append('description', form1Data.description);
-    formData.append('active', form1Data.active.toString());
-    formData.append('nomexp', formData2.nomexp);
-    formData.append('emailexp', formData2.emailexp);
-    formData.append('disnataireexp', formData2.disnataireexp);
-    formData.append('ccexp', formData2.ccexp);
-    formData.append('bccexp', formData2.bccexp);
-    
-    if (form3Data.fichier) {
-      formData.append('fichier', form3Data.fichier);
-    } else {
-      console.warn("Aucun fichier n'a été sélectionné.");
-    }
-    
-    formData.append('sujet', form4Data.sujet);
-    formData.append('contenue', form4Data.contenue);
-    formData.append('id_campagne', form5Data.selectedCampagne?.value || '');
-    formData.append('id_fonction', form5Data.selectedFonction?.value || '');
-    formData.append('id_user', user.id);
-    
-    
+    const combinedData = {
+      ...form1Data,
+      ...formData2,
+      fichier: form3Data.fichier ? form3Data.fichier.name : "null",
+      ...form4Data,
+      id_campagne: form5Data.selectedCampagne?.value || null,
+      id_fonction: form5Data.selectedFonction?.value || null,
+      id_user: user.id,
+    };
+    console.log(JSON.stringify(combinedData));
     try {
-      const response = await serviceModelMail.postModelmail(formData);
-      console.log('Réponse du serveur:', response);
+      const response = await serviceModelMail.postModelmail(combinedData);
       navigate("/modelemail");
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("Une erreur est survenue lors de l'enregistrement des données.");
     }
   };
-  
-  
-  
-
 
   return (
     <>
       <Otbar title="Espace mail" />
-      <div className="grid md:grid-cols-2 p-2 gap-5">
+      <div className="grid md:grid-cols-2  p-2 gap-5">
         <div>
           <InformationGeneraleEmail
             formData={form1Data}
@@ -184,7 +151,7 @@ const CreateModelEmail = () => {
           />
         </div>
       </div>
-      <div className="p-3 flex items-center gap-2">
+      <div className="p-3 flex items-center gap-2 ">
         <Link
           to="/modelemail"
           className="border-[#1e58c1] text-black flex items-center gap-3 bg-gray-200 p-3 rounded float-right"

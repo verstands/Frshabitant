@@ -1,17 +1,18 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
+import { ModelMailInterface } from '../Interfaces/ModelMailInterface';
 
 class ModelMailService<T> extends Repository<T> {
   constructor(config: RepositoryConfigInterface) {
     super(config);
   }
 
-  async postModelmail(data: FormData): Promise<T> { 
+  async postModelmail(data: ModelMailInterface): Promise<T> {
     try {
       const response = await this.postFind$('modelmail', data);
       return response.data;
     } catch (error: any) {
-      console.error('Error during post request:', error.message);
+      console.error('Error during login request:', error.message);
       throw error;
     }
   }

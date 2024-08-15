@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FaTrash } from "react-icons/fa";
 import { ProspectInterface } from "../../Interfaces/ProspectInterface";
 import DetailProspect from "./DetailProspect";
 
@@ -8,48 +7,18 @@ interface DetailProspectProps {
   data: ProspectInterface;
 }
 
-const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
+const PieceJointUser: React.FC<DetailProspectProps> = ({ data }) => {
   const [activeTab, setActiveTab] = useState<Tab>("tab1");
 
   const handleTabClick = (tab: Tab) => {
     setActiveTab(tab);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const archives = [
-    {
-      id: 1,
-      name: "Archive 1",
-      description: "This is the first archive.",
-    },
-    {
-      id: 2,
-      name: "Archive 2",
-      description: "This is the second archive.",
-    },
-    {
-      id: 3,
-      name: "Archive 3",
-      description: "This is the third archive.",
-    },
-  ];
-
   return (
     <div className="border-white  bg-white p-4 rounded-[10px] shadow">
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between pt-3">
-            <div>
-              <h1 className="font-bold">Dossier n°444</h1>
-              <p className="text-gray-500">Détail de votre dossier.</p>
-            </div>
-            <button className="bg-[#1d59cc] p-2 rounded-[5px] text-white flex items-center gap-1">
-              <FaTrash />
-              RAS
-            </button>
-          </div>
-          <br />
-          <hr/>
+          <hr />
           <nav className="-mb-px flex gap-2" aria-label="Tabs">
             <button
               onClick={() => handleTabClick("tab1")}
@@ -59,7 +28,7 @@ const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
-              Principal
+              Visualier
             </button>
             <button
               onClick={() => handleTabClick("tab2")}
@@ -69,16 +38,41 @@ const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
-              Complement
+              Ajouter
             </button>
           </nav>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
-        {activeTab === "tab1" && 
-             data && <DetailProspect data={data} />
-        }
-        {activeTab === "tab2" && <div>note archive</div>}
+        {activeTab === "tab1" && data && <DetailProspect data={data} />}
+        {activeTab === "tab2" && (
+          <div>
+            <div className="flex items-center justify-center bg-white">
+              <form className="bg-white-900 p-6 rounded-lg shadow-lg w-full max-w-md">
+                <div className="mb-4">
+                  <label
+                    className="block mb-2 text-sm font-medium text-gray-300"
+                    htmlFor="multiple_files"
+                  >
+                    Chissisez un fichier
+                  </label>
+                  <input
+                    className="block w-full text-sm border rounded-lg cursor-pointer text-gray-400 focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-400 file:bg-gray-800 file:text-white file:border-gray-600 file:rounded-lg file:px-4 file:py-2"
+                    id="multiple_files"
+                    type="file"
+                    multiple
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full mt-4 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+                >
+                  Soumettre
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -86,5 +80,4 @@ const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
 
 // Placeholder for TaxationNote component
 
-
-export default DossierUserTab;
+export default PieceJointUser;

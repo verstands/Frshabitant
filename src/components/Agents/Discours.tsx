@@ -82,17 +82,7 @@ const Discours: React.FC<DetailProspectProps> = ({ datadata }) => {
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
-              Principal
-            </button>
-            <button
-              onClick={() => handleTabClick("tab2")}
-              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium ${
-                activeTab === "tab2"
-                  ? "text-black border-2 p-2 mt-2 border-blue-500 rounded-t-[15px]"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
-              Complement
+              Discours
             </button>
           </nav>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
@@ -122,9 +112,6 @@ const Discours: React.FC<DetailProspectProps> = ({ datadata }) => {
             {renderContent()}
           </div>
         )}
-        {activeTab === "tab2" && <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200 h-96 overflow-y-scroll">  
-          <ComplementDiscour />
-          </div>}
       </div>
     </div>
   );

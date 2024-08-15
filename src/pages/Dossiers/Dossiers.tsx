@@ -18,18 +18,20 @@ import { ProvenanceInterface } from "../../Interfaces/ProvenanceInterface";
 import ProvenanceService from "../../Services/Provenance.service";
 import { ArchivageInterface } from "../../Interfaces/ArchivageInterface";
 import ArchivageService from "../../Services/Archivage.service";
-import Spinner from "../../components/Spinner";
 import hasAccess from "../../components/hasAcess";
+import { CampagneInterfce } from "../../Interfaces/CampagneInterface";
+import CampagneService from "../../Services/Campagne.service";
+import Select from "react-select";
+
 
 const Dossiers = () => {
   const [statut, setStatus] = useState<StatusInterface[] | null>(null);
-  const [agent, setAgent] = useState<UserInterface[] | null>(null);
+  const [campagne, setCampagne] = useState<CampagneInterfce[] | null>(null);
+  const [user, setUser] = useState<UserInterface[] | null>(null);
+  const [typeproduit, settypeproduit] = useState<TypeProduitInterface[] | null>(null);
   const [installateur, setInstallateur] = useState<
     InstallateurInterface[] | null
   >(null);
-  const [typeproduit, setTypeProduit] = useState<TypeProduitInterface[] | null>(
-    null
-  );
   const [invalidite, setInvalidite] = useState<InvaliditeInterface[] | null>(
     null
   );
@@ -37,6 +39,12 @@ const Dossiers = () => {
     null
   );
   const [archivage, setArchivage] = useState<ArchivageInterface[] | null>(null);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [dataExcel, setDatExcel] = useState([]); 
+
+  const updateDossierData = (newData: any[]) => {
+    setDatExcel(newData);
+  };
 
   const config: RepositoryConfigInterface = {
     appConfig: {},
@@ -52,15 +60,6 @@ const Dossiers = () => {
     }
   };
 
-  const getUser = async () => {
-    try {
-      const response = await agentService.getAgent();
-      setAgent(response.data);
-    } catch (error: unknown) {
-      console.log(error);
-    }
-  };
-
   const getInstallateur = async () => {
     try {
       const response = await installateurservice.getInstallateur();
@@ -70,14 +69,6 @@ const Dossiers = () => {
     }
   };
 
-  const getTypeproduit = async () => {
-    try {
-      const response = await TypeproduitService.getTypeProduit();
-      setTypeProduit(response.data);
-    } catch (error: unknown) {
-      console.log(error);
-    }
-  };
 
   const getIvalidite = async () => {
     try {
@@ -109,20 +100,112 @@ const Dossiers = () => {
   const getStatutService = new StatuService(config);
   const agentService = new AgentService(config);
   const installateurservice = new InstallateurService(config);
-  const TypeproduitService = new TypeProduitService(config);
   const invaliditeService = new InvaliditeService(config);
   const provenanceService = new ProvenanceService(config);
   const archivageService = new ArchivageService(config);
+  const serviceCampgane = new CampagneService(config);
+  const serviceTypeProduit = new TypeProduitService(config);
+
+  const getCampgane = async () => {
+    try {
+      const response = await serviceCampgane.getCampagne();
+      setCampagne(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const response = await agentService.getAgent();
+      setUser(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  const getTypeProduit = async () => {
+    try {
+      const response = await serviceTypeProduit.getTypeProduit();
+      settypeproduit(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getStatut();
     getUser();
     getInstallateur();
-    getTypeproduit();
+    getTypeProduit();
     getIvalidite();
     getprovenance();
     getarchivage();
+    getCampgane();
   }, []);
+
+
+  const handleChangeCampgne = (selectedOption: any) => {
+    setSelectedUser(selectedOption);
+    console.log("Campagne sélectionné:", selectedOption);
+  };
+
+
+  const campagneOptions =
+    campagne?.map((vh) => ({
+      label: vh.titre,
+      value: vh.id,
+    })) || [];
+
+    const userOptions =
+    user?.map((vh) => ({
+      label: vh.prenom + " " + vh.nom,
+      value: vh.id,
+    })) || [];
+
+    const typeProduitOptions =
+    typeproduit?.map((vh) => ({
+      label: vh.titre,
+      value: vh.id,
+    })) || [];
+
+    const installateurOptions =
+    installateur?.map((vh) => ({
+      label: vh.nom,
+      value: vh.id,
+    })) || []; 
+
+    const statusOptions =
+    statut?.map((vh) => ({
+      label: vh.nom,
+      value: vh.id,
+    })) || []; 
+
+    const provenanceOptions =
+    provenance?.map((vh) => ({
+      label: vh.nom,
+      value: vh.id,
+    })) || [];
+
+    const archivageOptions =
+    archivage?.map((vh) => ({
+      label: vh.nom,
+      value: vh.id,
+    })) || [];
+    
+    
+    const exportToExcel = () => {
+      import("xlsx").then((XLSX) => {
+        const ws = XLSX.utils.json_to_sheet(dataExcel);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Données");
+        XLSX.writeFile(wb, "Dossier.xlsx");
+      });
+    };
+
+    
+
+
 
   return (
     <>
@@ -145,7 +228,7 @@ const Dossiers = () => {
         hasAccess("read") && (
           <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
         {hasAccess("print") && (
-          <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right">
+          <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right" onClick={exportToExcel}>
             Exporter ma rechreche
           </button>
         )}
@@ -159,13 +242,11 @@ const Dossiers = () => {
             >
               Capamgne
             </label>
-            <select
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id=""
-            >
-              <option value="">Toutes les camapgnes</option>
-            </select>
+            <Select
+                id="user-select"
+                options={campagneOptions}
+                onChange={handleChangeCampgne}
+              />
           </div>
           <div>
             <label
@@ -174,16 +255,11 @@ const Dossiers = () => {
             >
               Utilisateur
             </label>
-            <select
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id=""
-            >
-              <option value="">Tous les utilisateurs</option>
-              {agent?.map((ville) => (
-                <option value={ville.id}>{ville.nom}</option>
-              ))}
-            </select>
+            <Select
+                id="user-select"
+                options={userOptions}
+                onChange={handleChangeCampgne}
+              />
           </div>
           <div>
             <label
@@ -192,16 +268,11 @@ const Dossiers = () => {
             >
               Installateur
             </label>
-            <select
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id=""
-            >
-              <option value="">Tous les installateurs</option>
-              {installateur?.map((ville) => (
-                <option value={ville.id}>{ville.nom}</option>
-              ))}
-            </select>
+            <Select
+                id="user-select"
+                options={installateurOptions}
+                onChange={handleChangeCampgne}
+              />
           </div>
           <div>
             <label
@@ -210,16 +281,11 @@ const Dossiers = () => {
             >
               Status
             </label>
-            <select
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id=""
-            >
-              <option value="">Tous les status</option>
-              {statut?.map((ville) => (
-                <option value={ville.id}>{ville.nom}</option>
-              ))}
-            </select>
+            <Select
+                id="user-select"
+                options={statusOptions}
+                onChange={handleChangeCampgne}
+              />
           </div>
           <div>
             <label
@@ -228,16 +294,11 @@ const Dossiers = () => {
             >
               Produit
             </label>
-            <select
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id=""
-            >
-              <option value="">Tous les produits</option>
-              {typeproduit?.map((ville) => (
-                <option value={ville.id}>{ville.titre}</option>
-              ))}
-            </select>
+            <Select
+                id="user-select"
+                options={typeProduitOptions}
+                onChange={handleChangeCampgne}
+              />
           </div>
           <div>
             <label
@@ -264,16 +325,11 @@ const Dossiers = () => {
             >
               Provenance
             </label>
-            <select
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id=""
-            >
-              <option value="">Tous les provenances</option>
-              {provenance?.map((ville) => (
-                <option value={ville.id}>{ville.nom}</option>
-              ))}
-            </select>
+            <Select
+                id="user-select"
+                options={provenanceOptions}
+                onChange={handleChangeCampgne}
+              />
           </div>
           <div>
             <label
@@ -282,16 +338,11 @@ const Dossiers = () => {
             >
               Affichage archivé
             </label>
-            <select
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id=""
-            >
-              <option value="">Afficher uniquement les non archivés</option>
-              {archivage?.map((ville) => (
-                <option value={ville.id}>{ville.nom}</option>
-              ))}
-            </select>
+            <Select
+                id="user-select"
+                options={archivageOptions}
+                onChange={handleChangeCampgne}
+              />
           </div>
           <div>
             <br />
@@ -303,7 +354,7 @@ const Dossiers = () => {
         <div className="py-4"></div>
         <hr />
         <div className="p-1">
-          <DossierTable />
+          <DossierTable onUpdateDossierData={updateDossierData} />
         </div>
       </div>
         )

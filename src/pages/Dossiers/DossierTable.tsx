@@ -14,7 +14,8 @@ import Spinner from "../../components/Spinner";
 import { Link } from "react-router-dom";
 import { FaEdit, FaEye, FaPhone, FaUser } from "react-icons/fa";
 
-const DossierTable = () => {
+ 
+const DossierTable = ({ onUpdateDossierData }: { onUpdateDossierData: (data: any[]) => void }) => {
   const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,9 +35,16 @@ const DossierTable = () => {
     }
   };
 
+
   useEffect(() => {
     getProspect();
   }, []);
+
+  useEffect(() => {
+    if (prospect) {
+      onUpdateDossierData(prospect);
+    }
+  }, [prospect]);
 
   const documentProspect = new DossierService(config);
 

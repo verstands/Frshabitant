@@ -37,6 +37,21 @@ abstract class Repository<T> {
     });
   }
 
+  postFindFile$(uri: string, data?: object): Promise<AxiosResponse<T>> {
+    return axiosClient.post<T>(`${uri}`, data, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    })
+    .catch(error => {
+        if (error.response.status !== 401 ) {
+            toast.error(`${error.response.data.message}`);
+        }
+        throw error;
+    });
+}
+
+
   find$(uri: string | undefined): Promise<T> {
     return axiosClient.get(`${uri}`)
     .then(response => response.data)

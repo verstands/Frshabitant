@@ -29,6 +29,7 @@ import { toast } from "react-toastify";
 import { AgendaInterface } from "../../Interfaces/AgendaInterface";
 import AgendaService from "../../Services/Agenda.service";
 import CommentaireAgent from "../../components/Agents/CommentaireAgent";
+import DetailProspect2 from "../../components/DetailProspect2";
 
 const Appels: React.FC = () => {
   const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
@@ -574,7 +575,7 @@ const Appels: React.FC = () => {
         <div className="grid grid-cols-2 gap-2">
           {prospect && <Discours datadata={prospect} />}
           <div>
-            {prospect && <DetailProspect data={prospect} />}
+            {prospect && <DetailProspect2 data={prospect} />}
             {user.statut !== "0" && prospect && <CommentaireAgent />}
           </div>
         </div>

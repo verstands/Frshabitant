@@ -214,18 +214,25 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
 
   useEffect(() => {
     if (modelMailData) {
-      console.log(modelMailData); // Affiche les données mises à jour dans la console
+      console.log(modelMailData); 
     }
     getTypeChauffage();
     getModelMailMail();
-  }, [modelMailData]);
+  }, [modelMailData])
   return (
     <>
       <div className="border-white  bg-white p-4 rounded-[10px] shadow">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="font-bold">Prospect n°{data.code}</h2>
-            <p className="text-gray-500">Detail de votre prospect</p>
+            {
+              prospect.status === "0" &&(
+                <>
+                  <h2 className="font-bold">Prospect n°{data.code}</h2>
+                  <p className="text-gray-500">Detail de votre prospect</p>
+                </>
+              )
+            }
+            
           </div>
           <div className="flex items-center gap-2">
             <button

@@ -1,7 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { CommenatareInterface } from "../../Interfaces/CommentaireInterface";
+import { UserInterface } from "../../Interfaces/UserInterface";
+import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
+import CommentaireService from "../../Services/Commentaire.service";
+import Spinner from "../Spinner";
 
-const CommentUserDossier = () => {
+interface DetailProspectProps {
+  datadata: CommenatareInterface;
+}
+const CommentUserDossier: React.FC<DetailProspectProps> = ({ datadata }) => {
+  const [comment, setComment] = useState<string>("");
+  const [comments, setComments] = useState<string[]>([]);
+  const [commentaire, setcommentaire] = useState<CommenatareInterface[] | null>(
+    null
+  );
+
+  const user: UserInterface = JSON.parse(
+    sessionStorage.getItem("user") || "[]"
+  );
+
+  const [loading, setLoading] = useState(true);
+  const [loadingBtn, setLoadingBtn] = useState(false);
+
+  const config: RepositoryConfigInterface = {
+    appConfig: {},
+    dialog: {},
+  };
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value);
+  };
+
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoadingBtn(true);
+    if (comment.trim()) {
+      const newComment: CommenatareInterface = {
+        id_prospect: `${datadata.id}`,
+        id_user: `${user.id}`,
+        message: comment,
+      };
+      setComments([...comments, comment]);
+      try {
+        await serviceCommentaire.postCommentaire(newComment);
+        setLoadingBtn(false);
+        getCommentaire();
+      } catch (error: unknown) {
+        console.log("Error creating prospect:", error);
+        setLoadingBtn(false);
+      }
+      setComment("");
+    }
+  };
+
+  const getCommentaire = async () => {
+    try {
+      const response = await serviceCommentaire.getCommentaire(
+        user.id,
+        datadata.id
+      );
+      setcommentaire(response.data);
+      setLoading(false);
+    } catch (error: unknown) {
+      console.error("Error fetching comments:", error);
+    }
+  };
+
+  const serviceCommentaire = new CommentaireService(config);
+
+  useEffect(() => {
+    getCommentaire();
+  }, []);
+
   return (
     <div className="border-white bg-white p-4 rounded-[10px] shadow">
       <h2 className="font-bold">Commentaire</h2>
@@ -14,30 +85,38 @@ const CommentUserDossier = () => {
             </nav>
           </div>
         </div>
-
-        <div className="mb-4 h-80 overflow-y-auto">
-          <div className="flex items-start mb-4">
-            <div className="flex-shrink-0 mr-4">
-              <FaUserCircle size={30} />
-            </div>
-            <div className="bg-indigo-100 p-3 rounded-lg shadow-sm w-full">
-              <p className="text-gray-700">Un message</p>
-            </div>
+        <div>
+          <div className="mb-4 h-96 overflow-y-scroll ">
+            {commentaire?.map((ab) => (
+              <div className="flex items-start mb-4">
+                <div className="bg-indigo-100 p-3 rounded-lg shadow-sm w-full">
+                  <p className="text-gray-700">{ab.message}</p>
+                </div>
+                <div className="flex-shrink-0 mr-4">
+                  <FaUserCircle size={30} />
+                </div>
+                <br />
+              </div>
+            ))}
           </div>
-        </div>
-
-        <hr />
-
-        <div className="flex p-2 gap-2 items-center justify-center">
-          <textarea
-            id="comment"
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 resize-none"
-            placeholder="Écrire un commentaire..."
-          ></textarea>
-
-          <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300">
-            Envoyer
-          </button>
+          <form onSubmit={handleCommentSubmit} className="mb-4">
+            <textarea
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              value={comment}
+              onChange={handleCommentChange}
+              placeholder="Écrire un commentaire..."
+            />
+            {loadingBtn ? (
+              <Spinner />
+            ) : (
+              <button
+                type="submit"
+                className="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+              >
+                Envoyer
+              </button>
+            )}
+          </form>
         </div>
       </div>
     </div>

@@ -1,55 +1,26 @@
 import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import { ProspectInterface } from "../../Interfaces/ProspectInterface";
-import DetailProspect from "./DetailProspect";
+import DetailProspect from "./Agents/DetailProspect";
+import { ProspectInterface } from "../Interfaces/ProspectInterface";
+import ComplementDiscour from "./Agents/ComplementDiscour";
 
 type Tab = "tab1" | "tab2" | "tab3";
 interface DetailProspectProps {
   data: ProspectInterface;
 }
 
-const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
+const DetailProspect2 : React.FC<DetailProspectProps> = ({ data })=> {
   const [activeTab, setActiveTab] = useState<Tab>("tab1");
 
   const handleTabClick = (tab: Tab) => {
     setActiveTab(tab);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const archives = [
-    {
-      id: 1,
-      name: "Archive 1",
-      description: "This is the first archive.",
-    },
-    {
-      id: 2,
-      name: "Archive 2",
-      description: "This is the second archive.",
-    },
-    {
-      id: 3,
-      name: "Archive 3",
-      description: "This is the third archive.",
-    },
-  ];
 
   return (
-    <div className="border-white  bg-white p-4 rounded-[10px] shadow">
+    <div className=" rounded-[10px] shadow">
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between pt-3">
-            <div>
-              <h1 className="font-bold">Dossier n°444</h1>
-              <p className="text-gray-500">Détail de votre dossier.</p>
-            </div>
-            <button className="bg-[#1d59cc] p-2 rounded-[5px] text-white flex items-center gap-1">
-              <FaTrash />
-              RAS
-            </button>
-          </div>
-          <br />
-          <hr/>
           <nav className="-mb-px flex gap-2" aria-label="Tabs">
             <button
               onClick={() => handleTabClick("tab1")}
@@ -78,7 +49,9 @@ const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
         {activeTab === "tab1" && 
              data && <DetailProspect data={data} />
         }
-        {activeTab === "tab2" && <div>note archive</div>}
+        {activeTab === "tab2" && <div className="max-w-7xl mx-auto py-8 border-t border-gray-200 h-96 overflow-y-scroll">  
+          <ComplementDiscour />
+          </div>}
       </div>
     </div>
   );
@@ -87,4 +60,4 @@ const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
 // Placeholder for TaxationNote component
 
 
-export default DossierUserTab;
+export default DetailProspect2;

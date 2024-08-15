@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import frLocale from '@fullcalendar/core/locales/fr';;
+import React, { useState } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import frLocale from "@fullcalendar/core/locales/fr";
 
 const AgendaDossierUser = () => {
   const [calendarEvents, setCalendarEvents] = useState([]);
@@ -11,6 +10,7 @@ const AgendaDossierUser = () => {
   const [eventDetails, setEventDetails] = useState(null);
 
   const handleEventClick = (clickInfo) => {
+    console.log("Event clicked:", clickInfo.event);
     setEventDetails(clickInfo.event);
     setIsModalOpen(true);
   };
@@ -25,47 +25,51 @@ const AgendaDossierUser = () => {
   };
 
   return (
-    <div className='border-white bg-white p-4 rounded-[10px] shadow'>
+    <div className="border-white bg-white p-4 rounded-[10px] shadow">
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin]}
         headerToolbar={{
-          left: 'prev,next today',
-          right: 'title'
+          left: "prev,next today",
+          right: "title",
         }}
-        
         initialView="dayGridMonth"
         events={calendarEvents}
         editable={true}
         selectable={true}
         selectMirror={true}
         dayMaxEvents={true}
-        eventClick={handleEventClick}
+        eventClick={handleEventClick} // Assurez-vous que cette ligne est bien présente
         locale={frLocale}
         eventContent={renderEventContent}
       />
-      {isModalOpen && (
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          eventDetails={eventDetails}
-        />
-      )}
     </div>
   );
 };
 
 export default AgendaDossierUser;
 
-// Note: The Modal component needs to be defined or imported
 const Modal = ({ isOpen, onClose, eventDetails }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="close" onClick={onClose}>&times;</span>
-        <h2>Event Details</h2>
-        <p>{eventDetails ? eventDetails.title : 'No details available'}</p>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black opacity-50" onClick={onClose}>
+        ddd
+      </div>
+      <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full p-6 z-10">
+        <div className="flex justify-end">
+          <button
+            className="text-gray-600 hover:text-gray-900 focus:outline-none"
+            onClick={onClose}
+          >
+            &times;ddssssssssssss
+          </button>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Event Details</h2>
+          <p>{eventDetails ? eventDetails.title : "No details available"}</p>
+          {/* Affiche d'autres détails de l'événement ici si nécessaire */}
+        </div>
       </div>
     </div>
   );
