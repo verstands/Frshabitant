@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { FaTrash } from "react-icons/fa";
 import { ProspectInterface } from "../../Interfaces/ProspectInterface";
 import DetailProspect from "./DetailProspect";
+import ComplementDiscour from "./ComplementDiscour";
 
 type Tab = "tab1" | "tab2" | "tab3";
 interface DetailProspectProps {
@@ -43,13 +43,8 @@ const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
               <h1 className="font-bold">Dossier n°444</h1>
               <p className="text-gray-500">Détail de votre dossier.</p>
             </div>
-            <button className="bg-[#1d59cc] p-2 rounded-[5px] text-white flex items-center gap-1">
-              <FaTrash />
-              RAS
-            </button>
           </div>
           <br />
-          <hr/>
           <nav className="-mb-px flex gap-2" aria-label="Tabs">
             <button
               onClick={() => handleTabClick("tab1")}
@@ -78,7 +73,7 @@ const DossierUserTab : React.FC<DetailProspectProps> = ({ data })=> {
         {activeTab === "tab1" && 
              data && <DetailProspect data={data} />
         }
-        {activeTab === "tab2" && <div>note archive</div>}
+        {activeTab === "tab2" && <ComplementDiscour />}
       </div>
     </div>
   );

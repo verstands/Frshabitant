@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ComplementInterface } from "../../Interfaces/ComplementInterface";
 
 type DataItem = {
   value: string;
@@ -96,7 +97,7 @@ const data: Data = {
     input: false,
     name: "Remplacement Fenêtres",
   },
-  immo1: {
+  /*immo1: {
     value: "immo1",
     montant: 1000,
     input: true,
@@ -107,7 +108,7 @@ const data: Data = {
     montant: 1000,
     input: true,
     name: "immo2",
-  },
+  },*/
 };
 
 const ComplementDiscour = () => {
@@ -116,8 +117,42 @@ const ComplementDiscour = () => {
   );
   const [inputValues, setInputValues] = useState<{ [key: string]: number }>({});
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
   const [dataPrime, setdataPrime] = useState<DataItem[]>([]);
   const [TotalPrime, setTotalPrime] = useState(0);
+  const [complementdata, setCompletementdata] = useState<ComplementInterface>({
+    surface: "",
+    hauteur: "",
+    typemaison: "",
+    coefficient: "",
+    temperatureinterieur: "",
+    departement: "",
+    correction: "",
+    temperatureexterieur: "",
+    typeoccupation: "",
+    nombreoccupant: "",
+    anneeconstruction: "",
+    surfacehabitable: "",
+    nombrepiece: "",
+    positionmaison: "",
+    formemaisonn: "",
+    nombreniveauhabitant: "",
+    hauteurmoyenne: "",
+    typetoit: "",
+    typecouverture: "",
+    inclinaison: "",
+    typecomble: "",
+    combleisole: "",
+    typemurs: "",
+    mursisole: "",
+    typevitrage: "",
+    jardin: "",
+    surfacejardin: "",
+    typesoussol: "",
+    garage: "",
+    typeinstallation: "",
+    sensibiliteenvironnement: "",
+  });
 
   const handleCheckboxChange =
     (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,6 +170,14 @@ const ComplementDiscour = () => {
       });
     };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCompletementdata((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   const handleCalculate = () => {
     let totalAmount = 0;
     const selectedItems = Object.keys(data).filter((key) => checkedItems[key]);
@@ -150,12 +193,34 @@ const ComplementDiscour = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleCalculateDebut = () => {
+    if(complementdata.surface !== "" &&
+      complementdata.hauteur !== "" &&
+      complementdata.typemaison > "0" &&
+      complementdata.coefficient !== "" &&
+      complementdata.temperatureinterieur !== "" &&
+      complementdata.departement !== "" 
+
+    ){
+    setIsDropdownOpen2(!isDropdownOpen2);
+
+    }
+  };
+
   const closeDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const volume =
+    parseInt(complementdata.surface) * parseInt(complementdata.hauteur);
+  const perteChaleur =
+    volume *
+    parseInt(complementdata.coefficient) *
+    (parseInt(complementdata.temperatureexterieur) -
+      parseInt(complementdata.temperatureinterieur));
   return (
     <>
-      <div className="border-white  bg-white p-4 rounded-[10px] shadow">
+      <div className="border-white  bg-white p-4 rounded-[10px] shadow  h-96 overflow-y-scroll">
         <div className="grid md:grid-cols-1 xl:grid-cols-1 gap-2">
           <div>
             <label
@@ -165,8 +230,10 @@ const ComplementDiscour = () => {
               Surface au sol (m²)
             </label>
             <input
-              type="text"
-              name="titre"
+              type="number"
+              name="surface"
+              value={complementdata.surface}
+              onChange={handleChange}
               id="email"
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
@@ -175,12 +242,14 @@ const ComplementDiscour = () => {
                 htmlFor="email"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
               >
-                Hauteur (m)
+                Hauteurs (m)
               </label>
               <input
-                type="text"
-                name="titre"
+                type="number"
                 id="email"
+                name="hauteur"
+                value={complementdata.hauteur}
+                onChange={handleChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
@@ -192,12 +261,15 @@ const ComplementDiscour = () => {
                 Type de maison
               </label>
               <select
-                name=""
+                name="typemaison"
+                value={complementdata.typemaison}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-                <option value="Maison individuelle">Maison individuelle</option>
-                <option value="Maison mitoyenne">Maison mitoyenne</option>
+                <option value="">choisir</option>
+                <option value="Maison_individuelle">Maison individuelle</option>
+                <option value="Maison_mitoyenne">Maison mitoyenne</option>
                 <option value="Appartement">Appartement</option>
                 <option value="Autre">Autre</option>
               </select>
@@ -211,7 +283,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="coefficient"
+                value={complementdata.coefficient}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -225,7 +299,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="temperatureinterieur"
+                value={complementdata.temperatureinterieur}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -239,7 +315,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="text"
-                name="titre"
+                name="departement"
+                value={complementdata.departement}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -253,7 +331,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="correction"
+                value={complementdata.correction}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -267,7 +347,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="temperatureexterieur"
+                value={complementdata.temperatureexterieur}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -280,17 +362,20 @@ const ComplementDiscour = () => {
                 Type d'occupation
               </label>
               <select
-                name=""
+                name="typeoccupation"
+                value={complementdata.typeoccupation}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-                <option value="Propriétaire occupant">
+                <option value="">choisir</option>
+                <option value="Propriétaire_occupant">
                   Propriétaire occupant
                 </option>
-                <option value="Propriétaire résidence secondaire">
+                <option value="Propriétaire_résidence_secondaire">
                   Propriétaire d'une résidence secondaire
                 </option>
-                <option value="Propriétaire bailleur">
+                <option value="Propriétaire_bailleur">
                   Propriétaire bailleur
                 </option>
                 <option value="Locataire">Locataire</option>
@@ -305,7 +390,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="nombreoccupant"
+                value={complementdata.nombreoccupant}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -319,7 +406,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="anneeconstruction"
+                value={complementdata.anneeconstruction}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -333,7 +422,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="surfacehabitable"
+                value={complementdata.surfacehabitable}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -347,7 +438,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="nombrepiece"
+                value={complementdata.nombrepiece}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -360,13 +453,16 @@ const ComplementDiscour = () => {
                 Positionnement de la maison
               </label>
               <select
-                name=""
+                name="positionmaison"
+                value={complementdata.positionmaison}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Indépendant">Indépendant</option>
-                <option value="Moyen 1 côté">Moyen 1 côté</option>
-                <option value="Moyen 2 côtés">Moyen 2 côtés</option>
+                <option value="Moyen_1_côté">Moyen 1 côté</option>
+                <option value="Moyen_2_côtés">Moyen 2 côtés</option>
               </select>
             </div>
             <div>
@@ -377,10 +473,13 @@ const ComplementDiscour = () => {
                 Forme de la maison
               </label>
               <select
-                name=""
+                name="formemaisonn"
+                value={complementdata.formemaisonn}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Carrée">Carrée</option>
                 <option value="Allongée">Allongée</option>
                 <option value="Développée">Développée</option>
@@ -394,10 +493,13 @@ const ComplementDiscour = () => {
                 Nombre de niveaux habitables (hors combles)
               </label>
               <select
-                name=""
+                name="nombreniveauhabitant"
+                value={complementdata.nombreniveauhabitant}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -412,7 +514,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="hauteurmoyenne"
+                value={complementdata.hauteurmoyenne}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -425,10 +529,13 @@ const ComplementDiscour = () => {
                 Type de toit
               </label>
               <select
-                name=""
+                name="typetoit"
+                value={complementdata.typetoit}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Toiture à 2 versants">
                   Toiture à 2 versants
                 </option>
@@ -447,10 +554,13 @@ const ComplementDiscour = () => {
                 Type de couverture de la toiture
               </label>
               <select
-                name=""
+                name="typecouverture"
+                value={complementdata.typecouverture}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Tuile">Tuile</option>
                 <option value="Ardoise">Ardoise</option>
                 <option value="Tôle">Tôle</option>
@@ -465,10 +575,13 @@ const ComplementDiscour = () => {
                 Inclinaison du pan
               </label>
               <select
-                name=""
+                name="inclinaison"
+                value={complementdata.inclinaison}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="0°">0°</option>
                 <option value="70°">70°</option>
                 <option value="45°">45°</option>
@@ -482,13 +595,16 @@ const ComplementDiscour = () => {
                 Type de combles
               </label>
               <select
-                name=""
+                name="typecomble"
+                value={complementdata.typecomble}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-                <option value="Combles aménagés">Combles aménagés</option>
-                <option value="Combles perdus">Combles perdus</option>
-                <option value="Pas de combles">Pas de combles</option>
+                <option value="">choisir</option>
+                <option value="Comble_aménagés">Combles aménagés</option>
+                <option value="Combles_perdus">Combles perdus</option>
+                <option value="Pas_de_combles">Pas de combles</option>
               </select>
             </div>
             <div>
@@ -499,10 +615,13 @@ const ComplementDiscour = () => {
                 Combles isolés
               </label>
               <select
-                name=""
+                name="combleisole"
+                value={complementdata.combleisole}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Oui">Oui</option>
                 <option value="Non">Non</option>
                 <option value="Je ne sais pas">Je ne sais pas</option>
@@ -516,10 +635,13 @@ const ComplementDiscour = () => {
                 Type de murs de la maison (Extérieur)
               </label>
               <select
-                name=""
+                name="typemurs"
+                value={complementdata.typemurs}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Pierre">Pierre</option>
                 <option value="Béton">Béton</option>
                 <option value="Brique">Brique</option>
@@ -534,10 +656,13 @@ const ComplementDiscour = () => {
                 Murs isolés
               </label>
               <select
-                name=""
+                name="mursisole"
+                value={complementdata.mursisole}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Oui">Oui</option>
                 <option value="A rénover">A rénover</option>
                 <option value="Je ne sais pas">Je ne sais pas</option>
@@ -551,10 +676,13 @@ const ComplementDiscour = () => {
                 Type de vitrage
               </label>
               <select
-                name=""
+                name="typevitrage"
+                value={complementdata.typevitrage}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Simple">Simple</option>
                 <option value="Double">Double</option>
                 <option value="Triple">Triple</option>
@@ -568,10 +696,13 @@ const ComplementDiscour = () => {
                 Jardin
               </label>
               <select
-                name=""
+                name="jardin"
+                value={complementdata.jardin}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Oui">Oui</option>
                 <option value="Non">Non</option>
               </select>
@@ -585,7 +716,9 @@ const ComplementDiscour = () => {
               </label>
               <input
                 type="number"
-                name="titre"
+                name="surfacejardin"
+                value={complementdata.surfacejardin}
+                onChange={handleChange}
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -598,10 +731,13 @@ const ComplementDiscour = () => {
                 Type de sous-sol
               </label>
               <select
-                name=""
+                name="typesoussol"
+                value={complementdata.typesoussol}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Cave ou Sous-sol">Cave ou Sous-sol</option>
                 <option value="Garage">Garage</option>
                 <option value="Vide sanitaire">Vide sanitaire</option>
@@ -616,10 +752,13 @@ const ComplementDiscour = () => {
                 Avez-vous un garage?
               </label>
               <select
-                name=""
+                name="garage"
+                value={complementdata.garage}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Oui">Oui</option>
                 <option value="Non">Non</option>
               </select>
@@ -632,10 +771,13 @@ const ComplementDiscour = () => {
                 Type d'installation électrique
               </label>
               <select
-                name=""
+                name="typeinstallation"
+                value={complementdata.typeinstallation}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
+                <option value="">choisir</option>
                 <option value="Monophasé">Monophasé</option>
                 <option value="Triphasé">Triphasé</option>
               </select>
@@ -648,15 +790,18 @@ const ComplementDiscour = () => {
                 Sensibilité à l'environnement
               </label>
               <select
-                name=""
+                name="sensibiliteenvironnement"
+                value={complementdata.sensibiliteenvironnement}
+                onChange={handleChange}
                 id=""
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-                <option value="Pas sensible">Pas sensible</option>
-                <option value="Peu sensible">Peu sensible</option>
+                <option value="">choisir</option>
+                <option value="Pas_sensible">Pas sensible</option>
+                <option value="Peu_sensible">Peu sensible</option>
                 <option value="Sensible">Sensible</option>
-                <option value="Très sensible">Très sensible</option>
-                <option value="Extrêmement sensible">
+                <option value="Très_sensible">Très sensible</option>
+                <option value="Extrêmement_sensible">
                   Extrêmement sensible
                 </option>
               </select>
@@ -665,6 +810,7 @@ const ComplementDiscour = () => {
               <button
                 type="submit"
                 className="border border-green-500 bg-green-500 py-3 text-white rounded-lg w-full"
+                onClick={handleCalculateDebut}
               >
                 Calculer
               </button>
@@ -802,50 +948,50 @@ const ComplementDiscour = () => {
             </fieldset>
 
             <fieldset className="border p-4 rounded-lg mb-4">
-        <legend className="text-lg mb-2">Produit souhaité</legend>
-        <div className="mb-4">
-          <table className="min-w-full">
-            <tbody>
-              {Object.keys(data).map((key) => (
-                <React.Fragment key={key}>
-                  <tr>
-                    <td>
-                      <label
-                        htmlFor={key}
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        {data[key].name} :
-                      </label>
-                    </td>
-                    <td></td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id={key}
-                        name={key}
-                        checked={checkedItems[key] || false}
-                        onChange={handleCheckboxChange(key)}
-                      />
-                    </td>
-                  </tr>
-                  {data[key].input && checkedItems[key] && (
-                    <tr>
-                      <td colSpan={3}>
-                        <input
-                          type="number"
-                          value={inputValues[key] || ""}
-                          onChange={handleInputChange(key)}
-                          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        />
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </fieldset>
+              <legend className="text-lg mb-2">Produit souhaité</legend>
+              <div className="mb-4">
+                <table className="min-w-full">
+                  <tbody>
+                    {Object.keys(data).map((key) => (
+                      <React.Fragment key={key}>
+                        <tr>
+                          <td>
+                            <label
+                              htmlFor={key}
+                              className="block text-sm font-medium text-gray-700"
+                            >
+                              {data[key].name} :
+                            </label>
+                          </td>
+                          <td></td>
+                          <td>
+                            <input
+                              type="checkbox"
+                              id={key}
+                              name={key}
+                              checked={checkedItems[key] || false}
+                              onChange={handleCheckboxChange(key)}
+                            />
+                          </td>
+                        </tr>
+                        {data[key].input && checkedItems[key] && (
+                          <tr>
+                            <td colSpan={3}>
+                              <input
+                                type="number"
+                                value={inputValues[key] || ""}
+                                onChange={handleInputChange(key)}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              />
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </fieldset>
             <div className="pt-2">
               <button
                 type="submit"
@@ -891,6 +1037,37 @@ const ComplementDiscour = () => {
                 className="bg-red-500 text-white px-4 py-2 rounded"
                 type="button"
                 onClick={closeDropdown}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isDropdownOpen2 && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-4/5 max-w-lg">
+            <br />
+            <div>
+              <span className="font-bold">Résultat du Dimensionnement</span>
+            </div>
+            <p>
+              Pour une surface de {complementdata.surface} m² avec une hauteur
+              de {complementdata.hauteur} m, le type de maison{" "}
+              {complementdata.typemaison}, un coefficient G de{" "}
+              {complementdata.coefficient}, une température intérieure de
+              confort de {complementdata.temperatureinterieur} °C, dans le
+              département {complementdata.departement} à une altitude de{" "}
+              {complementdata.correction} m avec une température extérieure de{" "}
+              {complementdata.temperatureexterieur} °C, la perte de chaleur
+              estimée est de {perteChaleur} W.
+            </p>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                type="button"
+                onClick={handleCalculateDebut}
               >
                 Fermer
               </button>

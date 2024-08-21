@@ -1,0 +1,33 @@
+export interface ComplementInterface {  
+    surface: string;
+    hauteur: string;
+    typemaison: string;
+    coefficient: string;
+    temperatureinterieur: string;
+    departement: string;
+    correction: string;
+    temperatureexterieur: string;
+    typeoccupation: string;
+    nombreoccupant: string;
+    anneeconstruction: string;
+    surfacehabitable: string;
+    nombrepiece: string;
+    positionmaison: string;
+    formemaisonn: string;
+    nombreniveauhabitant: string;
+    hauteurmoyenne: string;
+    typetoit: string;
+    typecouverture: string;
+    inclinaison: string;
+    typecomble: string;
+    combleisole: string;
+    typemurs: string;
+    mursisole: string;
+    typevitrage: string;
+    jardin: string;
+    surfacejardin: string;
+    typesoussol: string;
+    garage: string;
+    typeinstallation: string;
+    sensibiliteenvironnement: string;
+}

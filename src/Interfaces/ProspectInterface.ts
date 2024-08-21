@@ -1,10 +1,10 @@
 export interface ProspectInterface {
     nom: string;
-    prenom: string;
     code : string;
     email: string;
     id_user : string;
     telephone: string;
+    prenom: string;
     adresse: string;
     ville: string;
     codepostal: string;

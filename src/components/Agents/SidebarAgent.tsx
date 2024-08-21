@@ -262,15 +262,15 @@ const SidebarAgent = () => {
                     to="/viewapplicationuser"
                     className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
                   >
-                    Application & uilisateur
+                    Application & role
                   </Link>
                 </div>
                 <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
                   <Link
                     to="/viewRoleUser"
-                    className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                    className="text-[12px] leading-[20px] text-[#7d839d] font-bolud"
                   >
-                    Role & uilisateur
+                    Privilège & role
                   </Link>
                 </div>
                 <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">

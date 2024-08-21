@@ -158,7 +158,7 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
 
   const handleSubmit = async () => {
     setLoading(true);
-    console.log(datamail);
+    //console.log(JSON.stringify(datamail));
     const response = await serviceMail.postMail(datamail);
     setLoading(false);
     setIsOpen(false);
@@ -193,11 +193,14 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
         const response = await serviceModelMail.getModelmailId(
           selectedOption.id
         );
+
+        const updatedContent = response.data.contenue.replace("XXX", data.nom);
+        const updatedContents = updatedContent.replace("XXXX", user.prenom+" "+ user.nom);
         setmodelMailData(response.data);
         setdatamail((prevState) => ({
           ...prevState,
           objet: response.data.sujet,
-          message: response.data.contenue,
+          message: updatedContents,
           from: response.data.emailexp,
         }));
       } catch (error: unknown) {

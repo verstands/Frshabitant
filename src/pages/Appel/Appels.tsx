@@ -123,6 +123,8 @@ const Appels: React.FC = () => {
         ...agenda,
         id_postect: response.data.id,
       });
+    
+
       setIsOpenPhone(true);
     } catch (error: unknown) {
       console.log(error);
@@ -224,24 +226,23 @@ const Appels: React.FC = () => {
   useEffect(() => {
     if (id) {
       getProspectId();
-    }else if(idcampagne){
+    } else if (idcampagne) {
       getProspectIdCampagne();
-    }
-     else {
+    } else {
       getProspectNonId();
     }
-  
+
     const script = document.createElement("script");
     script.src = "/webphone/webphone_api.js";
     script.async = true;
-  
+
     script.onload = () => {
       (window as any).webphone_api.parameters = {
         serveraddress: "188.165.55.170",
         username: "8019",
         password: "goautodial",
       };
-  
+
       /*(window as any).webphone_api.onRegistered = () => {
         console.log("Webphone registered successfully");
         setStarted(2);
@@ -266,29 +267,28 @@ const Appels: React.FC = () => {
           resetMuteButton();
         }
       });*/
-  
+
       if (prospect?.telephone) {
-        makeCall(); 
+        makeCall();
       }
-  
+
       (window as any).webphone_api.start();
     };
-  
+
     document.body.appendChild(script);
-  
+
     return () => {
       document.body.removeChild(script);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, prospect?.telephone]);
-  
 
   const makeCall = () => {
-    const number = prospect?.telephone
+    const number = prospect?.telephone;
     if (number) {
       if (webphone_api.isincall()) {
         webphone_api.hangup();
-        alert(number)
+        alert(number);
       } else {
         webphone_api.call(number);
       }
@@ -385,9 +385,9 @@ const Appels: React.FC = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         handleToggleModal();
-        if(!isOpenPhone){
+        if (!isOpenPhone) {
           if (prospect?.telephone) {
-            makeCall(); 
+            makeCall();
             startCallTimer();
           }
         }
@@ -415,7 +415,9 @@ const Appels: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center mb-4">
-              <div className="text-xl mr-5 font-bold text-white">{callDuration}</div>
+              <div className="text-xl mr-5 font-bold text-white">
+                {callDuration}
+              </div>
               <div className="px-4 py-2 bg-black bg-opacity-30 rounded-xl text-lg font-semibold animate-[pulsate_1.5s_infinite]">
                 Appel en cours
               </div>
@@ -452,125 +454,142 @@ const Appels: React.FC = () => {
           </div>
         </div>
       )}
-      <div className="border-white bg-white p-4 m-3 rounded-[10px] shadow flex items-center justify-between">
-        <div
-          onClick={() => appel()}
-          className=" cursor-pointer text-[#6c7ec2] border-[#e7edfe] flex items-center gap-2 p-4 rounded-[10px] bg-[#e7edfe]"
-        >
-          <p>Démarrer un appel avec ce prospect</p>
-          <FaPhoneAlt />
-        </div>
-        <div className="">
-          <p>
-            <strong>Date de création : </strong> 11/12/2023 12:22:45
-          </p>
-          <p className="flex gap-2">
-            <strong>A rappeler : </strong> 11/12/2023 12:22:45{" "}
-            <FaPencilAlt className=" text-[#6c7ec2] cursor-pointer " />
-          </p>
-          <p>
-            <strong>Status : </strong> A rappeler
-          </p>
-          <p>
-            <strong>Agent : </strong>
-            {user.prenom} {user.nom}
-          </p>
-          <p>
-            <strong>Campagne : </strong>{" "}
-            {prospect?.capagnepospect && prospect?.capagnepospect.titre}
-          </p>
-        </div>
-      </div>
-      <div className=" p-4">
-        <div className="flex items-center mb-2">
-          <div className="bg-[#29b765] rounded-l-[10px] p-12 flex items-center flex-grow-0">
-            <FaClock className="text-white" />
+      {prospect && prospect.id !== "" && (
+        <div className="border-white bg-white p-4 m-3 rounded-[10px] shadow flex items-center justify-between">
+          <div
+            onClick={() => appel()}
+            className=" cursor-pointer text-[#6c7ec2] border-[#e7edfe] flex items-center gap-2 p-4 rounded-[10px] bg-[#e7edfe]"
+          >
+            <p>Démarrer un appel avec ce prospect</p>
+            <FaPhoneAlt />
           </div>
-          <div className="bg-[#d1e6dd] rounded-r-[10px] p-3 flex-grow">
+          <div className="">
             <p>
-              <strong>Rendez-vous </strong>- cet appel est un appel programmé
-              dans votre agenda
+              <strong>Date de création : </strong> 11/12/2023 12:22:45
             </p>
-            <br />
-            <button
-              className="text-white bg-[#f85153] p-2 rounded-[8px]"
-              onClick={toggleModal}
-            >
-              Rappeler plus tard
-            </button>
+            <p className="flex gap-2">
+              <strong>A rappeler : </strong> 11/12/2023 12:22:45{" "}
+              <FaPencilAlt className=" text-[#6c7ec2] cursor-pointer " />
+            </p>
+            <p>
+              <strong>Status : </strong> Nouveau
+            </p>
+            <p>
+              <strong>Agent : </strong>
+              {user.prenom} {user.nom}
+            </p>
+            <p>
+              <strong>Campagne : </strong>{" "}
+              {prospect?.capagnepospect && prospect?.capagnepospect.titre}
+            </p>
           </div>
         </div>
+      )}
 
-        <div className="border-white h-[50%] bg-white p-4 rounded-[10px] shadow">
-          <h2 className="font-bold">Actions rapides</h2>
-          <div className="flex items-center">
-            <div className="bg-[#56c3ee] rounded-l-[10px] p-7 flex items-center flex-grow-0">
-              <FaClock className="text-white" />
+      <div className=" p-4">
+        {prospect && prospect.status !== "0" && (
+          <>
+            <div className="flex items-center mb-2">
+              <div className="bg-[#29b765] rounded-l-[10px] p-12 flex items-center flex-grow-0">
+                <FaClock className="text-white" />
+              </div>
+              <div className="bg-[#d1e6dd] rounded-r-[10px] p-3 flex-grow">
+                <p>
+                  <strong>Rendez-vous </strong>- cet appel est un appel
+                  programmé dans votre agenda
+                </p>
+                <br />
+                <button
+                  className="text-white bg-[#f85153] p-2 rounded-[8px]"
+                  onClick={() => BtnMN(prospect?.id)}
+                >
+                  Rappeler plus tard
+                </button>
+              </div>
             </div>
-            <div className="bg-[#d1e6dd] rounded-r-[10px] p-3 flex-grow">
-              <p className="text-[#1d59cc]">
-                <strong>Help #1 </strong>Ces boutons permettent de changer le
-                statut du prospect en 1 clic
-              </p>
-              <p className="text-[#1d59cc]">
-                <strong>Help #2 </strong>Ex : "RDV" : Change le statut en "RDV",
-                crée un lead, puis passe au prospect suivant{" "}
-              </p>
+          </>
+        )}
+        {prospect && prospect.id !== "" && (
+          <>
+            <div className="border-white h-[50%] bg-white p-4 rounded-[10px] shadow">
+              <h2 className="font-bold">Actions rapides</h2>
+              <div className="flex items-center">
+                <div className="bg-[#56c3ee] rounded-l-[10px] p-7 flex items-center flex-grow-0">
+                  <FaClock className="text-white" />
+                </div>
+                <div className="bg-[#d1e6dd] rounded-r-[10px] p-3 flex-grow">
+                  <p className="text-[#1d59cc]">
+                    <strong>Help #1 </strong>Ces boutons permettent de changer
+                    le statut du prospect en 1 clic
+                  </p>
+                  <p className="text-[#1d59cc]">
+                    <strong>Help #2 </strong>Ex : "RDV" : Change le statut en
+                    "RDV", crée un lead, puis passe au prospect suivant{" "}
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <div className="mt-6 flex gap-1 items-center">
+                <button
+                  className="bg-[#f2c231] rounded-[7px] p-2"
+                  title="Non repondu"
+                  onClick={() => BtnNRP(prospect?.id)}
+                >
+                  NRP
+                </button>
+                <button
+                  className="bg-[#20b669] rounded-[7px] p-2 text-white"
+                  title="Rendez-vous"
+                  onClick={() => handleToggleModalRdv()}
+                >
+                  RDV
+                </button>
+                <button
+                  className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+                  title="Non valide"
+                  onClick={() => BtnNOnValide(prospect?.id)}
+                >
+                  Non valide
+                </button>
+                <button
+                  className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+                  title="Non valide"
+                  onClick={() => BtnPasInteresse(prospect?.id)}
+                >
+                  Pas interéssé
+                </button>
+                <button
+                  className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+                  title="Non valide"
+                  onClick={() => BtnNPP(prospect?.id)}
+                >
+                  Ne pas appeller
+                </button>
+                <button
+                  className="bg-gray-500 rounded-[7px] p-2 text-white"
+                  title="Non valide"
+                  onClick={() => BtnMN(prospect?.id)}
+                >
+                  Mauvais numéro
+                </button>
+                <button
+                  className="bg-blue-500 rounded-[7px] p-2 text-white"
+                  title="Non valide"
+                  onClick={() => BtnFL(prospect?.id)}
+                >
+                  Faux lead
+                </button>
+                <button
+                  className="bg-orange-500 rounded-[7px] p-2 text-white"
+                  title="A rappeler"
+                  onClick={toggleModal}
+                >
+                  A rappeler
+                </button>
+              </div>
             </div>
-          </div>
-          <hr />
-          <div className="mt-6 flex gap-1 items-center">
-            <button
-              className="bg-[#f2c231] rounded-[7px] p-2"
-              title="Non repondu"
-              onClick={() => BtnNRP(prospect?.id)}
-            >
-              NRP
-            </button>
-            <button
-              className="bg-[#20b669] rounded-[7px] p-2 text-white"
-              title="Rendez-vous"
-              onClick={() => handleToggleModalRdv()}
-            >
-              RDV
-            </button>
-            <button
-              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
-              title="Non valide"
-              onClick={() => BtnNOnValide(prospect?.id)}
-            >
-              Non valide
-            </button>
-            <button
-              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
-              title="Non valide"
-              onClick={() => BtnPasInteresse(prospect?.id)}
-            >
-              Pas interéssé
-            </button>
-            <button
-              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
-              title="Non valide"
-              onClick={() => BtnNPP(prospect?.id)}
-            >
-              Ne pas appeller
-            </button>
-            <button
-              className="bg-gray-500 rounded-[7px] p-2 text-white"
-              title="Non valide"
-              onClick={() => BtnMN(prospect?.id)}
-            >
-              Mauvais numéro
-            </button>
-            <button
-              className="bg-blue-500 rounded-[7px] p-2 text-white"
-              title="Non valide"
-              onClick={() => BtnFL(prospect?.id)}
-            >
-              Faux lead
-            </button>
-          </div>
-        </div>
+          </>
+        )}
         <br />
         <div className="grid grid-cols-2 gap-2">
           {prospect && <Discours datadata={prospect} />}

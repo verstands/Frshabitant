@@ -10,10 +10,12 @@ import ApplicationService from "../../Services/Application.service";
 import { AccesApplicationInterface } from "../../Interfaces/AccesApplication";
 import AccesApplicationService from "../../Services/AccesApplication.service";
 import { useNavigate } from "react-router-dom";
+import FonctionService from "../../Services/Fonction.service";
+import { FonctionInterface } from "../../Interfaces/FonctionInterface";
 
 const ApplicationUser = () => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<UserInterface[] | null>(null);
+  const [user, setUser] = useState<FonctionInterface[] | null>(null);
   const [app, setApp] = useState<ApplicationInterface[] | null>(null);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [selectedApps, setSelectedApps] = useState<ApplicationInterface[]>([]);
@@ -24,13 +26,13 @@ const ApplicationUser = () => {
     dialog: {},
   };
 
-  const serviceUser = new AgentService(config);
+  const serviceUser = new FonctionService(config);
   const serviceApplication = new ApplicationService(config);
   const serviceAccesApplication = new AccesApplicationService(config);
 
   const getUser = async () => {
     try {
-      const response = await serviceUser.getAgent();
+      const response = await serviceUser.getFonction();
       setUser(response.data);
     } catch (error: unknown) {
       console.log(error);
@@ -99,18 +101,18 @@ const ApplicationUser = () => {
 
   const userOptions =
     user?.map((vh) => ({
-      label: vh.prenom + " " + vh.nom,
+      label: vh.initule,
       value: vh.id,
     })) || [];
 
   return (
     <>
-      <Otbar title="Espace application et utilisateur" />
+      <Otbar title="Espace application et role" />
       <div className="px-8 py-6">
         <div className="border-white m-3 bg-white p-6 rounded-lg shadow-md">
           <form onSubmit={handleSubmit}>
             <h2 className="font-semibold text-xl mb-4">
-              Ajouter un utilisateur dans une application
+              Ajouter un role dans une application
             </h2>
             <hr className="mb-4" />
             <div className="mb-4">
@@ -118,7 +120,7 @@ const ApplicationUser = () => {
                 htmlFor="user-select"
                 className="block text-sm font-medium text-gray-700"
               >
-                Noms de l'utilisateur
+                Role
               </label>
               <Select
                 id="user-select"

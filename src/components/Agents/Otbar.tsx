@@ -95,17 +95,19 @@ const Otbar: React.FC<OtbarProps> = ({ title, data = [] }) => {
   };
 
   useEffect(() => {
+    const savedNotifications = JSON.parse(sessionStorage.getItem("notifications") || "[]");
+    setNotifications(savedNotifications);
+  
     socket.on("notify", (notification: Notification) => {
-      setNotifications((prevNotifications) => [
-        ...prevNotifications,
-        notification,
-      ]);
+      const newNotifications = [...notifications, notification];
+      setNotifications(newNotifications);
+      sessionStorage.setItem("notifications", JSON.stringify(newNotifications));
     });
-
+  
     return () => {
       socket.off("notify");
     };
-  }, []);
+  }, [notifications]);
 
   const handleToggleModal = () => {
     setIsOpenPhoneRdv(!isOpenPhoneRdv);

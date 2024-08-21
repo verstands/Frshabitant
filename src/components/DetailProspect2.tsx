@@ -49,9 +49,9 @@ const DetailProspect2 : React.FC<DetailProspectProps> = ({ data })=> {
         {activeTab === "tab1" && 
              data && <DetailProspect data={data} />
         }
-        {activeTab === "tab2" && <div className="max-w-7xl mx-auto py-8 border-t border-gray-200 h-96 overflow-y-scroll">  
+        {activeTab === "tab2" &&  
           <ComplementDiscour />
-          </div>}
+        }
       </div>
     </div>
   );

@@ -42,7 +42,15 @@ const ModelzMailTable = () => {
   useEffect(() => {
     getModelmail();
   }, []);
-  const TABLE_HEAD = ["N°", "Modele", "Sujet", "Campagne", "Agent", "Active", "Action"];
+  const TABLE_HEAD = [
+    "N°",
+    "Modele",
+    "Sujet",
+    "Campagne",
+    "Agent",
+    "Active",
+    "Action",
+  ];
   return (
     <>
       <div className="p-5">
@@ -60,9 +68,7 @@ const ModelzMailTable = () => {
               />
             </div>
           </CardHeader>
-          <center>
-          {loading && <Spinner />}
-          </center>
+          <center>{loading && <Spinner />}</center>
           <CardBody className="overflow-scroll px-1">
             <table className="w-full min-w-max table-auto text-left">
               <thead>
@@ -87,14 +93,20 @@ const ModelzMailTable = () => {
                 {Array.isArray(data) &&
                   data
                     .filter((data) => {
-                      if (typeof data.sujet !== "string" || typeof data.nom !== "string"){
+                      if (
+                        typeof data.sujet !== "string" ||
+                        typeof data.nom !== "string"
+                      ) {
                         return false;
                       }
-                      return data.sujet
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase()) ||  data.nom
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase());
+                      return (
+                        data.sujet
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase()) ||
+                        data.nom
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase())
+                      );
                     })
                     .map((data, index) => (
                       <tr key={index}>
@@ -131,7 +143,9 @@ const ModelzMailTable = () => {
                             color="blue-gray"
                             className="font-bold"
                           >
-                            {data.capagnemodel?.titre}
+                            {data.capagnemodel?.titre.length > 50
+                              ? `${data.capagnemodel.titre.slice(0, 50)}...`
+                              : data.capagnemodel.titre}
                           </Typography>
                         </td>
                         <td className="p-4">
@@ -140,16 +154,27 @@ const ModelzMailTable = () => {
                             color="blue-gray"
                             className="font-bold"
                           >
-                            {data.fonctionmodel?.initule}
+                            {data.fonctionmodel?.initule.length > 50
+                              ? `${data.fonctionmodel.initule.slice(0, 50)}...`
+                              : data.fonctionmodel.initule}
                           </Typography>
                         </td>
+
                         <td className="p-4">
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-bold"
                           >
-                            <p className={data.active ? "bg-green-500 inline-block border p-2 rounded-xl text-white" : "bg-red-500 inline-block border p-2 rounded-xl text-white"}>{data.active ? "Activer" : "Desactiver"}</p>
+                            <p
+                              className={
+                                data.active
+                                  ? "bg-green-500 inline-block border p-2 rounded-xl text-white"
+                                  : "bg-red-500 inline-block border p-2 rounded-xl text-white"
+                              }
+                            >
+                              {data.active ? "Activer" : "Desactiver"}
+                            </p>
                           </Typography>
                         </td>
 

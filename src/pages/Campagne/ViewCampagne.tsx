@@ -76,16 +76,26 @@ const ViewCampagne = () => {
       <div className="px-4">
         <Card className="h-full w-full">
           <CardHeader className="rounded-none p-4">
-            <div className="flex items-center md:w-80 px-4">
-              <input
-                type="text"
-                name="email"
-                id="email"
-                value={searchTerm}
-                onChange={handleSearchDette}
-                placeholder="Recherche"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+            <div className="flex items-center justify-between px-4">
+              <div className="md:w-80 ">
+                <input
+                  type="text"
+                  name="email"
+                  id="email"
+                  value={searchTerm}
+                  onChange={handleSearchDette}
+                  placeholder="Recherche"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outlined" size="sm">
+                  Precedent
+                </Button>
+                <Button variant="outlined" size="sm">
+                  Suivant
+                </Button>
+              </div>
             </div>
           </CardHeader>
           <CardBody className="overflow-scroll px-1">
@@ -203,7 +213,8 @@ const ViewCampagne = () => {
                           <br />
                           <p className="border text-[10px] rounded-[10px] p-1 bg-blue-500 text-white inline-block border-blue-600">
                             Faux lead : {data.statusCounts?.status7}
-                          </p><br />
+                          </p>
+                          <br />
                           <p className="border text-[10px] rounded-[10px] p-1 bg-gray-500 text-white inline-block border-blue-600">
                             Ne pas appeler : {data.statusCounts?.status5}
                           </p>
@@ -265,14 +276,6 @@ const ViewCampagne = () => {
               </tbody>
             </table>
           </CardBody>
-          <CardFooter className="flex items-center gap-1 border-t border-blue-gray-50 p-4">
-            <Button variant="outlined" size="sm">
-              Precedent
-            </Button>
-            <Button variant="outlined" size="sm">
-              Suivant
-            </Button>
-          </CardFooter>
         </Card>
       </div>
     </>

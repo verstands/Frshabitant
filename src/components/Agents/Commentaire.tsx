@@ -4,8 +4,6 @@ import { UserInterface } from "../../Interfaces/UserInterface";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import CommentaireService from "../../Services/Commentaire.service";
 import { CommenatareInterface } from "../../Interfaces/CommentaireInterface";
-import prospect from "../../pages/Prospect/prospect";
-import { toast } from "react-toastify";
 import Spinner from "../Spinner";
 import PieceJointUser from "./PieceJointUser";
 
@@ -42,6 +40,11 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
     setComment(e.target.value);
   };
 
+  const getCurrentDateTime = (): string => {
+    const now = new Date();
+    return now.toLocaleString(); // Format date/heure local
+  };
+
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoadingBtn(true);
@@ -50,6 +53,7 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
         id_prospect: `${datadata.id}`,
         id_user: `${user.id}`,
         message: comment,
+        date: getCurrentDateTime()
       };
       setComments([...comments, comment]);
       try {
@@ -165,49 +169,49 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
           {activeTab === "tab1" && (
             <div className="mt-6 flex gap-1 items-center">
-            <button
-              className="bg-[#f2c231] rounded-[7px] p-2"
-              title="Non repondu"
-            >
-              NRP
-            </button>
-            <button
-              className="bg-[#20b669] rounded-[7px] p-2 text-white"
-              title="Rendez-vous"
-            >
-              RDV
-            </button>
-            <button
-              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
-              title="Non valide"
-            >
-              Non valide
-            </button>
-            <button
-              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
-              title="Non valide"
-            >
-              Pas interéssé
-            </button>
-            <button
-              className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
-              title="Non valide"
-            >
-              Ne pas appeller
-            </button>
-            <button
-              className="bg-gray-500 rounded-[7px] p-2 text-white"
-              title="Non valide"
-            >
-              Mauvais numéro
-            </button>
-            <button
-              className="bg-blue-500 rounded-[7px] p-2 text-white"
-              title="Non valide"
-            >
-              Faux lead
-            </button>
-          </div>
+              <button
+                className="bg-[#f2c231] rounded-[7px] p-2"
+                title="Non repondu"
+              >
+                NRP
+              </button>
+              <button
+                className="bg-[#20b669] rounded-[7px] p-2 text-white"
+                title="Rendez-vous"
+              >
+                RDV
+              </button>
+              <button
+                className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+                title="Non valide"
+              >
+                Non valide
+              </button>
+              <button
+                className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+                title="Non valide"
+              >
+                Pas interéssé
+              </button>
+              <button
+                className="bg-[#eb5c56] rounded-[7px] p-2 text-white"
+                title="Non valide"
+              >
+                Ne pas appeller
+              </button>
+              <button
+                className="bg-gray-500 rounded-[7px] p-2 text-white"
+                title="Non valide"
+              >
+                Mauvais numéro
+              </button>
+              <button
+                className="bg-blue-500 rounded-[7px] p-2 text-white"
+                title="Non valide"
+              >
+                Faux lead
+              </button>
+            </div>
           )}
           {activeTab === "tab2" && (
             <div>
@@ -221,16 +225,20 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
           {activeTab === "tab4" && <div>Contenu du Tab 4</div>}
           {activeTab === "tab5" && (
             <div>
-              <div className="mb-4 h-96 overflow-y-scroll ">
+              <div className="mb-4 h-96 overflow-y-scroll">
                 {commentaire?.map((ab) => (
-                  <div className="flex items-start mb-4">
-                    <div className="bg-indigo-100 p-3 rounded-lg shadow-sm w-full">
-                      <p className="text-gray-700">{ab.message}</p>
-                    </div>
+                  <div key={ab.id} className="flex items-start mb-4">
                     <div className="flex-shrink-0 mr-4">
-                      <FaUserCircle size={30} />
+                      <FaUserCircle size={40} className="text-indigo-500" />
                     </div>
-                    <br />
+                    <div className="bg-indigo-100 p-3 rounded-lg shadow-sm w-full">
+                      <div className="flex justify-between items-center">
+                        <p className="font-semibold text-indigo-700">{ab.user?.prenom} {ab.user?.nom}
+                      </p>
+                        <span className="text-xs text-gray-500">{ab.date}</span>
+                      </div>
+                      <p className="text-gray-700 mt-2">{ab.message}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -255,7 +263,9 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
             </div>
           )}
           {activeTab === "tab6" && <div>Contenu du Tab 6</div>}
-          {activeTab === "tab7" && <div> <PieceJointUser data={datadata} /></div>}
+          {activeTab === "tab7" && (
+            <div>{datadata && <PieceJointUser data={datadata} />} </div>
+          )}
         </div>
       </div>
     </div>

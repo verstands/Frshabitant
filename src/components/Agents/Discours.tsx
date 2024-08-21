@@ -4,7 +4,6 @@ import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.int
 import { ScriptInterface } from "../../Interfaces/ScriptInterface";
 import { ProspectInterface } from "../../Interfaces/ProspectInterface";
 import Spinner from "../Spinner";
-import ComplementDiscour from "./ComplementDiscour";
 
 interface DetailProspectProps {
   datadata: ProspectInterface;
@@ -60,7 +59,8 @@ const Discours: React.FC<DetailProspectProps> = ({ datadata }) => {
     if (!activeData) {
       return <div></div>;
     }
-    return <div dangerouslySetInnerHTML={{ __html: activeData.contenue }} />;
+    const contenuModifie = activeData.contenue.replace("[Nom]", datadata.nom);
+    return <div dangerouslySetInnerHTML={{ __html: contenuModifie }} />;
   };
 
   return (

@@ -268,12 +268,6 @@ const Utilisateur = () => {
               */}
 
             </div>
-            <button
-              type="reset"
-              className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#ba312a] p-3 rounded-[15px] float-right"
-            >
-              Supprimer
-            </button>
             <br />
           </form>
         </div>

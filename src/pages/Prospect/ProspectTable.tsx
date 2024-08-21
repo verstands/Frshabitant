@@ -59,7 +59,8 @@ const ProspectTable = () => {
       <center>{loading && <Spinner />}</center>
       <Card className="h-full w-full">
         <CardHeader className="rounded-none py-4">
-          <div className="flex items-center md:w-80 px-4">
+          <div className="flex items-center justify-between px-4">
+            <div className="md:w-80 ">
             <input
               type="text"
               value={searchTerm}
@@ -69,6 +70,15 @@ const ProspectTable = () => {
               placeholder="Recherche"
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outlined" size="sm">
+                Precedent
+              </Button>
+              <Button variant="outlined" size="sm">
+                Suivant
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardBody className="overflow-scroll px-1">
@@ -171,7 +181,7 @@ const ProspectTable = () => {
                           {data.email}
                         </Typography>
                       </td>
-                  
+
                       <td className="p-4">
                         <Typography
                           variant="small"
@@ -195,7 +205,7 @@ const ProspectTable = () => {
                           )}
                           {data.status === "3" && (
                             <div className="border p-1  border-red-400 bg-red-400 rounded-[50px] text-white">
-                             <center>Non valide</center> 
+                              <center>Non valide</center>
                             </div>
                           )}
                           {data.status === "4" && (
@@ -205,7 +215,7 @@ const ProspectTable = () => {
                           )}
                           {data.status === "5" && (
                             <div className="border p-1  border-red-400 bg-red-400 rounded-[50px] text-white">
-                             <center>Ne pas appeller</center> 
+                              <center>Ne pas appeller</center>
                             </div>
                           )}
                           {data.status === "6" && (
@@ -253,14 +263,6 @@ const ProspectTable = () => {
             </tbody>
           </table>
         </CardBody>
-        <CardFooter className="flex items-center gap-1 border-t border-blue-gray-50 p-4">
-          <Button variant="outlined" size="sm">
-            Precedent
-          </Button>
-          <Button variant="outlined" size="sm">
-            Suivant
-          </Button>
-        </CardFooter>
       </Card>
     </>
   );
