@@ -13,6 +13,9 @@ import ProspectService from "../../Services/Prospect.service";
 import Spinner from "../../components/Spinner";
 import { FaEdit, FaEye, FaPhone, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import iconMap from "../Campagne/iconMap";
+import React from "react";
+
 
 const ProspectTable = () => {
   const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
@@ -53,6 +56,15 @@ const ProspectTable = () => {
 
   const handleSearchDette = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const getIconComponent = (iconName: string | number) => {
+    const Icon = iconMap[iconName];
+    if (!Icon) {
+      console.error(`Icon not found foreeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ${iconName}`);
+      return Icon;
+    }
+    return Icon;
   };
   return (
     <>
@@ -156,7 +168,13 @@ const ProspectTable = () => {
                           className="font-normal"
                         >
                           <center>
-                            <FaUser color="blue" />
+                          <center>
+                              {data.produitpospect?.image && 
+                                React.createElement(getIconComponent(data.produitpospect.image), {
+                                  className: "text-blue-500"
+                                })
+                              }
+                            </center>
                             <div className="text-blue-500">
                               {data.produitpospect && data.produitpospect.titre}
                             </div>

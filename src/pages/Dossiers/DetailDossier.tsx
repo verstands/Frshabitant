@@ -11,6 +11,7 @@ import { ProspectInterface } from "../../Interfaces/ProspectInterface";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import ProspectService from "../../Services/Prospect.service";
 import Swal from "sweetalert2";
+import Commentaire from "../../components/Agents/Commentaire";
 
 const DetailDossier = () => {
   const { id } = useParams<{ id: string }>();
@@ -91,6 +92,9 @@ const DetailDossier = () => {
             <br />
             <AgendaDossierUser />
           </div>
+        </div>
+        <div className="">
+          {prospect && <Commentaire datadata={prospect} />}
         </div>
       </div>
     </>

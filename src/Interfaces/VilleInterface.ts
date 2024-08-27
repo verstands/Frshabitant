@@ -1,6 +1,6 @@
 export interface VilleInterface {
     insee_code: string;
-    city_code: string;
+    labelcity_code: string;
     zip_code: string;
     label: string;
     latitude: string;

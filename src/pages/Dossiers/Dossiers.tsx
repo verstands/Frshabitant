@@ -196,6 +196,7 @@ const Dossiers = () => {
     
     const exportToExcel = () => {
       import("xlsx").then((XLSX) => {
+        
         const ws = XLSX.utils.json_to_sheet(dataExcel);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Données");

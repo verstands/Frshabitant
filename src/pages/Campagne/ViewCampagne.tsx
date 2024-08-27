@@ -218,6 +218,10 @@ const ViewCampagne = () => {
                           <p className="border text-[10px] rounded-[10px] p-1 bg-gray-500 text-white inline-block border-blue-600">
                             Ne pas appeler : {data.statusCounts?.status5}
                           </p>
+                          <br />
+                          <p className="border text-[10px] rounded-[10px] p-1 bg-gray-500 text-white inline-block border-blue-600">
+                            a ppeler : 0
+                          </p>
                         </td>
                         <td className="p-4">
                           <Typography
