@@ -2,7 +2,6 @@
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import Otbar from "../../components/Agents/Otbar";
-import hasAccess from "../../components/hasAcess";
 import TypeProduitTable from "./TypeProduitTable";
 const ViewTypeProduit = () => {
   return (
@@ -16,18 +15,17 @@ const ViewTypeProduit = () => {
       </div>
       <div className="px-20">
         <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
-          {hasAccess("create") && (
+        
            <Link
            to="/createtypeproduit"
            className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right"
          >
            <FaPlus /> Nouveau type produit
          </Link>
-          )}
           <div className="py-4"></div>
           <br />
           <hr />
-          {hasAccess("read") && <TypeProduitTable/>} 
+         <TypeProduitTable/>
         </div>
       </div>
     </>

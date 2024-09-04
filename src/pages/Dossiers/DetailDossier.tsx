@@ -85,7 +85,7 @@ const DetailDossier = () => {
             <br />
             { <DossierUserActionRapide datadata={prospect} /> }
             <br />
-            <HistoriqueDossierUser />
+            <HistoriqueDossierUser  datadata={prospect} />
           </div>
           <div>
             {prospect && <CommentUserDossier datadata={prospect} />}

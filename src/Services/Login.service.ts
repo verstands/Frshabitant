@@ -1,5 +1,6 @@
 import Repository from '../repository/inhumation.repository';
 import { RepositoryConfigInterface } from '../Interfaces/RepositoryConfig.interface';
+import axios from 'axios';
 
 
 class LoginService<T> extends Repository<T> {
@@ -17,6 +18,17 @@ class LoginService<T> extends Repository<T> {
       throw error;
     }
   }
+
+    async dataIp() {
+      try {
+        const response = await axios.get('https://ipapi.co/json/');
+        const data = response.data;
+        return data;
+      } catch (error: any) {
+        console.error('Error fetching IP data:', error.message);
+        throw error;
+      }
+    }
   
 }
 

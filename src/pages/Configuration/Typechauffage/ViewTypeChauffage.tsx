@@ -15,18 +15,17 @@ const ViewTypeChauffage = () => {
       </div>
       <div className="px-20">
         <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
-          {hasAccess("create") && (
+          
            <Link
            to="/createtypechauffage"
            className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right"
          >
            <FaPlus /> Nouveau type de chauffage
          </Link>
-          )}
           <div className="py-4"></div>
           <br />
           <hr />
-          {hasAccess("read") && <TypeChauffageTable />} 
+          <TypeChauffageTable />
         </div>
       </div>
     </>

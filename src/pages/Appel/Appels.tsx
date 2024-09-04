@@ -30,6 +30,9 @@ import { AgendaInterface } from "../../Interfaces/AgendaInterface";
 import AgendaService from "../../Services/Agenda.service";
 import CommentaireAgent from "../../components/Agents/CommentaireAgent";
 import DetailProspect2 from "../../components/DetailProspect2";
+import HistoriqueAfficheService from "../../Services/HistoriqueAffiche.service";
+import { HistoriqueAfficheInterface } from "../../Interfaces/HistoriqueAfficheInterface";
+import useHasModule from "../../components/Agents/useHasModule";
 
 const Appels: React.FC = () => {
   const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
@@ -40,6 +43,7 @@ const Appels: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isOpenPhone, setIsOpenPhone] = useState(false);
   const [isOpenPhoneRdv, setIsOpenPhoneRdv] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
   const idprospect = prospect?.id;
 
@@ -53,6 +57,12 @@ const Appels: React.FC = () => {
     title: "A rappeler",
     id_postect: idprospect,
     id_user: `${user.id}`,
+  });
+
+  const [histtorique, setHistorique] = useState<HistoriqueAfficheInterface>({
+    action: "a crée un agenda sur la fiche le",
+    userProspect: "",
+    userAgent: String(user.id),
   });
 
   //pour les appels
@@ -85,6 +95,7 @@ const Appels: React.FC = () => {
 
   const serviceProspect = new ProspectService(config);
   const serviceAgentda = new AgendaService(config);
+  const historiqueAffiche = new HistoriqueAfficheService(config);
 
   const getProspectId = async () => {
     try {
@@ -142,7 +153,14 @@ const Appels: React.FC = () => {
     e.preventDefault();
     try {
       try {
+        setHistorique(
+          {
+            ...histtorique,
+            userProspect : prospect?.id
+          }
+        )
         const response = await serviceAgentda.postAgenda(agenda);
+        const responsehistorique = await historiqueAffiche.postHistoriqueAffiche(histtorique);
         setIsOpen(false);
         toast.success("rappel a été ajouté dans l'agenda");
       } catch (error) {
@@ -402,59 +420,121 @@ const Appels: React.FC = () => {
   const handleToggleModalRdv = () => {
     setIsOpenPhoneRdv(!isOpenPhoneRdv);
   };
+
+  const answerCall = () => {
+    console.log("Appel décroché");
+  };
+
+  const hangupCall = () => {
+    console.log("Appel raccroché");
+  };
+
+  
+
+  const showTransferModal = () => {
+    setIsTransferModalOpen(true);
+  };
+
+  const closeTransferModal = () => {
+    setIsTransferModalOpen(false);
+  };
+
+  const hasModule = useHasModule('appelautomatique');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
   return (
     <>
       <Otbar title="Robot d'appel automatique " />
       {isOpenPhone && (
-        <div className="p-4">
-          <div className="flex flex-col items-center p-5 rounded-xl shadow-lg  relative overflow-hidden bg-gradient-to-r from-blue-500 to-pink-500 bg-[length:200%_200%] animate-[gradientAnimation_10s_ease_infinite]">
-            <div className="text-center mb-4 text-white">
-              <div className="text-xl font-bold mb-1">{prospect.nom}</div>
-              <div className="text-lg font-normal text-blue-100">
-                +{prospect.telephone}
-              </div>
-            </div>
-            <div className="flex items-center mb-4">
-              <div className="text-xl mr-5 font-bold text-white">
-                {callDuration}
-              </div>
-              <div className="px-4 py-2 bg-black bg-opacity-30 rounded-xl text-lg font-semibold animate-[pulsate_1.5s_infinite]">
-                Appel en cours
-              </div>
-            </div>
-            <div className="flex justify-center gap-2 w-full max-w-2xl">
-              <button
-                className="flex items-center justify-center hover:bg-red-500 hover:text-white bg-white w-16 h-16 rounded-full text-2xl transition duration-300 transform hover:scale-110 hover:shadow-lg"
-                aria-label="Raccrocher l'appel"
-                onClick={handleToggleModal}
-              >
-                <FaPhoneSlash />
-              </button>
-              <button
-                className="flex items-center justify-center hover:bg-red-500 hover:text-white bg-white w-16 h-16 rounded-full text-2xl transition duration-300 transform hover:scale-110 hover:shadow-lg"
-                aria-label="Raccrocher l'appel"
-              >
-                <FaMicrophoneSlash />
-              </button>
-              <button
-                className="flex items-center justify-center hover:bg-red-500 hover:text-white bg-white w-16 h-16 rounded-full text-2xl transition duration-300 transform hover:scale-110 hover:shadow-lg"
-                aria-label="Transférer l'appel"
-              >
-                <FaUser />
-                <span className="ml-2 hidden">Transfert</span>
-              </button>
-              <button
-                className="flex items-center justify-center hover:bg-yellow-500 hover:text-white bg-white w-16 h-16 rounded-full text-2xl transition duration-300 transform hover:scale-110 hover:shadow-lg"
-                aria-label="Mettre en attente"
-              >
-                <FaPause />
-                <span className="ml-2 hidden">Attente</span>
-              </button>
-            </div>
+        <div className="flex flex-col items-center p-6 rounded-lg shadow-lg w-full bg-gradient-to-r from-red-500 to-blue-500 animate-gradientBackground">
+          <div className="text-center mb-4 text-white">
+            <div className="text-2xl font-bold mb-2" id="caller-name">{prospect?.nom}</div>
+            <div className="text-lg text-red-100" id="caller-number">{prospect?.telephone}</div>
+          </div>
+          <div className="flex items-center mb-4">
+            <div className="text-lg text-white mr-4" id="call-timer">00m 10s</div>
+            <div className="px-4 py-2 bg-white bg-opacity-30 rounded-full text-white font-semibold animate-pulse" id="call-status">Appel en cours</div>
+          </div>
+          <div className="flex flex-wrap justify-center w-full max-w-xl">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold p-3 m-2 rounded-full transition transform hover:scale-110"
+              onClick={answerCall}
+              aria-label="Décrocher"
+              title="Décrocher"
+            >
+              <FaPhone className="text-lg" />
+            </button>
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white font-bold p-3 m-2 rounded-full transition transform hover:scale-110"
+              onClick={hangupCall}
+              aria-label="Raccrocher"
+              title="Raccrocher"
+            >
+              <FaPhoneSlash className="text-lg" />
+            </button>
+            <button
+              className="bg-white text-black font-bold p-2 m-2 rounded-full transition transform hover:bg-red-500 hover:text-white hover:scale-110"
+              aria-label="Couper le micro"
+              title="Couper le micro"
+            >
+              <FaMicrophoneSlash className="text-lg" />
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-3 m-2 rounded-full transition transform hover:scale-110"
+              onClick={showTransferModal}
+              aria-label="Transférer"
+              title="Transférer"
+            >
+              <FaUser className="text-lg" />
+            </button>
+            <button
+              className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold p-3 m-2 rounded-full transition transform hover:scale-110"
+              aria-label="Mettre en attente"
+              title="Mettre en attente"
+            >
+              <FaPause className="text-lg" />
+            </button>
+            <button
+              className="bg-purple-500 text-white font-bold p-3 m-2 rounded-full opacity-50 cursor-not-allowed"
+              aria-label="Conférence"
+              title="Conférence"
+            >
+              <FaUsers className="text-lg" />
+            </button>
+            <button
+              className="bg-blue-700 hover:bg-blue-900 text-white font-bold p-3 m-2 rounded-full transition transform hover:scale-110"
+              aria-label="Ajouter un participant"
+              title="Ajouter un participant"
+            >
+              <FaUserPlus className="text-lg" />
+            </button>
           </div>
         </div>
       )}
-      {prospect && prospect.id !== "" && (
+
+      {isTransferModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md relative animate-fadeIn">
+            <span className="absolute top-4 right-4 text-gray-500 text-2xl cursor-pointer" onClick={closeTransferModal}>
+              &times;
+            </span>
+            <div className="mb-4">
+              <h2 className="text-xl font-bold text-gray-800">Transférer l'appel</h2>
+            </div>
+            <div className="mb-4">
+              <ul className="list-none p-0">
+                <li className="p-2 rounded-lg cursor-pointer transition hover:bg-gray-200">Service Administratif - 103</li>
+                <li className="p-2 rounded-lg cursor-pointer transition hover:bg-gray-200">Service Technique - 102</li>
+              </ul>
+            </div>
+            <div className="flex justify-end">
+              <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Transférer</button>
+            </div>
+          </div>
+        </div>
+      )}     {prospect && prospect.id !== "" && (
         <div className="border-white bg-white p-4 m-3 rounded-[10px] shadow flex items-center justify-between">
           <div
             onClick={() => appel()}

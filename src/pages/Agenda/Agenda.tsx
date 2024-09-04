@@ -1,8 +1,14 @@
 import AgendaComponent from '../../components/Agents/AgendaComponent'
 import Otbar from '../../components/Agents/Otbar'
 import { FaClock } from 'react-icons/fa'
+import useHasModule from '../../components/Agents/useHasModule';
 
 const Agenda = () => {
+    const hasModule = useHasModule('agenda');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
     return (
         <>
             <Otbar title='Espace Agenda' />

@@ -6,6 +6,9 @@ import CommentaireService from "../../Services/Commentaire.service";
 import { CommenatareInterface } from "../../Interfaces/CommentaireInterface";
 import Spinner from "../Spinner";
 import PieceJointUser from "./PieceJointUser";
+import { HistoriqueAfficheInterface } from "../../Interfaces/HistoriqueAfficheInterface";
+import HistoriqueAfficheService from "../../Services/HistoriqueAffiche.service";
+import HistoriqueDossierUser from "./HistoriqueDossierUser";
 
 type Tab = "tab1" | "tab2" | "tab3" | "tab4" | "tab5" | "tab6" | "tab7";
 
@@ -19,10 +22,15 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
   const [commentaire, setcommentaire] = useState<CommenatareInterface[] | null>(
     null
   );
-
   const user: UserInterface = JSON.parse(
     sessionStorage.getItem("user") || "[]"
   );
+
+  const [histtorique, setHistorique] = useState<HistoriqueAfficheInterface>({
+    action: "a creé un commentaire sur ce lead le",
+    userProspect: String(datadata?.id),
+    userAgent: String(user.id),
+  });
 
   const [loading, setLoading] = useState(true);
   const [loadingBtn, setLoadingBtn] = useState(false);
@@ -53,10 +61,12 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
         id_prospect: `${datadata.id}`,
         id_user: `${user.id}`,
         message: comment,
-        date: getCurrentDateTime()
+        date: getCurrentDateTime(),
       };
       setComments([...comments, comment]);
       try {
+        const responsehistorique =
+          await historiqueAffiche.postHistoriqueAffiche(histtorique);
         await serviceCommentaire.postCommentaire(newComment);
         setLoadingBtn(false);
         getCommentaire();
@@ -82,6 +92,7 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
   };
 
   const serviceCommentaire = new CommentaireService(config);
+  const historiqueAffiche = new HistoriqueAfficheService(config);
 
   useEffect(() => {
     getCommentaire();
@@ -215,10 +226,7 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
           )}
           {activeTab === "tab2" && (
             <div>
-              <h2 className="font-bold">{datadata.nom}</h2>
-              <p>Statut: Nouveau = NRP</p>
-              <p>Compteur NRP: 0 = 1</p>
-              <p>CountNrpTotal : 0 = 1</p>
+              {datadata && <HistoriqueDossierUser datadata={datadata} />}
             </div>
           )}
           {activeTab === "tab3" && <div>Contenu du Tab 3</div>}
@@ -233,8 +241,9 @@ const Commentaire: React.FC<DetailProspectProps> = ({ datadata }) => {
                     </div>
                     <div className="bg-indigo-100 p-3 rounded-lg shadow-sm w-full">
                       <div className="flex justify-between items-center">
-                        <p className="font-semibold text-indigo-700">{ab.user?.prenom} {ab.user?.nom}
-                      </p>
+                        <p className="font-semibold text-indigo-700">
+                          {ab.user?.prenom} {ab.user?.nom}
+                        </p>
                         <span className="text-xs text-gray-500">{ab.date}</span>
                       </div>
                       <p className="text-gray-700 mt-2">{ab.message}</p>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Otbar from "../../components/Agents/Otbar";
 import * as XLSX from "xlsx";
 import { useNavigate } from "react-router-dom";
+import useHasModule from "../../components/Agents/useHasModule";
 
 const CreateCampagne = () => {
   const [selectedFile, setSelectedFile] = useState<null | File>(null);
@@ -53,6 +54,12 @@ const CreateCampagne = () => {
   useEffect(() => {
     console.log("excelData:", excelData);
   }, [excelData]);
+
+  const hasModule = useHasModule('creercampagne');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
 
   return (
     <>

@@ -6,6 +6,9 @@ import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.int
 import { toast } from "react-toastify";
 import { FaFile, FaFilePdf, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { UserInterface } from "../../Interfaces/UserInterface";
+import { HistoriqueAfficheInterface } from "../../Interfaces/HistoriqueAfficheInterface";
+import HistoriqueAfficheService from "../../Services/HistoriqueAffiche.service";
 
 type Tab = "tab1" | "tab2" | "tab3";
 
@@ -26,12 +29,26 @@ const PieceJointUser: React.FC<DetailProspectProps> = ({ data }) => {
     status: true,
   });
 
+
+  const user: UserInterface = JSON.parse(
+    sessionStorage.getItem("user") || "[]"
+  );
+
+  const [histtorique, setHistorique] = useState<HistoriqueAfficheInterface>({
+    action: "a ajouter une piece joint sur ce lead le",
+    userProspect: String(data?.id),
+    userAgent: String(user.id),
+  });
+
   const config: RepositoryConfigInterface = {
     appConfig: {},
     dialog: {},
   };
 
   const servicepieceJoint = new PieceJointService(config);
+  const historiqueAffiche = new HistoriqueAfficheService(config);
+
+  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileList(e.target.files);
@@ -60,6 +77,8 @@ const PieceJointUser: React.FC<DetailProspectProps> = ({ data }) => {
   
     try {
       const response = await servicepieceJoint.postPieceJoint(formData);
+      const responsehistorique = await historiqueAffiche.postHistoriqueAffiche(histtorique);
+
       getpieceJoint()
       toast.success("Fichier envoyé avec succès:");
     } catch (error: unknown) {

@@ -11,6 +11,7 @@ class ProspectService<T> extends Repository<T> {
     try {
       const response = await this.postFind$('pospect', prospect);
       return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Error during login request:', error.message);
       throw error;
@@ -19,13 +20,15 @@ class ProspectService<T> extends Repository<T> {
 
   async getProspect(): Promise<T> {
     try {
-      const response = await this.find$('pospect');
+      const response = await this.find$(`pospect`);
       return response;
     } catch (error: any) {
-      console.error('Error during login request:', error.message);
+      console.error('Error during request:', error.message);
       throw error;
     }
   }
+  
+  
 
   async getOne(): Promise<T> {
     try {

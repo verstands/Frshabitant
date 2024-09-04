@@ -9,6 +9,8 @@ import ScriptService from "../../Services/Script.service";
 import { useNavigate, useParams } from "react-router-dom";
 import TypeProduitService from "../../Services/TypeProduit.service";
 import { TypeProduitInterface } from "../../Interfaces/TypeProduitInterface";
+import CampagneService from "../../Services/Campagne.service";
+import { CampagneInterfce } from "../../Interfaces/CampagneInterface";
 
 const config: RepositoryConfigInterface = {
   appConfig: {},
@@ -17,19 +19,21 @@ const config: RepositoryConfigInterface = {
 
 const serviceScript = new ScriptService(config);
 const serviceTypeProduitt = new TypeProduitService(config);
+const serviceCampagne = new CampagneService(config);
+
 
 const Script = () => {
   const [userInfo, setUserInfo] = useState<ScriptInterface>({
     titre: "",
     contenue: "",
     position: "",
+    campagne: ""
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [typroduit, settyproduit] = useState<TypeProduitInterface[] | null>(
-    null
-  );
+  const [typroduit, settyproduit] = useState<TypeProduitInterface[] | null>(null);
+  const [campagne, setcampagne] = useState<CampagneInterfce[] | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,6 +47,15 @@ const Script = () => {
     try {
       const response = await serviceTypeProduitt.getTypeProduit();
       settyproduit(response.data);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  const getCampagne = async () => {
+    try {
+      const response = await serviceCampagne.getCampagne();
+      setcampagne(response.data);
     } catch (error: unknown) {
       console.log(error);
     }
@@ -70,6 +83,7 @@ const Script = () => {
   useEffect(() => {
     getScriptId();
     getTypeProduit();
+    getCampagne();
     setLoading(false);
   }, [id]);
 
@@ -123,7 +137,6 @@ const Script = () => {
   return (
     <>
       <Otbar title="Espace script" />
-      {hasAccess("create") && (
         <div className="px-4">
           <div className="border-white m-3 bg-white p-10 rounded-[10px] shadow">
             <h2 className="font-bold text-[20px]">
@@ -136,7 +149,7 @@ const Script = () => {
                 Enregistrer
               </button>
               <br />
-              <div className="grid md:grid-cols-2 gap-2">
+              <div className="grid md:grid-cols-3 gap-2">
                 <div>
                   <label
                     htmlFor="titre"
@@ -158,7 +171,7 @@ const Script = () => {
                     htmlFor="information"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                   >
-                    Type produit
+                    Programme
                   </label>
                   <select
                     name="position"
@@ -168,6 +181,25 @@ const Script = () => {
                   >
                     <option value="">selectioner un type de produit</option>
                     {typroduit?.map((ville) => (
+                      <option value={ville.id}>{ville.titre}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label
+                    htmlFor="information"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                  >
+                    Campagne
+                  </label>
+                  <select
+                    name="campagne"
+                    value={userInfo.campagne}
+                    onChange={handleInputChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  >
+                    <option value="">selectioner une campagne</option>
+                    {campagne?.map((ville) => (
                       <option value={ville.id}>{ville.titre}</option>
                     ))}
                   </select>
@@ -189,7 +221,6 @@ const Script = () => {
             </form>
           </div>
         </div>
-      )}
     </>
   );
 };

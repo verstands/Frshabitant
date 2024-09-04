@@ -17,6 +17,7 @@ import { TypeProduitInterface } from "../../Interfaces/TypeProduitInterface";
 import TypeProduitService from "../../Services/TypeProduit.service";
 import VilleJson from "../../Json/cities.json";
 import Select from "react-select";
+import useHasModule from "../../components/Agents/useHasModule";
 
 const Prospect = () => {
   const [ville, setVille] = useState<VilleInterface[] | null>(null);
@@ -155,6 +156,12 @@ const Prospect = () => {
       label: vh.label,
       value: vh.label,
     })) || [];
+
+    const hasModule = useHasModule('afficherdossier');
+
+    if (!hasModule) {
+      return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+    }
 
   return (
     <>

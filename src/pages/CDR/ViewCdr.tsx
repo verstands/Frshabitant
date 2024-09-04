@@ -1,8 +1,14 @@
 import Otbar from "../../components/Agents/Otbar";
 import CrdTable from "./CrdTable";
 import hasAccess from "../../components/hasAcess";
+import useHasModule from "../../components/Agents/useHasModule";
 
 const ViewCdr = () => {
+  const hasModule = useHasModule('affichercdr');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
   return (
     <>
       <Otbar title="Espace Appel" />
@@ -12,8 +18,7 @@ const ViewCdr = () => {
           <h1 className="font-bold"> Liste</h1>
         </div>
       </div>
-      {
-        hasAccess("read") && (
+     
           <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
           <div className="grid md:grid-cols-3 gap-2">
             <div>
@@ -71,8 +76,7 @@ const ViewCdr = () => {
           <hr />
           <CrdTable />
         </div>
-        )
-      }
+       
     </>
   );
 };

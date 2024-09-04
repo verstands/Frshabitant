@@ -24,7 +24,8 @@ const Discours: React.FC<DetailProspectProps> = ({ datadata }) => {
   const getTypeProduit = async () => {
     try {
       const response = await serviceScript.getScriptByIdProduit(
-        datadata.id_produit
+        datadata.id_produit,
+        datadata.id_campagne
       );
       setData(response);
 

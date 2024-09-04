@@ -1,6 +1,5 @@
 import React from 'react'
 import Otbar from '../../components/Agents/Otbar'
-import hasAccess from '../../components/hasAcess'
 import { Link } from 'react-router-dom'
 import { FaPlus } from 'react-icons/fa'
 import ModelzMailTable from './ModelzMailTable'
@@ -15,12 +14,11 @@ const Modelmail = () => {
           <h1 className="font-bold"> Liste</h1>
         </div>
         <Link to="/createmodelemail">
-          {hasAccess("create") && (
+          
             <div className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right">
               <FaPlus className="bg-white  p-1 rounded-[50%] text-[#1e58c1]" />
               <p className=" text-white">Nouveu model</p>
             </div>
-          )}
         </Link>
       </div>
       <ModelzMailTable />

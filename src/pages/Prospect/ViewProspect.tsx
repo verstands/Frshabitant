@@ -12,6 +12,7 @@ import AgentService from "../../Services/Agent.service";
 import { UserInterface } from "../../Interfaces/UserInterface";
 import { TypeProduitInterface } from "../../Interfaces/TypeProduitInterface";
 import TypeProduitService from "../../Services/TypeProduit.service";
+import useHasModule from "../../components/Agents/useHasModule";
 
 
 const ViewProspect = () => {
@@ -89,7 +90,11 @@ const ViewProspect = () => {
       value: vh.id,
     })) || [];
 
+    const hasModule = useHasModule('afficherprospect');
 
+    if (!hasModule) {
+      return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+    }
     
 
   return (
@@ -100,22 +105,20 @@ const ViewProspect = () => {
           <h1 className="text-[#b3b4b6]">Prospect / </h1>
           <h1 className="font-bold"> Liste</h1>
         </div>
-        {hasAccess("create") && (
           <Link to="/createProspect">
             <div className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right">
               <FaPlus className="bg-white  p-1 rounded-[50%] text-[#1e58c1]" />
               <p className=" text-white">Nouveau prospect</p>
             </div>
           </Link>
-        )}
       </div>
-      {hasAccess("read") && (
+     
         <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
-          {hasAccess("print") && (
+         
             <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right">
               Exporter ma rechreche
             </button>
-          )}
+        
           <br />
           <br />
           <div className="grid md:grid-cols-3 gap-2">
@@ -229,7 +232,7 @@ const ViewProspect = () => {
           <hr />
           <ProspectTable />
         </div>
-      )}
+      
     </>
   );
 };

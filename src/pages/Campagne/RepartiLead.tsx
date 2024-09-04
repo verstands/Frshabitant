@@ -8,6 +8,7 @@ import ProspectService from "../../Services/Prospect.service";
 import { useNavigate } from "react-router-dom";
 import CampagneService from "../../Services/Campagne.service";
 import { CampagneInterfce } from "../../Interfaces/CampagneInterface";
+import useHasModule from "../../components/Agents/useHasModule";
 
 const RepartiLead = () => {
   const [dataMapping, setDataMapping] = useState([]);
@@ -167,6 +168,12 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
     navigate("/viewCapagne");
     console.log("Prospect distribution saved to sessionStorage:", prospectDistribution);
   };
+  
+  const hasModule = useHasModule('repartitionprospect');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
   return (
     <>
       <Otbar title="Espace campagne" />

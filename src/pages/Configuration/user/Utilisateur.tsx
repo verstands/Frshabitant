@@ -8,6 +8,7 @@ import Otbar from "../../../components/Agents/Otbar";
 import FonctionService from "../../../Services/Fonction.service";
 import { FonctionInterface } from "../../../Interfaces/FonctionInterface";
 import Spinner from "../../../components/Spinner";
+import useAgentData from "../../../components/Agents/useAgentData";
 
 const Utilisateur = () => {
   const generatePassword = (length: number): string => {
@@ -83,8 +84,16 @@ const Utilisateur = () => {
     getFonction();
   }, []);
 
+  const { isAdmin, accessDenied } = useAgentData();
+
+  if (accessDenied) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
+
   return (
     <>
+    {isAdmin && (
+        <>
       <Otbar title="Espace utilisateurs" />
       <div className="px-40">
         <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
@@ -272,7 +281,10 @@ const Utilisateur = () => {
           </form>
         </div>
       </div>
+      </>
+      )}
     </>
+    
   );
 };
 

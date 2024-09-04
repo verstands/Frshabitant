@@ -22,6 +22,7 @@ import hasAccess from "../../components/hasAcess";
 import { CampagneInterfce } from "../../Interfaces/CampagneInterface";
 import CampagneService from "../../Services/Campagne.service";
 import Select from "react-select";
+import useHasModule from "../../components/Agents/useHasModule";
 
 
 const Dossiers = () => {
@@ -41,6 +42,7 @@ const Dossiers = () => {
   const [archivage, setArchivage] = useState<ArchivageInterface[] | null>(null);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [dataExcel, setDatExcel] = useState([]); 
+
 
   const updateDossierData = (newData: any[]) => {
     setDatExcel(newData);
@@ -96,6 +98,8 @@ const Dossiers = () => {
       console.log(error);
     }
   };
+
+  
 
   const getStatutService = new StatuService(config);
   const agentService = new AgentService(config);
@@ -205,7 +209,11 @@ const Dossiers = () => {
     };
 
     
+    const hasModule = useHasModule('afficherdossier');
 
+    if (!hasModule) {
+      return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+    }
 
 
   return (
@@ -217,22 +225,17 @@ const Dossiers = () => {
           <h1 className="font-bold"> Liste</h1>
         </div>
         <Link to="/createdossier">
-          {hasAccess("create") && (
             <div className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right">
               <FaPlus className="bg-white  p-1 rounded-[50%] text-[#1e58c1]" />
               <p className=" text-white">Nouveau dossier</p>
             </div>
-          )}
         </Link>
       </div>
-      {
-        hasAccess("read") && (
+      
           <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
-        {hasAccess("print") && (
           <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right" onClick={exportToExcel}>
             Exporter ma rechreche
           </button>
-        )}
         <br />
         <br />
         <div className="grid md:grid-cols-3 gap-2">
@@ -358,8 +361,6 @@ const Dossiers = () => {
           <DossierTable onUpdateDossierData={updateDossierData} />
         </div>
       </div>
-        )
-      }
     </>
   );
 };

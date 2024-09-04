@@ -1,0 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  lastPage: number;
+}

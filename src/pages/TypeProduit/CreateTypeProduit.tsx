@@ -5,6 +5,7 @@ import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.int
 import { useNavigate } from "react-router-dom";
 import Otbar from "../../components/Agents/Otbar";
 import { Spinner } from "@material-tailwind/react";
+import useHasModule from "../../components/Agents/useHasModule";
 
 const CreateTypeProduit = () => {
   const [data, setdata] = useState<TypeProduitInterface>({
@@ -45,6 +46,11 @@ const CreateTypeProduit = () => {
     }
   };
 
+  const hasModule = useHasModule('affichercampagnes');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
   return (
     <>
       <Otbar title="Espace parametre" />

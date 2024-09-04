@@ -1,5 +1,5 @@
 import Otbar from "../../components/Agents/Otbar";
-import { FaHeadphones, FaPlay, FaPlus, FaUser } from "react-icons/fa";
+import { FaHeadphones, FaPlay, FaPlus, FaTrash, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -14,6 +14,8 @@ import CampagneService from "../../Services/Campagne.service";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import { CampagneInterfce } from "../../Interfaces/CampagneInterface";
 import Spinner from "../../components/Spinner";
+import useHasModule from "../../components/Agents/useHasModule";
+import Swal from "sweetalert2";
 
 const ViewCampagne = () => {
   const [prospect, setProspect] = useState<CampagneInterfce[] | null>(null);
@@ -54,6 +56,45 @@ const ViewCampagne = () => {
 
   const handleSearchDette = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const hasModule = useHasModule("affichercampagne");
+
+  if (!hasModule) {
+    return (
+      <div className="font-bold">
+        <center>
+          {" "}
+          <br /> Accès refusé
+        </center>
+      </div>
+    );
+  }
+
+  const handleDeleteCampagne = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: "Vous ne pourrez pas récupérer cette campagne !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Oui, supprimer !",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        //await serviceCampgne.deleteCampagne(id);
+        Swal.fire("Supprimé !", "Votre campagne a été supprimée.", "success");
+        getProspect();
+      } catch (error) {
+        Swal.fire(
+          "Erreur !",
+          "Une erreur est survenue lors de la suppression.",
+          "error"
+        );
+      }
+    }
   };
   return (
     <>
@@ -265,12 +306,25 @@ const ViewCampagne = () => {
                             <div className="flex items-center">
                               <div className="border border-green-500 bg-green-500 p-3 rounded-l-xl">
                                 <Link to={`/appels/campagne/${data.id}`}>
-                                  {" "}
                                   <FaPlay color="white" />
                                 </Link>
                               </div>
+                              <div className="border border-blue-500 bg-blue-500 p-3 ">
+                                <Link to={`/campagneAddLead/${data.id}`}>
+                                  <FaPlus color="white" />
+                                </Link>
+                              </div>
+                              <div className="border border-red-500 bg-red-500 p-3 ">
+                                <Link to={''}
+                                  onClick={() => handleDeleteCampagne(data.id)}
+                                >
+                                  <FaTrash color="white" />
+                                </Link>
+                              </div>
                               <div className="border border-orange-100 bg-orange-200 p-3 rounded-r-xl">
-                                <FaHeadphones color="orange" />
+                                <Link to={``}>
+                                  <FaHeadphones color="orange" />
+                                </Link>
                               </div>
                             </div>
                           </Typography>

@@ -4,23 +4,20 @@ import {
   Typography,
   Button,
   CardBody,
-  CardFooter,
 } from "@material-tailwind/react";
 import { ProspectInterface } from "../../Interfaces/ProspectInterface";
 import { useEffect, useState } from "react";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import ProspectService from "../../Services/Prospect.service";
 import Spinner from "../../components/Spinner";
-import { FaEdit, FaEye, FaPhone, FaUser } from "react-icons/fa";
+import { FaEye, FaPhone, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import iconMap from "../Campagne/iconMap";
-import React from "react";
-
 
 const ProspectTable = () => {
   const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
 
   const config: RepositoryConfigInterface = {
     appConfig: {},
@@ -41,7 +38,7 @@ const ProspectTable = () => {
 
   useEffect(() => {
     getProspect();
-  }, []);
+  }, [page]);
 
   const TABLE_HEAD = [
     "Action",
@@ -58,13 +55,12 @@ const ProspectTable = () => {
     setSearchTerm(event.target.value);
   };
 
-  const getIconComponent = (iconName: string | number) => {
-    const Icon = iconMap[iconName];
-    if (!Icon) {
-      console.error(`Icon not found foreeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ${iconName}`);
-      return Icon;
-    }
-    return Icon;
+  const handleNextPage = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+  
+  const handlePrevPage = () => {
+    setPage(prevPage => (prevPage > 1 ? prevPage - 1 : 1));
   };
   return (
     <>
@@ -73,21 +69,26 @@ const ProspectTable = () => {
         <CardHeader className="rounded-none py-4">
           <div className="flex items-center justify-between px-4">
             <div className="md:w-80 ">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchDette}
-              name="email"
-              id="email"
-              placeholder="Recherche"
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearchDette}
+                name="email"
+                id="email"
+                placeholder="Recherche"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              />
             </div>
             <div className="flex gap-2">
-              <Button variant="outlined" size="sm">
-                Precedent
+              <Button
+                variant="outlined"
+                size="sm"
+                onClick={handlePrevPage}
+                disabled={page === 1}
+              >
+                Précédent
               </Button>
-              <Button variant="outlined" size="sm">
+              <Button variant="outlined" size="sm" onClick={handleNextPage}>
                 Suivant
               </Button>
             </div>
@@ -146,14 +147,9 @@ const ProspectTable = () => {
                         >
                           <div className="flex items-center gap-2">
                             <div className="flex items-center">
-                              <div className="border border-green-100 bg-green-100 p-3 rounded-l-xl">
+                              <div className="border border-green-100 bg-green-100 p-3 rounded-xl">
                                 <Link to={`/appels/${data.id}`}>
                                   <FaPhone color="green" />
-                                </Link>
-                              </div>
-                              <div className="border border-green-100 bg-green-100 p-3 rounded-r-xl">
-                                <Link to={`/detailProspect/${data.id}`}>
-                                  <FaEye color="green" />
                                 </Link>
                               </div>
                             </div>
@@ -168,12 +164,8 @@ const ProspectTable = () => {
                           className="font-normal"
                         >
                           <center>
-                          <center>
-                              {data.produitpospect?.image && 
-                                React.createElement(getIconComponent(data.produitpospect.image), {
-                                  className: "text-blue-500"
-                                })
-                              }
+                            <center>
+                              <FaUser color="blue" />
                             </center>
                             <div className="text-blue-500">
                               {data.produitpospect && data.produitpospect.titre}

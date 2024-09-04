@@ -1,7 +1,13 @@
 import Otbar from "../../components/Agents/Otbar";
+import useHasModule from "../../components/Agents/useHasModule";
 import MappingTable from "./MappingTable";
 
 const MappingCampagne = () => {
+  const hasModule = useHasModule('mappingcampagne');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
   return (
     <>
       <Otbar title="Espace Campagne" />

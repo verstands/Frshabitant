@@ -44,6 +44,8 @@ import Resetpassword from '../pages/resetPassword/resetpassword'
 import ApplicationUser from '../pages/ApplicationUser/ApplicationUser'
 import ViewApplicationUser from '../pages/ApplicationUser/ViewApplicationUser'
 import RoleUser from '../pages/Configuration/RoleUser/RoleUser'
+import Historique from '../pages/Histoqrique/Historique'
+import EtapeWork from '../pages/WorkFlow/Etape'
 
 const Routers = () => {
   return (
@@ -87,6 +89,8 @@ const Routers = () => {
             <Route path='/createFonction' element={<CreateFonction />}></Route>
             <Route path='/applicationuser' element={<ApplicationUser />}></Route>
             <Route path='/viewapplicationuser' element={<ViewApplicationUser />}></Route>
+            <Route path='/historique' element={<Historique />}></Route>
+            <Route path='/workflow' element={<EtapeWork />}></Route>
         </Route>
         <Route path='/' element={< LoginAgnt />}></Route>
         <Route path='/dashboard' element={< Dashboad />}></Route>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Otbar from "../../components/Agents/Otbar";
 import { FaDropbox } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import useHasModule from "../../components/Agents/useHasModule";
 
 const ResulatCampagne = () => {
   const [dataMapping, setDataMapping] = useState([]);
@@ -132,6 +133,12 @@ const ResulatCampagne = () => {
     sessionStorage.setItem('selectedProspects', JSON.stringify(selectedProspects));
     navigate('/reaprtilead');
   };
+
+  const hasModule = useHasModule('resultatscaner');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
+  }
 
   return (
     <>

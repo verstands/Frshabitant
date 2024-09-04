@@ -6,6 +6,7 @@ import { TypeProduitInterface } from "../../Interfaces/TypeProduitInterface";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import TypeProduitService from "../../Services/TypeProduit.service";
 import Spinner from "../../components/Spinner";
+import useHasModule from "../../components/Agents/useHasModule";
 
 const TypeProduit = ({ produits }: { produits: TypeProduitInterface[] }) => {
   const [produitData, setproduit] = useState<TypeProduitInterface[] | null>(null);
@@ -35,6 +36,12 @@ const TypeProduit = ({ produits }: { produits: TypeProduitInterface[] }) => {
   const BtnOnclick = (id: string) =>{
     sessionStorage.setItem('produit', id);
     navigate('/createCapagne')
+  }
+
+  const hasModule = useHasModule('affichertypeproduit');
+
+  if (!hasModule) {
+    return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
   }
   return (
     <div>

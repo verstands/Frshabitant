@@ -1,6 +1,50 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { HistoriqueAfficheInterface } from "../../Interfaces/HistoriqueAfficheInterface";
+import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
+import HistoriqueAfficheService from "../../Services/HistoriqueAffiche.service";
+import { ProspectInterface } from "../../Interfaces/ProspectInterface";
+import { UserInterface } from "../../Interfaces/UserInterface";
+import dateFormat from 'dateformat';
 
-const HistoriqueDossierUser = () => {
+
+interface DetailProspectProps {
+  datadata: ProspectInterface;
+}
+
+const HistoriqueDossierUser: React.FC<DetailProspectProps> = ({ datadata }) => {
+  const [historique, setHistorique] = useState<HistoriqueAfficheInterface[] | null>(null);
+
+  const config: RepositoryConfigInterface = {
+    appConfig: {},
+    dialog: {},
+  };
+
+  const user: UserInterface = JSON.parse(
+    sessionStorage.getItem("user") || "[]"
+  );
+
+  const serviceHistorique = new HistoriqueAfficheService(config);
+
+  const getHistoriqueArchivage = async () => {
+    try {
+      if (datadata?.id && datadata.agentpospect?.id) {
+        const response = await serviceHistorique.getHistoriqueAffiche(undefined, {
+          prospect: datadata.id,
+          user: String(user.id,)
+        });
+        setHistorique(response.data);
+      }
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (datadata) {
+      getHistoriqueArchivage();
+    }
+  }, [datadata]);
+
   return (
     <div className="border-white bg-white p-4 rounded-[10px] shadow">
       <h2 className="font-bold">Historiques</h2>
@@ -13,15 +57,20 @@ const HistoriqueDossierUser = () => {
             </nav>
           </div>
         </div>
-        <div className='flex items-center gap-2 justify-center border border-gray-300 p-2 rounded'>
-            <h1 className='font-bold'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. </h1><span>Il y a 2 mois</span>
-        </div>
-        <div className='flex items-center gap-2 justify-center border border-gray-300 p-2 rounded'>
-            <h1 className='font-bold'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. </h1><span>Il y a 2 mois</span>
-        </div>
+        {historique?.map((item, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-2 justify-center border border-gray-300 p-2 rounded"
+          >
+            <h1 className="font-bold">
+             {item.action}
+            </h1>
+            <span>{dateFormat(item.createdA, "d-mm-yyyy: HH:MM:ss")}</span>
+          </div>
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HistoriqueDossierUser
+export default HistoriqueDossierUser;

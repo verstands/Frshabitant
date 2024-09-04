@@ -14,6 +14,8 @@ import ModelMailService from "../../Services/ModelMail.service";
 import { UserInterface } from "../../Interfaces/UserInterface";
 import { ModelMailInterface } from "../../Interfaces/ModelMailInterface";
 import Select, { SingleValue } from "react-select";
+import { HistoriqueAfficheInterface } from "../../Interfaces/HistoriqueAfficheInterface";
+import HistoriqueAfficheService from "../../Services/HistoriqueAffiche.service";
 
 interface DetailProspectProps {
   data: ProspectInterface;
@@ -47,6 +49,13 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
     sessionStorage.getItem("user") || "[]"
   );
 
+  const [histtorique, setHistorique] = useState<HistoriqueAfficheInterface>({
+    action: "a crée un agenda sur la fiche le",
+    userProspect: String(data?.id),
+    userAgent: String(user.id),
+  });
+
+
   const handleChangeMail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setdatamail((prevState) => ({
@@ -73,10 +82,13 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
 
   const serviceCommentaire = new ProspectService(config);
   const serviceModelMail = new ModelMailService(config);
+  const historiqueAffiche = new HistoriqueAfficheService(config);
+
 
   const handleCommentSubmitUpdata = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoadingBtn(true);
+
     const newComment: ProspectInterface = {
       status: `${prospect.status}`,
       nom: `${prospect.nom}`,
@@ -96,6 +108,7 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
     };
     try {
       await serviceCommentaire.updateProspect(String(data.id), newComment);
+      const responsehistorique = await historiqueAffiche.postHistoriqueAffiche(histtorique);
       setLoadingBtn(false);
       window.location.reload();
       toast.success("modification a été fait avec success !!!");

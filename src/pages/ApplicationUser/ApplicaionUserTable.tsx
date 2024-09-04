@@ -54,7 +54,6 @@ const ApplicaionUserTable = () => {
           <Spinner />
         </center>
       )}
-      {hasAccess("read") && (
         <div className="pt-2">
           <center>{loading && <Spinner />}</center>
           <Card className="h-full w-full">
@@ -138,11 +137,9 @@ const ApplicaionUserTable = () => {
                           </td>
                           
                           <td className="p-4">
-                            {hasAccess("delete") && (
                               <button className="border p-2 rounded-lg bg-red-600 text-white border-red-600">
                                 <FaTrash />
                               </button>
-                            )}
                           </td>
                         </tr>
                       ))}
@@ -151,7 +148,6 @@ const ApplicaionUserTable = () => {
             </CardBody>
           </Card>
         </div>
-      )}
     </>
   );
 };

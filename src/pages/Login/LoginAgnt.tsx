@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginService from "../../Services/Login.service";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import Spinner from "../../components/Spinner";
-
+import { browserName, osName } from "react-device-detect";
 
 const LoginAgnt = () => {
   const [email, setUsername] = useState("");
@@ -17,20 +17,25 @@ const LoginAgnt = () => {
     dialog: {},
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loginServiceInstance = new LoginService(config);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    console.log('Form submitted');
+    console.log("Form submitted");
     try {
       const response = await loginServiceInstance.login(email, password);
-      sessionStorage.setItem('token', response.access_token);
-      sessionStorage.setItem('application', JSON.stringify(response.application));
-      sessionStorage.setItem('user', JSON.stringify(response.agent));
-      sessionStorage.setItem('role', JSON.stringify(response.role));
+      sessionStorage.setItem("token", response.access_token);
+      sessionStorage.setItem(
+        "application",
+        JSON.stringify(response.application)
+      );
+      sessionStorage.setItem("user", JSON.stringify(response.agent));
+      localStorage.setItem("user", JSON.stringify(response.agent));
+      localStorage.setItem("user", response.agent?.id);
       setLoading(false);
-      navigate('/dashboard')
+      navigate("/dashboard");
     } catch (error: unknown) {
       if (isError(error)) {
         setError(error.message);
@@ -44,6 +49,24 @@ const LoginAgnt = () => {
   function isError(error: unknown): error is Error {
     return error instanceof Error;
   }
+
+  useEffect(() => {
+    const fetchDataIp = async () => {
+      try {
+        const data = await loginServiceInstance.dataIp();
+        console.log(data);
+        localStorage.setItem("pays", data.country_name);
+        localStorage.setItem("ip", data.ip);
+        localStorage.setItem("isp", data.org);
+        localStorage.setItem("browser", browserName);
+        localStorage.setItem("os", osName);
+      } catch (error) {
+        console.error("Error fetching IP data:", error);
+      }
+    };
+
+    fetchDataIp();
+  }, [loginServiceInstance]);
 
   return (
     <>
@@ -124,9 +147,9 @@ const LoginAgnt = () => {
                   <div></div>
                 </div>
                 {loading ? (
-                 <center>
-                   <Spinner />
-                 </center>
+                  <center>
+                    <Spinner />
+                  </center>
                 ) : (
                   <button
                     type="submit"

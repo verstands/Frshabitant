@@ -3,11 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import AgentService from "../../Services/Agent.service";
+import { Spinner } from "@material-tailwind/react";
 
 const Resetpassword: React.FC = () => {
   const { email } = useParams<{ id: string; email: string }>();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const config: RepositoryConfigInterface = {
@@ -19,14 +22,17 @@ const Resetpassword: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     if (newPassword.length < 5) {
       toast.error("Le mot de passe doit contenir au moins 6 caractères.");
+      setLoading(false);
       return;
     }
 
     if (newPassword !== confirmPassword) {
       toast.error("Les mots de passe ne correspondent pas.");
+      setLoading(false);
       return;
     }
 
@@ -35,14 +41,14 @@ const Resetpassword: React.FC = () => {
         String(email),
         newPassword
       );
+      setLoading(false);
       toast.success("Votre mot de passe a été réinitialisé avec succès.");
       navigate("/");
     } catch (error) {
+      setLoading(false);
       console.error("Une erreur est survenue. Veuillez réessayer.");
     }
   };
-
-   '$2b$10$uT41YVQlyuTYymoLrIzcYOUef9tKHq1hh60llOGARpXRBsQAPSAQi'
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -50,7 +56,7 @@ const Resetpassword: React.FC = () => {
         <h2 className="text-2xl font-semibold text-center text-gray-800">
           Réinitialisation du mot de passe
         </h2>
-        <form onSubmit={handleSubmit} className="mt-6"> 
+        <form onSubmit={handleSubmit} className="mt-6">
           <div className="mb-4">
             <label
               htmlFor="newPassword"
@@ -84,12 +90,18 @@ const Resetpassword: React.FC = () => {
             />
           </div>
           <div className="flex items-center justify-between">
-            <button
-              type="submit"
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200"
-            >
-              Réinitialiser le mot de passe
-            </button>
+            {loading ? (
+              <center>
+                <Spinner />
+              </center>
+            ) : (
+              <button
+                type="submit"
+                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200"
+              >
+                Réinitialiser le mot de passe
+              </button>
+            )}
           </div>
         </form>
       </div>
