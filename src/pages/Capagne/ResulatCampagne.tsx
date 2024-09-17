@@ -134,7 +134,7 @@ const ResulatCampagne = () => {
     navigate('/reaprtilead');
   };
 
-  const hasModule = useHasModule('resultatscaner');
+  const hasModule = useHasModule('RESULTAT_SCANNER');
 
   if (!hasModule) {
     return <div className="font-bold"><center> <br /> Accès refusé</center></div>;

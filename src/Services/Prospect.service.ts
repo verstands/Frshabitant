@@ -27,6 +27,16 @@ class ProspectService<T> extends Repository<T> {
       throw error;
     }
   }
+
+  async getProspectAgent(id:string): Promise<T> {
+    try {
+      const response = await this.find$(`pospect/agent/${id}`);
+      return response;
+    } catch (error: any) {
+      console.error('Error during request:', error.message);
+      throw error;
+    }
+  }
   
   
 

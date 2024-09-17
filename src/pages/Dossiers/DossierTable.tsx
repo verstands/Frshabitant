@@ -134,6 +134,7 @@ const DossierTable = ({ onUpdateDossierData }: { onUpdateDossierData: (data: any
                       );
                     })
                     .map((data, index) => (
+                      <>
                       <tr key={index}>
                         <td className="p-4">
                           <Typography
@@ -225,6 +226,12 @@ const DossierTable = ({ onUpdateDossierData }: { onUpdateDossierData: (data: any
                           </Typography>
                         </td>
                       </tr>
+                      <tr>
+                          <td colSpan="8">
+                            <hr />
+                          </td>
+                        </tr>
+                      </>
                     ))}
               </tbody>
             </table>

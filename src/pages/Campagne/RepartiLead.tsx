@@ -51,12 +51,25 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
 
   const getUtilisateur = async () => {
     try {
-      const response = await AgntService.getAgent();
+      const storedIds = sessionStorage.getItem('userCampagne');
+      if (!storedIds) {
+        console.error("Aucun ID de fonction trouvé dans le sessionStorage");
+        return;
+      }
+      const fonctionIds = JSON.parse(storedIds); 
+      if (!Array.isArray(fonctionIds)) {
+        console.error("Les IDs de fonction ne sont pas un tableau");
+        return;
+      }
+      const ids = fonctionIds.map((item: { value: string }) => item.value);
+      const response = await AgntService.getAgentsByFonctions(ids);
       setAgent(response.data);
+      setLoading(false)
     } catch (error: unknown) {
       console.log(error);
     }
   };
+  
 
   const AgntService = new AgentService(config);
   const serviceProspect = new ProspectService(config);
@@ -160,16 +173,17 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
       console.log("Error creating prospect:", error);
       setAddLoading(false);
     }
-    //sessionStorage.removeItem("prospectDistribution");
-    //sessionStorage.removeItem("selectedProspects");
-    //sessionStorage.removeItem("titre");
-    //sessionStorage.removeItem("produit");
-    //sessionStorage.removeItem("dataexcel");
+    sessionStorage.removeItem("prospectDistribution");
+    sessionStorage.removeItem("selectedProspects");
+    sessionStorage.removeItem("titre");
+    sessionStorage.removeItem("produit");
+    sessionStorage.removeItem("dataexcel");
+    sessionStorage.removeItem("userCampagne");
     navigate("/viewCapagne");
     console.log("Prospect distribution saved to sessionStorage:", prospectDistribution);
   };
   
-  const hasModule = useHasModule('repartitionprospect');
+  const hasModule = useHasModule('REPPARTITION_LEAD_PAR_UTILISATEUR');
 
   if (!hasModule) {
     return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
@@ -270,7 +284,7 @@ const [campagne, setCampagne] = useState<CampagneInterfce>({
                   <h5>{r.email}</h5>
                   <div className="border border-green-300 bg-green-300 inline-block p-1 font-bold text-green-700 rounded-xl">
                     {
-                        r.statut === "0" ? "Admin" : ""
+                        r.fonction?.initule 
                     }
                   </div>
                   <div className="py-1"></div>

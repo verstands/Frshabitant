@@ -58,7 +58,7 @@ const ViewCampagne = () => {
     setSearchTerm(event.target.value);
   };
 
-  const hasModule = useHasModule("affichercampagne");
+  const hasModule = useHasModule("AFFICHER_CAMPAGNE");
 
   if (!hasModule) {
     return (
@@ -183,6 +183,7 @@ const ViewCampagne = () => {
                       );
                     })
                     .map((data, index) => (
+                      <>
                       <tr key={index}>
                         <td className="p-4">
                           <Typography
@@ -310,7 +311,7 @@ const ViewCampagne = () => {
                                 </Link>
                               </div>
                               <div className="border border-blue-500 bg-blue-500 p-3 ">
-                                <Link to={`/campagneAddLead/${data.id}`}>
+                                <Link to={`/addordercampagne`}>
                                   <FaPlus color="white" />
                                 </Link>
                               </div>
@@ -330,6 +331,12 @@ const ViewCampagne = () => {
                           </Typography>
                         </td>
                       </tr>
+                      <tr>
+                          <td colSpan="8">
+                            <hr />
+                          </td>
+                        </tr>
+                      </>
                     ))}
               </tbody>
             </table>

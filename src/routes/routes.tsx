@@ -46,6 +46,13 @@ import ViewApplicationUser from '../pages/ApplicationUser/ViewApplicationUser'
 import RoleUser from '../pages/Configuration/RoleUser/RoleUser'
 import Historique from '../pages/Histoqrique/Historique'
 import EtapeWork from '../pages/WorkFlow/Etape'
+import CategorieStatus from '../pages/WorkFlow/CategorieStatus'
+import Statuts from '../pages/WorkFlow/Statut'
+import AddOrderCampagne from '../pages/Campagne/AddOrderCampagne'
+import Modules from '../pages/Configuration/Modules/Modules'
+import Workflow from '../pages/WorkFlow/Workflow'
+import ModulePerso from '../pages/ModulePerso/ModulePerso'
+import WorkflowRole from '../pages/WorkFlow/WorkflowRole'
 
 const Routers = () => {
   return (
@@ -91,6 +98,13 @@ const Routers = () => {
             <Route path='/viewapplicationuser' element={<ViewApplicationUser />}></Route>
             <Route path='/historique' element={<Historique />}></Route>
             <Route path='/workflow' element={<EtapeWork />}></Route>
+            <Route path='/workflows' element={<Workflow />}></Route>
+            <Route path='/categoriestatus' element={<CategorieStatus />}></Route>
+            <Route path='/statuts' element={<Statuts />}></Route>
+            <Route path='/addordercampagne' element={<AddOrderCampagne />}></Route>
+            <Route path='/modules' element={<Modules />}></Route>
+            <Route path='/moduleperso' element={<ModulePerso />}></Route>
+            <Route path='/workflowrole' element={<WorkflowRole />}></Route>
         </Route>
         <Route path='/' element={< LoginAgnt />}></Route>
         <Route path='/dashboard' element={< Dashboad />}></Route>

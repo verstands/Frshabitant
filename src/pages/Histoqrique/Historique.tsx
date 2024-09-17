@@ -1,6 +1,5 @@
 import React from 'react'
 import Otbar from '../../components/Agents/Otbar'
-import hasAccess from '../../components/hasAcess'
 import HistoriqueTable from './HistoriqueTable'
 const Historique = () => {
   return (

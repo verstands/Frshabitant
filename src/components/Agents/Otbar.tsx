@@ -143,6 +143,7 @@ const Otbar: React.FC<OtbarProps> = ({ title, data = [] }) => {
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-full focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
             {isDropdownOpen1 && (
+              
               <div
                 className="absolute right-0 w-48  bg-white border border-gray-200 rounded-lg shadow-lg z-50 "
                 style={{ width: "210px" }}

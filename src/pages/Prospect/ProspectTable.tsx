@@ -12,12 +12,19 @@ import ProspectService from "../../Services/Prospect.service";
 import Spinner from "../../components/Spinner";
 import { FaEye, FaPhone, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import useAgentData from "../../components/Agents/useAgentData";
+import { UserInterface } from "../../Interfaces/UserInterface";
 
 const ProspectTable = () => {
   const [prospect, setProspect] = useState<ProspectInterface[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
+  const { isAdmin, accessDenied } = useAgentData();
+
+  const user: UserInterface = JSON.parse(
+    sessionStorage.getItem("user") || "{}"
+  );
 
   const config: RepositoryConfigInterface = {
     appConfig: {},
@@ -36,9 +43,23 @@ const ProspectTable = () => {
     }
   };
 
+  const getProspectAgent = async () => {
+    try {
+      const response = await serviceProspect.getProspectAgent(String(user.id));
+      setProspect(response.data);
+      setLoading(false);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getProspect();
-  }, [page]);
+    if (isAdmin) {
+      getProspect();
+    } else {
+      getProspectAgent();
+    }
+  }, [page, isAdmin, user.id]);
 
   const TABLE_HEAD = [
     "Action",
@@ -138,6 +159,7 @@ const ProspectTable = () => {
                     );
                   })
                   .map((data, index) => (
+                    <>
                     <tr key={index}>
                       <td className="p-4">
                         <Typography
@@ -269,6 +291,12 @@ const ProspectTable = () => {
                         </Typography>
                       </td>
                     </tr>
+                    <tr>
+                          <td colSpan="8">
+                            <hr />
+                          </td>
+                        </tr>
+                    </>
                   ))}
             </tbody>
           </table>

@@ -37,6 +37,27 @@ class AgentService<T> extends Repository<T> {
       throw error;
     }
   }
+
+  async deleteAgent(id:string): Promise<T> {
+    try {
+      const response = await this.delete$(`agent/${id}`);
+      return response;
+    } catch (error: any) {
+      console.error('Error during login request:', error.message);
+      throw error;
+    }
+  }
+
+  async getAgentsByFonctions(ids: string[]): Promise<T> {
+    try {
+      const response = await this.postFind$('agent/by-fonctions', { fonctionIds: ids });
+      return response.data;
+    } catch (error: any) {
+      console.error('Error during getAgentsByFonctions request:', error.message);
+      throw error;
+    }
+  }
+  
   
 }
 export default AgentService;

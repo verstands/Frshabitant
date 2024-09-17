@@ -1,4 +1,8 @@
 export interface StatusInterface {
-    id: number;
-    nom: string;
+    id?: number;
+    ordre: string;
+    couleur: string;
+    libelle: string;
+    status: string;
+    idcategorie: string;
 }

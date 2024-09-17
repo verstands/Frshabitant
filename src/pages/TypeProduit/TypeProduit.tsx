@@ -38,7 +38,7 @@ const TypeProduit = ({ produits }: { produits: TypeProduitInterface[] }) => {
     navigate('/createCapagne')
   }
 
-  const hasModule = useHasModule('affichertypeproduit');
+  const hasModule = useHasModule('AFFICHER_PRODUIT_CAPAGNE');
 
   if (!hasModule) {
     return <div className="font-bold"><center> <br /> Accès refusé</center></div>;

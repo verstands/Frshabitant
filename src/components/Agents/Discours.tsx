@@ -60,7 +60,7 @@ const Discours: React.FC<DetailProspectProps> = ({ datadata }) => {
     if (!activeData) {
       return <div></div>;
     }
-    const contenuModifie = activeData.contenue.replace("[Nom]", datadata.nom);
+    const contenuModifie = activeData.contenue.replace("XXX", datadata.nom);
     return <div dangerouslySetInnerHTML={{ __html: contenuModifie }} />;
   };
 

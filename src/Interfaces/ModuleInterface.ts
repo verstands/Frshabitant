@@ -1,6 +1,10 @@
-export interface MenuInterface {
-    id: string;
-    idmenu: string;
-    idfonction : string;
-    menu : object;
+export interface ModuleInterface {
+    id?: string;
+    id_fonction : string;
+    id_module : string;
+    moduleperso? : {
+        id : string,
+        libelle : string,
+        statut : string,
+    };
 }

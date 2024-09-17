@@ -4,15 +4,11 @@ interface Module {
   id: string;
   nom: string;
   id_fonction: string;
-  ModulesPrivilege?: {
+  moduleperso?: {
     id: string;
-    id_module: string;
-    id_privilege: string;
-    privileges: {
-      id: string;
-      initule: string;
-    };
-  }[];
+    libelle: string;
+    statut: string;
+  };
 }
 
 interface Fonction {
@@ -41,9 +37,11 @@ const useHasModule = (moduleName: string): boolean => {
     const hasModule = agentData &&
       agentData.fonction &&
       agentData.fonction.Modules &&
-      agentData.fonction.Modules.some(m => m.nom === moduleName);
+      agentData.fonction.Modules.some(module =>
+        module.moduleperso && module.moduleperso.libelle === moduleName
+      );
 
-    setHasModule(hasModule);
+    setHasModule(!!hasModule);
     console.log(agentData);
   }, [moduleName]);
 

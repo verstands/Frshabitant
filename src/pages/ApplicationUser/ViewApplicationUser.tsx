@@ -19,6 +19,8 @@ const ViewApplicationUser = () => {
     );
   }
 
+  
+
   return (
     <>
     {isAdmin && (
@@ -37,7 +39,7 @@ const ViewApplicationUser = () => {
               to="/applicationuser"
               className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right"
             >
-              <span><FaPlus /></span>Affecter un role par une appilication
+              <span><FaPlus /></span>Ajouter un role dans une application
             </Link>
           <div className="py-4"></div>
           <br />

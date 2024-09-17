@@ -12,6 +12,7 @@ import ScriptService from "../../Services/Script.service";
 import { Link } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Spinner from "../../components/Spinner";
+import Swal from "sweetalert2";
 
 const ScriptTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,6 +51,36 @@ const ScriptTable = () => {
     const tempElement = document.createElement("div");
     tempElement.innerHTML = text;
     return tempElement.textContent || tempElement.innerText || "";
+  };
+
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: "Vous ne pourrez pas récupérer cette categorie status !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Oui, supprimer !",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        //await AgntService.deleteAgent(id);
+        Swal.fire(
+          "Supprimé !",
+          "Votre categorie status a été supprimée.",
+          "success"
+        );
+        //getUtilisateur();
+      } catch (error) {
+        Swal.fire(
+          "Erreur !",
+          "Une erreur est survenue lors de la suppression.",
+          "error"
+        );
+      }
+    }
   };
 
   return (
@@ -113,6 +144,7 @@ const ScriptTable = () => {
                         );
                       })
                       .map((data, index) => (
+                        <>
                         <tr key={index}>
                           <td className="p-4 font-bold">
                             <Typography
@@ -163,15 +195,21 @@ const ScriptTable = () => {
                               >
                                 <FaEdit color="white" />
                               </Link>
-                              <Link
-                                to={`/scriptupdate/${data.id}`}
+                              <button
+                                onClick={() => handleDelete(data.id)}
                                 className=" inline-block p-2 border border-red-500 bg-red-500 rounded-[10px]"
                               >
                                 <FaTrash color="white" />
-                              </Link>
+                              </button>
                             </Typography>
                           </td>
                         </tr>
+                        <tr>
+                          <td colSpan="5">
+                            <hr />
+                          </td>
+                        </tr>
+                        </>
                       ))}
                 </tbody>
               </table>

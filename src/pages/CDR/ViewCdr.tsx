@@ -1,10 +1,9 @@
 import Otbar from "../../components/Agents/Otbar";
 import CrdTable from "./CrdTable";
-import hasAccess from "../../components/hasAcess";
 import useHasModule from "../../components/Agents/useHasModule";
 
 const ViewCdr = () => {
-  const hasModule = useHasModule('affichercdr');
+  const hasModule = useHasModule('AFFICHER_CDRS');
 
   if (!hasModule) {
     return <div className="font-bold"><center> <br /> Accès refusé</center></div>;

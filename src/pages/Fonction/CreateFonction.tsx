@@ -62,12 +62,12 @@ const CreateFonction = () => {
     <>
       {isAdmin && (
         <>
-          <Otbar title="Espace Fonction" />
+          <Otbar title="Espace Role" />
           <div className="px-40">
             <div className="border-white m-3  bg-white p-10 rounded-[10px] shadow">
               <form onSubmit={handleSubmit}>
                 <h2 className="font-normal text-[20px]">
-                  Ajouter une fonction
+                  Ajouter un Role
                 </h2>
                 <br />
                 <hr />

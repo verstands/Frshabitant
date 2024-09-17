@@ -18,7 +18,6 @@ import { ProvenanceInterface } from "../../Interfaces/ProvenanceInterface";
 import ProvenanceService from "../../Services/Provenance.service";
 import { ArchivageInterface } from "../../Interfaces/ArchivageInterface";
 import ArchivageService from "../../Services/Archivage.service";
-import hasAccess from "../../components/hasAcess";
 import { CampagneInterfce } from "../../Interfaces/CampagneInterface";
 import CampagneService from "../../Services/Campagne.service";
 import Select from "react-select";
@@ -209,7 +208,7 @@ const Dossiers = () => {
     };
 
     
-    const hasModule = useHasModule('afficherdossier');
+    const hasModule = useHasModule('AFFICHER_DOSSIER');
 
     if (!hasModule) {
       return <div className="font-bold"><center> <br /> Accès refusé</center></div>;
@@ -252,16 +251,17 @@ const Dossiers = () => {
                 onChange={handleChangeCampgne}
               />
           </div>
+         
           <div>
             <label
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
             >
-              Utilisateur
+              Programme
             </label>
             <Select
                 id="user-select"
-                options={userOptions}
+                options={typeProduitOptions}
                 onChange={handleChangeCampgne}
               />
           </div>
@@ -270,7 +270,33 @@ const Dossiers = () => {
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
             >
-              Installateur
+              Workflow
+            </label>
+            <Select
+                id="user-select"
+                options={installateurOptions}
+                onChange={handleChangeCampgne}
+              />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+            >
+              Etape work
+            </label>
+            <Select
+                id="user-select"
+                options={installateurOptions}
+                onChange={handleChangeCampgne}
+              />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+            >
+              Catgeorie 
             </label>
             <Select
                 id="user-select"
@@ -296,65 +322,21 @@ const Dossiers = () => {
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
             >
-              Produit
+              Utilisateur
             </label>
             <Select
                 id="user-select"
-                options={typeProduitOptions}
+                options={userOptions}
                 onChange={handleChangeCampgne}
               />
           </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-            >
-              Invalidité
-            </label>
-            <select
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id=""
-            >
-              <option value="">Tous les invalidité</option>
-              {invalidite?.map((ville) => (
-                <option value={ville.id}>{ville.nom}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-            >
-              Provenance
-            </label>
-            <Select
-                id="user-select"
-                options={provenanceOptions}
-                onChange={handleChangeCampgne}
-              />
-          </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-            >
-              Affichage archivé
-            </label>
-            <Select
-                id="user-select"
-                options={archivageOptions}
-                onChange={handleChangeCampgne}
-              />
-          </div>
-          <div>
+        </div>
+        <div className="">
             <br />
-            <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#4aa873] p-3 rounded-[15px] float-right">
+            <button className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#4aa873] p-3 rounded-[15px] ">
               Recherche
             </button>
           </div>
-        </div>
         <div className="py-4"></div>
         <hr />
         <div className="p-1">

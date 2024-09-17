@@ -90,7 +90,7 @@ const ViewProspect = () => {
       value: vh.id,
     })) || [];
 
-    const hasModule = useHasModule('afficherprospect');
+    const hasModule = useHasModule('AFFICHER_PROSPECTS');
 
     if (!hasModule) {
       return <div className="font-bold"><center> <br /> Accès refusé</center></div>;

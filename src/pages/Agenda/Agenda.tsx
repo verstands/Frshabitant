@@ -4,7 +4,7 @@ import { FaClock } from 'react-icons/fa'
 import useHasModule from '../../components/Agents/useHasModule';
 
 const Agenda = () => {
-    const hasModule = useHasModule('agenda');
+    const hasModule = useHasModule('AGENDA');
 
   if (!hasModule) {
     return <div className="font-bold"><center> <br /> Accès refusé</center></div>;

@@ -60,7 +60,7 @@ const Appels: React.FC = () => {
   });
 
   const [histtorique, setHistorique] = useState<HistoriqueAfficheInterface>({
-    action: "a crée un agenda sur la fiche le",
+    action: "a modifier l'iedentite sur la fiche le",
     userProspect: "",
     userAgent: String(user.id),
   });
@@ -439,7 +439,7 @@ const Appels: React.FC = () => {
     setIsTransferModalOpen(false);
   };
 
-  const hasModule = useHasModule('appelautomatique');
+  const hasModule = useHasModule('AFFICHER_APPEL_AUTOMATIQUE');
 
   if (!hasModule) {
     return <div className="font-bold"><center> <br /> Accès refusé</center></div>;

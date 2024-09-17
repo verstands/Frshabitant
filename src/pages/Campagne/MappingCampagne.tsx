@@ -3,7 +3,7 @@ import useHasModule from "../../components/Agents/useHasModule";
 import MappingTable from "./MappingTable";
 
 const MappingCampagne = () => {
-  const hasModule = useHasModule('mappingcampagne');
+  const hasModule = useHasModule('MAPPING_CAMPAGNE');
 
   if (!hasModule) {
     return <div className="font-bold"><center> <br /> Accès refusé</center></div>;

@@ -5,6 +5,7 @@ import {
   FaFileAlt,
   FaHeadphones,
   FaCalendarAlt,
+  FaFolder,
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { BsCalendar } from "react-icons/bs";
@@ -21,6 +22,11 @@ const SidebarAgent = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showDashboardSubMenuConfig, setShowDashboardSubMenuConfig] =
     useState(false);
+  const [applicationShow, setApplicationShow] = useState(false);
+  const [workflow, setworkflow] = useState(false);
+  const [tarif, settarif] = useState(false);
+  const [user, setuser] = useState(false);
+  const [type, settype] = useState(false);
 
   const config: RepositoryConfigInterface = {
     appConfig: {},
@@ -50,15 +56,15 @@ const SidebarAgent = () => {
 
   useEffect(() => {
     const agentData = JSON.parse(sessionStorage.getItem("user") || "{}");
-  
+
     if (agentData && agentData.fonction) {
       const extractedMenus = agentData.fonction.fonctions
-        .map(f => f.menu)
-        .filter(menu => menu);
+        .map((f) => f.menu)
+        .filter((menu) => menu);
       setMenus(extractedMenus);
       setIsAdmin(agentData.fonction.initule === "Administrateur");
     }
-  
+
     getProspect();
   }, []);
 
@@ -122,19 +128,19 @@ const SidebarAgent = () => {
             GESTION
           </p>
           {menus.map((menu) => (
-      <div
-        key={menu.id}
-        className="flex items-center p-2 gap-[15px] py-[15px]"
-      >
-        {iconMap[menu.icon] || ""}
-        <Link
-          to={menu.url}
-          className="text-[12px] font-bold leading-[20px] text-[#898c94]"
-        >
-          {menu.nom}
-        </Link>
-      </div>
-    ))}
+            <div
+              key={menu.id}
+              className="flex items-center p-2 gap-[15px] py-[15px]"
+            >
+              {iconMap[menu.icon] || ""}
+              <Link
+                to={menu.url}
+                className="text-[12px] font-bold leading-[20px] text-[#898c94]"
+              >
+                {menu.nom}
+              </Link>
+            </div>
+          ))}
           {isAdmin && (
             <>
               <p
@@ -161,94 +167,41 @@ const SidebarAgent = () => {
               {showDashboardSubMenuConfig && (
                 <>
                   <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/bagent"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                    <FaFolder />
+                    <p
+                      className="font-bold cursor-pointer text-[12px] leading-[10px]"
+                      onClick={() => settarif(!tarif)}
                     >
-                      Facures
-                    </Link>
+                      Tarif
+                    </p>
                   </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/commercialstatistique"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Abonnement
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/commercialstatistique"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Cartes
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/viewUser"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Utilisateurs
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/fonction"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Roles
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/commercialstatistique"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Provenances
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/viewapplicationuser"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Application et role
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/viewapplicationuser"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Module et role
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/script"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Script
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/viewtypeproduit"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Type produit
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
-                    <Link
-                      to="/typechauffage"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Type chauffage
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                  {tarif && (
+                    <div className="pl-5">
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/bagent"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Facures
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/commercialstatistique"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Abonnement
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/commercialstatistique"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Cartes
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
                     <Link
                       to="/script"
                       className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
@@ -264,12 +217,162 @@ const SidebarAgent = () => {
                       Installateur
                     </Link>
                   </div>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                    <FaFolder />
+                    <p
+                      className="font-bold cursor-pointer text-[12px] leading-[10px]"
+                      onClick={() => setuser(!user)}
+                    >
+                      Utilisateurs
+                    </p>
+                  </div>
+                  {user && (
+                    <div className="pl-5">
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/viewUser"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Utilisateurs
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                    <FaFolder />
+                    <p
+                      className="font-bold cursor-pointer text-[12px] leading-[10px]"
+                      onClick={() => setApplicationShow(!applicationShow)}
+                    >
+                      Configuration
+                    </p>
+                  </div>
+                  {applicationShow && (
+                    <div className="pl-5">
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/fonction"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Roles
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/moduleperso"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Modules
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/viewapplicationuser"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Application et role
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/modules"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Module et role
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/workflowrole"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          workflow et role
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                    <FaFolder />
+                    <p
+                      className="font-bold cursor-pointer text-[12px] leading-[10px]"
+                      onClick={() => setworkflow(!workflow)}
+                    >
+                      WorkFlow
+                    </p>
+                  </div>
+                  {workflow && (
+                    <div className="pl-5">
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/workflows"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Workflow
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px] cursor-pointer">
+                        <Link
+                          to="/workflow"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Etape de workflow
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px] cursor-pointer">
+                        <Link
+                          to="/categoriestatus"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Categorie statuts
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/statuts"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Status
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                    <FaFolder />
+                    <p
+                      className="font-bold cursor-pointer text-[12px] leading-[10px]"
+                      onClick={() => settype(!type)}
+                    >
+                      Types
+                    </p>
+                  </div>
+                  {type && (
+                    <div className="pl-5">
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/viewtypeproduit"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Type produit
+                        </Link>
+                      </div>
+                      <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
+                        <Link
+                          to="/typechauffage"
+                          className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
+                        >
+                          Type chauffage
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
                     <Link
-                      to="/script"
+                      to="/commercialstatistique"
                       className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
                     >
-                      Status
+                      Provenances
                     </Link>
                   </div>
                   <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
@@ -277,7 +380,7 @@ const SidebarAgent = () => {
                       to="/script"
                       className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
                     >
-                      Provenance
+                      Script
                     </Link>
                   </div>
                   <div className="flex items-center gap-[15px] py-[5px] pl-[20px]">
@@ -294,14 +397,6 @@ const SidebarAgent = () => {
                       className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
                     >
                       Model mail
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-[15px] py-[5px] pl-[20px] cursor-pointer">
-                    <Link
-                      to="/workflow"
-                      className="text-[12px] leading-[20px] text-[#7d839d] font-bold"
-                    >
-                      Etape de workflow
                     </Link>
                   </div>
                   <br />

@@ -23,10 +23,10 @@ const Fonction = () => {
     <>
       {isAdmin && (
         <>
-          <Otbar title="Espace Fonction" />
+          <Otbar title="Espace Role" />
           <div className="flex items-center p-2 justify-between">
             <div className="flex p-4">
-              <h1 className="text-[#b3b4b6]">Fonction / </h1>
+              <h1 className="text-[#b3b4b6]">Role / </h1>
               <h1 className="font-bold"> Liste</h1>
             </div>
           </div>
@@ -36,7 +36,7 @@ const Fonction = () => {
                 to="/createFonction"
                 className="border-[#1e58c1] text-white flex items-center gap-3 bg-[#1e58c1] p-3 rounded-[15px] float-right"
               >
-                <FaPlus /> Nouveau fonction
+                <FaPlus /> Nouveau role
               </Link>
               <div className="py-4"></div>
               <br />

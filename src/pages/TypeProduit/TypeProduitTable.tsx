@@ -11,6 +11,7 @@ import TypeProduitService from "../../Services/TypeProduit.service";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import Spinner from "../../components/Spinner";
 import hasAccess from "../../components/hasAcess";
+import Swal from "sweetalert2";
 
 const TypeProduitTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,6 +45,35 @@ const TypeProduitTable = () => {
   }, []);
   const TABLE_HEAD = ["N°", "Nom", "Desciption", "Image", "Action"];
 
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: "Vous ne pourrez pas récupérer cette type produit status !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Oui, supprimer !",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        //await AgntService.deleteAgent(id);
+        Swal.fire(
+          "Supprimé !",
+          "Votre categorie status a été supprimée.",
+          "success"
+        );
+        //getUtilisateur();
+      } catch (error) {
+        Swal.fire(
+          "Erreur !",
+          "Une erreur est survenue lors de la suppression.",
+          "error"
+        );
+      }
+    }
+  };
   return (
     <>
         <div className="pt-2">
@@ -93,6 +123,7 @@ const TypeProduitTable = () => {
                           .includes(searchTerm.toLowerCase());
                       })
                       .map((data, index) => (
+                        <>
                         <tr key={index}>
                           <td className="p-4">
                             <Typography
@@ -132,11 +163,19 @@ const TypeProduitTable = () => {
                           </td>
                           <td className="p-4">
                            
-                              <button className="border p-2 rounded-lg bg-red-600 text-white border-red-600">
+                              <button className="border p-2 rounded-lg bg-red-600 text-white border-red-600"
+                              onClick={() => handleDelete(data.id)}
+                              >
                                 <FaTrash />
                               </button>
                           </td>
                         </tr>
+                        <tr>
+                          <td colSpan="5">
+                            <hr />
+                          </td>
+                        </tr>
+                        </>
                       ))}
                 </tbody>
               </table>

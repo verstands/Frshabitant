@@ -3,4 +3,5 @@ export interface TypeProduitInterface {
     image: string;
     description: string;
     id?: string;
+    id_work : string;
 }

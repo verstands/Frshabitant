@@ -12,5 +12,6 @@ export interface HistoriqueInterface {
     isp: string;
     pays: string;
     id?: string;
+    agent?: object;
     createdAt: string;
 }

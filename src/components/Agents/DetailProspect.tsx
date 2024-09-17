@@ -50,7 +50,7 @@ const DetailProspect: React.FC<DetailProspectProps> = ({ data }) => {
   );
 
   const [histtorique, setHistorique] = useState<HistoriqueAfficheInterface>({
-    action: "a crée un agenda sur la fiche le",
+    action: "a modifier l'iedentite sur la fiche le",
     userProspect: String(data?.id),
     userAgent: String(user.id),
   });

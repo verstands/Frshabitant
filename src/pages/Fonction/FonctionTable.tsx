@@ -8,9 +8,9 @@ import {
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { RepositoryConfigInterface } from "../../Interfaces/RepositoryConfig.interface";
 import Spinner from "../../components/Spinner";
-import hasAccess from "../../components/hasAcess";
 import { FonctionInterface } from "../../Interfaces/FonctionInterface";
 import FonctionService from "../../Services/Fonction.service";
+import Swal from "sweetalert2";
 
 const FonctionTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,6 +46,36 @@ const FonctionTable = () => {
   }, []);
 
   const TABLE_HEAD = ["N°", "Nom", "Action"];
+
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: "Vous ne pourrez pas récupérer cette categorie status !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Oui, supprimer !",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        //await AgntService.deleteAgent(id);
+        Swal.fire(
+          "Supprimé !",
+          "Votre categorie status a été supprimée.",
+          "success"
+        );
+        //getUtilisateur();
+      } catch (error) {
+        Swal.fire(
+          "Erreur !",
+          "Une erreur est survenue lors de la suppression.",
+          "error"
+        );
+      }
+    }
+  };
 
   return (
     <>
@@ -96,34 +126,44 @@ const FonctionTable = () => {
                         .includes(searchTerm.toLowerCase());
                     })
                     .map((data, index) => (
-                      <tr key={index}>
-                        <td className="p-4">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal font-bold"
-                          >
-                            {numero++}
-                          </Typography>
-                        </td>
-                        <td className="p-4">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-bold"
-                          >
-                            {data.initule}
-                          </Typography>
-                        </td>
-                        <td className="p-4">
-                            <button className="border p-2 rounded-lg bg-red-600 text-white border-red-600">
+                      <>
+                        <tr key={index}>
+                          <td className="p-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal font-bold"
+                            >
+                              {numero++}
+                            </Typography>
+                          </td>
+                          <td className="p-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-bold"
+                            >
+                              {data.initule}
+                            </Typography>
+                          </td>
+                          <td className="p-4">
+                            <button
+                              className="border p-2 rounded-lg bg-red-600 text-white border-red-600"
+                              onClick={() => handleDelete(data.id)}
+                            >
                               <FaTrash />
                             </button>
                             <button className="border p-2 rounded-lg bg-blue-600 text-white border-blue-600">
                               <FaEdit />
                             </button>
-                        </td>
-                      </tr>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colSpan="3">
+                            <hr />
+                          </td>
+                        </tr>
+                      </>
                     ))}
               </tbody>
             </table>

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import SidebarAgent from './SidebarAgent'
 import { useEffect, useState } from 'react';
-const LayoutAgent = () => {
+const   LayoutAgent = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
